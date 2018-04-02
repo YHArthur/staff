@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>风赢员工用API说明文档</title>
+<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+<link rel="stylesheet" href="https://libs.baidu.com/bootstrap/3.3.4/css/bootstrap.min.css">
+<link href="help.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <div class="bs-docs-header" id="content" tabindex="-1">
+    <div class="container">
+      <h1>风赢员工用API说明文档</h1>
+      <p>2018.4.2 V1.0 by Y·H</p>
+    </div>
+  </div>
+
+  <div class="container bs-docs-container">
+    <div class="row">
+      <div class="col-md-9" role="main">
+        <div class="bs-docs-section">
+
+          <h3 id="common">概要说明</h3>
+          <h2></h2>
+          <pre>
+            <b>API访问地址</b>
+              正式服：http://www.fnying.com/staff/api/
+
+            <b>返回数据格式</b>
+              json
+
+            <b>异常返回</b>
+              errcode 返回码
+              errmsg  失败信息
+
+              常见错误码：
+              -1  系统繁忙，稍候再试
+              110 服务异常中断，请与管理员联系
+              120 参数错误
+          </pre>
+
+          <h3 id="sign">员工注册</h3>
+          <h2><a href='http://www.fnying.com/staff/api/sign.php' target='api'>http://www.fnying.com/staff/api/sign.php</a></h2>
+          <pre>
+            <b>GET参数</b>
+              staff_name      员工姓名
+              staff_phone     员工电话
+
+            <b>返回</b>
+              errcode = 0 请求成功
+
+            <b>说明</b>
+              风赢科技员工注册
+
+          </pre>
+
+          <h3 id="office_sign">办公室签到</h3>
+          <h2><a href='http://www.fnying.com/staff/api/office_sign.php' target='api'>http://www.fnying.com/staff/api/office_sign.php</a></h2>
+          <pre>
+            <b>GET参数</b>
+              sign_type           签到类型
+              latitude            纬度
+              longitude           经度
+
+            <b>返回</b>
+              errcode = 0     请求成功
+
+            <b>说明</b>
+              风赢科技员工签到
+          </pre>
+
+          <h3 id="office_sign_log">办公室签到记录</h3>
+          <h2><a href='http://www.fnying.com/staff/api/office_sign_log.php' target='api'>http://www.fnying.com/staff/api/office_sign_log.php</a></h2>
+          <pre>
+            <b>Get参数</b>
+              limit     （记录条数，可选）默认10 最大100
+              offset    （记录偏移量，可选）默认0 与limit参数一起分页使用。如设置 offset=20&limit=10 取第21-30条记录
+
+            <b>返回</b>
+              total     总记录件数
+              rows      记录数组
+                log_id      签到日志ID
+                staff_name  员工姓名
+                sign_type   签到类型
+                ctime       签到时间
+
+            <b>说明</b>
+
+          </pre>
+
+        </div>
+
+      </div>
+
+
+      <div class="col-md-3" role="complementary">
+        <nav class="bs-docs-sidebar hidten-print hidten-xs hidten-sm fixmenu">
+          <ul class="nav bs-docs-sidenav">
+            <li><a href="#common"><b>概要说明</b></a></li>
+            <li>------------------------------------------</li>
+            <li><a href="#sign"><b class="text-success">员工注册</b></a></li>
+            <li><a href="#office_sign"><b class="text-success">办公室签到</b></a></li>
+            <li><a href="#office_sign_log"><b class="text-success">办公室签到记录</b></a></li>
+          </ul>
+        </nav>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="http://libs.baidu.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+</body>
+</html>
+
+
