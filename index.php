@@ -60,8 +60,8 @@ need_staff_login();
           <div id="admin_menu" class="panel-collapse collapse">
             <div class="panel-body">
               <ul class="nav nav-sidebar">
-                <li><a href="javascript:;" onclick="menu_click('manages','permission')">权限管理</a></li>
-                <li><a href="javascript:;" onclick="menu_click('manages','staff')">员工管理</a></li>
+                <li><a href="javascript:;" onclick="menu_click('feature','staff_weixin')">微信登录</a></li>
+                <li><a href="javascript:;" onclick="menu_click('feature','staff_permit')">管理权限</a></li>
               </ul>
             </div>
           </div>
@@ -78,8 +78,8 @@ need_staff_login();
           <div id="info_menu" class="panel-collapse collapse">
             <div class="panel-body">
               <ul class="nav nav-sidebar">
-                <li><a href="javascript:;" onclick="menu_click('manages','info_member')">邮箱列表</a></li>
-                <li><a href="javascript:;" onclick="menu_click('manages','info_group')">官网联系</a></li>
+                <li><a href="javascript:;" onclick="menu_click('feature','www_email')">邮箱列表</a></li>
+                <li><a href="javascript:;" onclick="menu_click('feature','www_contact')">官网联系</a></li>
               </ul>
             </div>
           </div>
@@ -96,15 +96,16 @@ need_staff_login();
           <div id="news_menu" class="panel-collapse collapse">
             <div class="panel-body">
               <ul class="nav nav-sidebar">
-                <li><a href="javascript:;" onclick="menu_click('manages','info_news')">员工情报</a></li>
-                <li><a href="javascript:;" onclick="menu_click('manages','info_video')">员工考勤</a></li>
+                <li><a href="javascript:;" onclick="menu_click('feature','staff_main')">员工情报</a></li>
+                <li><a href="javascript:;" onclick="menu_click('feature','staff_office_sign')">员工考勤</a></li>
               </ul>
             </div>
           </div>
         </div>
         <?php }?>        
 
-
+      </div>
+    
       <!--右侧内容-->
       <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
@@ -121,6 +122,8 @@ need_staff_login();
   <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
   <script src="http://libs.baidu.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
   <script src="http://cdn.bootcss.com/Chart.js/2.1.6/Chart.bundle.min.js"></script>
+  <script src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+  <script src="wx/js/wx.js"></script>
   <script src="js/layer/layer.js"></script>
   <script src="js/index.js"></script>
 

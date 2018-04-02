@@ -8,6 +8,8 @@ require_once('log.php');
 require_once('test_arg.php');
 require_once('mysql.php');
 require_once('db_connect.php');
+require_once('html.php');
+require_once('db_table.php');
 require_once('wx_login.php');
 require_once('permission.php');
 
