@@ -3,14 +3,14 @@ Navicat MySQL Data Transfer
 
 Source Server         : www.fnying.com
 Source Server Version : 50173
-Source Host           : bdm25986977.my3w.com:3306
-Source Database       : bdm25986977_db
+Source Host           : 
+Source Database       : 
 
 Target Server Type    : MYSQL
 Target Server Version : 50173
 File Encoding         : 65001
 
-Date: 2018-04-02 17:17:06
+Date: 2018-03-30 10:06:08
 */
 
 SET FOREIGN_KEY_CHECKS=0;
