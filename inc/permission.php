@@ -64,8 +64,9 @@ function need_staff_login()
 //======================================
 function has_pm($pmid)
 {
-  // if (in_array($pmid, $_SESSION['pmids'], true))
-    // return true;
-  return true;
+  $staff_id = $_SESSION['staff_id'];
+  if ($staff_id == '640C3986-5EC2-EABA-59C1-B9C6EC4FF610')
+    return true;
+  return false;
 }
 ?>

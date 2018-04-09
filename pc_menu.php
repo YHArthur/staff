@@ -1,6 +1,7 @@
 <?php
 require_once 'inc/common.php';
-require_once('db/staff_weixin.php');
+require_once 'db/staff_weixin.php';
+require_once 'db/staff_permit.php';
 
 need_staff_login();
 ?>
@@ -60,6 +61,9 @@ need_staff_login();
           <div id="admin_menu" class="panel-collapse collapse">
             <div class="panel-body">
               <ul class="nav nav-sidebar">
+                <li><a href="javascript:;" onclick="menu_click('feature','obj')">目标管理</a></li>
+                <li><a href="javascript:;" onclick="menu_click('feature','kpi')">衡量指标</a></li>
+                <li><a href="javascript:;" onclick="menu_click('feature','task')">任务管理</a></li>
                 <li><a href="javascript:;" onclick="menu_click('feature','staff_weixin')">微信登录</a></li>
                 <li><a href="javascript:;" onclick="menu_click('feature','staff_permit')">管理权限</a></li>
               </ul>
@@ -102,10 +106,10 @@ need_staff_login();
             </div>
           </div>
         </div>
-        <?php }?>        
+        <?php }?>
 
       </div>
-    
+
       <!--右侧内容-->
       <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
@@ -122,10 +126,8 @@ need_staff_login();
   <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
   <script src="http://libs.baidu.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
   <script src="http://cdn.bootcss.com/Chart.js/2.1.6/Chart.bundle.min.js"></script>
-  <script src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
-  <script src="wx/js/wx.js"></script>
   <script src="js/layer/layer.js"></script>
-  <script src="js/index.js"></script>
+  <script src="js/pc_menu.js"></script>
 
 </body>
 </html>

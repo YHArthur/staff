@@ -1,4 +1,5 @@
 body{background-color:#f8f8f8}
 .page__hd{padding:20px}
+.glyphicon{font-size:22px}
 .code-scan{width:50%;margin:0 auto;padding:0.5em 0;}
 .scan-result{width:200px;word-wrap:break-word;margin:5px;padding:0 10px;background-color:#ebebeb;line-height:2.3em;text-align:left;color:#000000}

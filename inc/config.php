@@ -21,7 +21,7 @@ class Config
   // 异常日志等级
   const ERROR_LEVEL = 8;
   // PHP日志等级(0关闭，15全部, 14关闭跟踪日志)
-  const PHP_LOG_LEVEL = 15;
+  const PHP_LOG_LEVEL = 14;
   // PHP日志文件目录加前缀
   const PHP_LOG_FILE_PREFIX = '../log/';
 

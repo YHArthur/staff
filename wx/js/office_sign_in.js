@@ -37,7 +37,8 @@ $(function () {
       wx.getLocation({
           type: 'gcj02',
           success: function (res) {
-            staff_sign(res.latitude, res.longitude);
+            // staff_sign(res.latitude, res.longitude);
+            
           },
           cancel: function (res) {
             AlertDialog('地理位置获取失败，无法签到');
@@ -56,6 +57,7 @@ function staff_sign(latitude, longitude) {
   // 员工注册处理
   CallApi(api_url, post_data, function (response) {
     Toast('签到成功');
+    
   }, function (response) {
     AlertDialog(response.errmsg);
   });
