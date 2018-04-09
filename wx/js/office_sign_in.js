@@ -37,7 +37,7 @@ $(function () {
       wx.getLocation({
           type: 'gcj02',
           success: function (res) {
-            // staff_sign(res.latitude, res.longitude);
+            staff_sign(res.latitude, res.longitude);
             
           },
           cancel: function (res) {
