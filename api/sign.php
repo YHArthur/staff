@@ -1,5 +1,6 @@
 <?php
 require_once '../inc/common.php';
+require_once '../inc/api.php';
 require_once '../db/staff_weixin.php';
 
 header("cache-control:no-cache,must-revalidate");
@@ -35,10 +36,22 @@ if (!session_id())
 if (!isset($_SESSION['unionid']))
   exit_error('119', '网页已失效，请刷新页面再试');
 
+$wxid = 1;
 $unionid = $_SESSION['unionid'];
 // 微信统一标识存在检查
 if (exist_staff_weixin($unionid))
   exit_ok('该微信账号已经存在');
+
+// 获得微信用户信息
+$user = API::getWxUserInfo($wxid, $unionid);
+// 头像取得
+$headimgurl = 'http://www.fnying.com/staff/img/default_avata.png';
+if (isset($user['headimgurl']))
+  $headimgurl = $user['headimgurl'];
+// 昵称取得
+$nickname = '未知';
+if (isset($user['nickname']))
+  $nickname = $user['nickname'];
 
 // 字段设定
 $data = array();
@@ -46,6 +59,8 @@ $data['unionid'] = $unionid;
 $data['staff_id'] = get_guid();
 $data['staff_name'] = $staff_name;
 $data['staff_phone'] = $staff_phone;
+$data['headimgurl'] = $headimgurl;
+$data['nickname'] = $nickname;
 $data['is_void'] = 1;
 $data['last_ip'] = $last_ip;
 // 创建员工微信账号

@@ -7,7 +7,7 @@ $table_name = 'staff_weixin';
 $table = new DBTable('DB_WWW', $table_name);
 
 // 展示字段列表
-$table->show_columns = array("staff_name", "staff_avata", "wx_name", "is_void", "ctime");
+$table->show_columns = array("staff_name", "staff_phone", "staff_avata", "wx_name", "ctime", "is_void");
 // 字段转换样式列表
 $table->format_columns[] = array('field'=>'staff_avata', 'formatter'=>'imageFormatter');
 // 是否无效
@@ -23,7 +23,7 @@ $table->add_javascript =  <<<EOF
 
     // 正式员工审核通过处理
     function getChkBtn(value, row, index) {
-        return '<button class="updfeedback btn-warning" type="button" aria-label="审核通过"><i class="glyphicon glyphicon-ok"></i> 审核通过</button>';
+        return '<button class="updfeedback btn-warning" type="button" aria-label="审核"><i class="glyphicon glyphicon-ok"></i> 审核</button>';
     }
 
     // 是否无效
