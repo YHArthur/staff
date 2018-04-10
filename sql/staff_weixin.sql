@@ -22,7 +22,6 @@ DROP TABLE IF EXISTS `staff_weixin`;
 CREATE TABLE `staff_weixin` (
   `unionid` varchar(50) CHARACTER SET ascii NOT NULL COMMENT '微信统一标识',
   `staff_id` char(36) CHARACTER SET ascii NOT NULL COMMENT '员工ID',
-  `staff_cd` char(3) CHARACTER SET ascii NOT NULL DEFAULT '000' COMMENT '员工工号',
   `staff_name` varchar(50) NOT NULL COMMENT '员工姓名',
   `staff_phone` varchar(20) DEFAULT NULL COMMENT '员工电话',
   `wx_name` varchar(50) NOT NULL,

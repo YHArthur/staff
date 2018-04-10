@@ -44,7 +44,6 @@ if (exist_staff_weixin($unionid))
 $data = array();
 $data['unionid'] = $unionid;
 $data['staff_id'] = get_guid();
-$data['staff_cd'] = '000';
 $data['staff_name'] = $staff_name;
 $data['staff_phone'] = $staff_phone;
 $data['is_void'] = 1;

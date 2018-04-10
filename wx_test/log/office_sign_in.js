@@ -18,9 +18,6 @@ $(function () {
   // 微信配置启动
   wx_config();
 
-  // 展示员工签到记录
-  staff_sign_log(10, 0);
-  
   wx.ready(function() {
 
       wx.onMenuShareTimeline({
@@ -41,7 +38,6 @@ $(function () {
           type: 'gcj02',
           success: function (res) {
             staff_sign(res.latitude, res.longitude);
-            
           },
           cancel: function (res) {
             AlertDialog('地理位置获取失败，无法签到');
@@ -60,37 +56,36 @@ function staff_sign(latitude, longitude) {
   // 员工注册处理
   CallApi(api_url, post_data, function (response) {
     Toast('签到成功');
-    $("#sign_rows").html('');
-    staff_sign_log(10, 0);
+
+    
+} // 展示员工签到记录
+    var limit = 10;
+    var offset = 0;
+        Qiandao(limit, offset, function (response) {
+            var log_id,sign_type,staff_name,ctime;
+            var count = response.rows;
+            for (var i = 0; i < count.length; i++) {
+               var jilu = '\
+        <label class="weui-cell weui-check__label" for="x' +count[i].log_id+ '">\
+          <div class="weui-cell__bd">' + count[i].sign_type + ' <span>' + count[i].staff_name + '</span></div>\
+          <div class="weui-cell__ft">' + count[i].ctime+ '</div>\
+        </label>\
+        ';
+                $("#tab").append(jilu);
+            }
+            alert(count);
+        }, function (response) {
+            console.log(response.errmsg)
+        });
+
+
   }, function (response) {
     AlertDialog(response.errmsg);
   });
-}
 
-// 展示员工签到记录
-function staff_sign_log(limit, offset) {
-    var api_url = 'office_sign_log.php';
+// 获取签到记录
+function Qiandao(limit, offset, suc_func, error_func) {
+    var api_url = 'http://www.fnying.com/staff/api/office_sign_log.php';
     var post_data = {"limit": limit, "offset": offset};
-    CallApi(api_url, post_data, function (response) {
-        var log_id, staff_name, sign_type, ctime;
-        var clist = response.rows;
-        if (clist.length > 0) {
-          clist.forEach(function(value, index, array) {
-             log_id = value.log_id;
-             staff_name = value.staff_name;
-             sign_type = value.sign_type.replace('白金湾339', '');
-             ctime = value.ctime;
-             
-             check = '\
-              <label class="weui-cell weui-check__label" for="x' + log_id + '">\
-                <div class="weui-cell__bd">' + sign_type + ' <span>' + staff_name + '</span></div>\
-                <div class="weui-cell__ft">' + ctime.substr(5, 11) + '</div>\
-              </label>\
-              ';
-              $("#sign_rows").append(check);
-          });
-        }
-    }, function (response) {
-      console.log(response.errmsg)
-    });
+    CallApi(api_url, post_data, suc_func, error_func);
 }
