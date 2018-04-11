@@ -28,7 +28,7 @@ chk_empty_args('GET', $args);
 // 提交参数整理
 $staff_name = get_arg_str('GET', 'staff_name');
 $staff_phone = get_arg_str('GET', 'staff_phone');
-$last_ip = ip2long(get_ip());
+$last_ip = get_int_ip();
 
 if (!session_id())
   session_start();

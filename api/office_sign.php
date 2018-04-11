@@ -29,7 +29,7 @@ chk_empty_args('GET', $args);
 $sign_type = get_arg_str('GET', 'sign_type');
 $latitude = get_arg_str('GET', 'latitude');
 $longitude = get_arg_str('GET', 'longitude');
-$user_ip = ip2long(get_ip());
+$user_ip = get_int_ip();
 
 if (!session_id())
   session_start();
