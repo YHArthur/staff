@@ -4,5 +4,5 @@ session_start();
 session_destroy();
 
 // 重定向
-Header("Location: index.php");
+Header("Location: index.html");
 ?>

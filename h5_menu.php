@@ -12,7 +12,6 @@ need_staff_login();
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
   <title>风赢科技员工管理平台</title>
-  <link rel="stylesheet" href="css/bootstrap.min.css">
   <link rel="stylesheet" href="wx/css/weui.css">
   <link rel="stylesheet" href="wx/css/index.css">
 </head>
@@ -23,6 +22,12 @@ need_staff_login();
       <p class="page__desc">风赢科技</p>
   </div>
   <div class="weui-grids">
+      <a href="../report/index.php" class="weui-grid">
+          <div class="weui-grid__icon">
+              <i class="glyphicon glyphicon-stats"></i>
+          </div>
+          <p class="weui-grid__label">统计报表</p>
+      </a>
       <a href="wx/office_sign_log.php" class="weui-grid">
           <div class="weui-grid__icon">
               <i class="glyphicon glyphicon-time"></i>
