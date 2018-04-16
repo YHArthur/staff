@@ -56,6 +56,28 @@
 
           </pre>
 
+          <h3 id="staff_main_all">员工情报一览</h3>
+          <h2><a href='http://www.fnying.com/staff/api/staff_main_all.php' target='api'>http://www.fnying.com/staff/api/staff_main_all.php</a></h2>
+          <pre>
+            <b>GET参数</b>
+              limit     （记录条数，可选）默认10 最大100
+              offset    （记录偏移量，可选）默认0 与limit参数一起分页使用。如设置 offset=20&limit=10 取第21-30条记录
+              
+            <b>返回</b>
+              total     总记录件数
+              rows      记录数组
+                staff_id    
+                staff_cd
+                staff_name
+                staff_sex
+                birth_year
+                birth_day
+                join_date
+
+            <b>说明</b>
+
+          </pre>
+          
           <h3 id="office_sign">办公室签到</h3>
           <h2><a href='http://www.fnying.com/staff/api/office_sign.php' target='api'>http://www.fnying.com/staff/api/office_sign.php</a></h2>
           <pre>
@@ -101,6 +123,7 @@
             <li><a href="#common"><b>概要说明</b></a></li>
             <li>------------------------------------------</li>
             <li><a href="#sign"><b class="text-success">员工注册</b></a></li>
+            <li><a href="#staff_main_all"><b class="text-success">员工情报一览</b></a></li>
             <li><a href="#office_sign"><b class="text-success">办公室签到</b></a></li>
             <li><a href="#office_sign_log"><b class="text-success">办公室签到记录</b></a></li>
           </ul>
