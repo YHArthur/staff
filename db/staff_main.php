@@ -15,6 +15,26 @@ function get_staff($staff_id)
 }
 
 //======================================
+// 函数: 取得员工列表
+// 参数: 无
+// 参数: $limit         记录条数
+// 参数: $offset        记录偏移量
+// 返回: 员工列表
+//======================================
+function get_staff_list()
+{
+  $db = new DB_WWW();
+
+  $sql = "SELECT * FROM staff_main WHERE is_void = 0";
+  $sql .= " ORDER BY staff_cd";
+  // $sql .= " limit {$offset},{$limit}";
+
+  $db->query($sql);
+  $rows = $db->fetchAll();
+  return $rows;
+}
+
+//======================================
 // 函数: 创建员工信息
 // 参数: $data          信息数组
 // 返回: true           创建成功
@@ -42,7 +62,7 @@ function upd_staff($data, $staff_id)
 {
   $db = new DB_WWW();
 
-  $where = "staffid = '{$staff_id}'";
+  $where = "staff_id = '{$staff_id}'";
   $sql = $db->sqlUpdate("staff_main", $data, $where);
   $q_id = $db->query($sql);
 
@@ -52,8 +72,30 @@ function upd_staff($data, $staff_id)
 }
 
 //======================================
-// 函数: get_star_sign_12($m, $d)
-// 功能: 根据月，日取得12星座
+// 函数: 设定员工列表下拉框所需的数组
+// 参数: $my_id         我的员工ID
+// 参数: $staff_rows    员工列表数组
+// 返回: 若员工列表存在我的ID，则把名称换成'我'，并排列第一
+//======================================
+function get_staff_list_select($my_id, $staff_rows)
+{
+  $my_array = array(); 
+  $staff_list = array();
+  foreach ($staff_rows as $staff) {
+    $staff_id = $staff['staff_id'];
+    $staff_cd = $staff['staff_cd'];
+    if ($my_id == $staff_id) {
+      $my_array[$my_id] = $staff_cd . ' 我';
+    } else {
+      $staff_name = $staff['staff_name'];
+      $staff_list[$staff_id] = $staff_cd . ' ' . $staff_name;
+    }
+  }
+  return array_merge($my_array, $staff_list);
+}
+
+//======================================
+// 函数: 根据月，日取得12星座
 // 参数: $m             月（2位数字，不足2位第一位补0）
 // 参数: $d             日（2位数字，不足2位第一位补0）
 // 返回: 对应的星座

@@ -1,17 +1,15 @@
 <?php
 require_once '../inc/common.php';
 require_once '../db/task.php';
+require_once '../db/staff_main.php';
 
 // 禁止游客访问
 exit_guest();
 
-$staff_id = $_SESSION['staff_id'];
-$staff_name = $_SESSION['staff_name'];
-
 // 未设置任务ID(默认添加)
 if (!isset($_GET["id"])) {
 
-  $task_id = get_guid();                          // 任务ID
+  $task_id = '';                                  // 任务ID
   $task_name = '';                                // 任务
   $task_intro = '';                               // 任务内容
   $respo_id = '';                                 // 责任人ID
@@ -23,18 +21,14 @@ if (!isset($_GET["id"])) {
   $task_value = 0;                                // 任务价值
   $task_perc = 0;                                 // 任务进度
   $task_status = 3;                               // 任务状态
-
-  $end_time = date('Y-m-d H:i:s');                // 任务结束时间
-
-  $prvs_task_id = '';                             // 上一任务ID
-  $next_task_id = '';                             // 下一任务ID
-  $is_void = 1;                                   // 是否无效
+  $limit_time = date('Y-m-d H:i:s');              // 任务期限
+  $is_public = 1;                                 // 是否公开
 
 } else {
 
   $task_id = $_GET["id"];                         // 任务ID
+  // 取得指定任务ID的任务记录
   $task = get_task($task_id);
-
   if (!$task)
     exit('task id is not exist');
 
@@ -50,24 +44,25 @@ if (!isset($_GET["id"])) {
   $task_value = $task['task_value'];              // 任务价值
   $task_perc = $task['task_perc'];                // 任务进度
   $task_status = $task['task_status'];            // 任务状态
-  $end_time = $task['end_time'];                  // 任务结束时间
-
-  $prvs_task_id = $task['prvs_task_id'];          // 上一任务ID
-  $next_task_id = $task['next_task_id'];          // 下一任务ID
-  $is_void = $task['is_void'];                    // 是否无效
+  $limit_time = $task['limit_time'];              // 任务期限
+  $is_public = $task['is_public'];                // 是否公开
 
   // 将数据库存放的用户输入内容转换回再修改内容
   $task_intro = html_to_str($task_intro);
 }
 
 // 员工选项
-$staff_list = array('0'=>'待定', '1'=>'我', '2'=>'他', '3'=>'她');
-$respo_option = get_select_option($staff_list, $respo_id);
-$check_option = get_select_option($staff_list, $check_id);
+$staff_id = $_SESSION['staff_id'];
+$staff_name = $_SESSION['staff_name'];
+$staff_rows = get_staff_list();
+$staff_list = get_staff_list_select($staff_id, $staff_rows);
+$blank_array = array('0' => '请选择');
+$respo_option = get_select_option(array_merge($blank_array, $staff_list), $respo_id);
+$check_option = get_select_option(array_merge($blank_array, $staff_list), $check_id);
 
-// 对外发布选项
-$void_list = array('0'=>'发布', '1'=>'筹备');
-$void_input = get_radio_input('is_void', $void_list, $is_void);
+// 对外公开选项
+$public_list = array('1'=>'公开', '0'=>'私人');
+$public_input = get_radio_input('is_public', $public_list, $is_public);
 
 // 任务等级列表
 $level_list = array('0'=>'可选','1'=>'一般','2'=>'重要','3'=>'非常重要');
@@ -112,16 +107,16 @@ $status_option = get_select_option($status_list, $task_status);
             </div>
 
             <div class="layui-inline">
-              <label for="ct_end_time" class="layui-form-label" style="width: 110px;">截止期限</label>
+              <label for="ct_limit_time" class="layui-form-label" style="width: 110px;">截止期限</label>
               <div class="layui-input-inline">
-                <input type="Datatime" class="layui-input" id="ct_end_time" name="end_time" value="<?php echo $end_time?>" placeholder="截止期限" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD hh:mm:ss'})">
+                <input type="Datatime" class="layui-input" id="ct_limit_time" name="limit_time" value="<?php echo $limit_time?>" placeholder="截止期限" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD hh:mm:ss'})">
               </div>
             </div>
           </div>
 
           <div class="layui-form-item">
             <div class="layui-inline">
-              <label for="ct_respo_id" class="layui-form-label">任务担当</label>
+              <label for="ct_respo_id" class="layui-form-label">责任担当</label>
               <div class="layui-input-inline" style="width: 190px;">
                 <select name="respo_id" id="ct_respo_id">
                 <?php echo $respo_option?>
@@ -130,7 +125,7 @@ $status_option = get_select_option($status_list, $task_status);
             </div>
 
             <div class="layui-inline">
-              <label for="ct_check_id" class="layui-form-label">任务检查</label>
+              <label for="ct_check_id" class="layui-form-label">监督检查</label>
               <div class="layui-input-inline" style="width: 190px;">
                 <select name="check_id" id="ct_check_id">
                 <?php echo $check_option?>
@@ -141,9 +136,9 @@ $status_option = get_select_option($status_list, $task_status);
 
           <div class="layui-form-item">
             <div class="layui-inline">
-              <label for="ct_is_void" class="layui-form-label">公开发布</label>
+              <label for="ct_is_public" class="layui-form-label">对外公开</label>
               <div class="layui-input-inline" style="width: 190px">
-                <?php echo $void_input?>
+                <?php echo $public_input?>
               </div>
             </div>
 
@@ -221,7 +216,7 @@ $status_option = get_select_option($status_list, $task_status);
 
     layedit.set({
       uploadImage: {
-        url: 'http://h5.snh48.com/service/upload/upload_news_image.php' //接口url
+        url: 'http://www.fnying.com/upload/upload_image.php' //接口url
         ,type: '' //默认post
       }
     });
@@ -236,26 +231,20 @@ $status_option = get_select_option($status_list, $task_status);
 
   // 确认按钮点击事件
   $("#btn_ok").click(function() {
-    var cid = $("#ct_cid").val();
-    if (cid == "0") {
-      parent.layer.msg('请选择新闻类别');
-      return;
-    }
-
     var task_name = $("#ct_task_name").val().trim();
     if (task_name.length == 0) {
       parent.layer.msg('请输入任务标题');
       return;
     }
 
-    var content = layedit.getContent(edit_index).trim();
-    if (content.length == 0) {
-      parent.layer.msg('请输入新闻内容');
+    var task_intro = layedit.getContent(edit_index).trim();
+    if (task_intro.length == 0) {
+      parent.layer.msg('请输入任务内容');
       return;
     }
 
-    var end_time = $("#ct_end_time").val().trim();
-    if (end_time.length == 0) {
+    var limit_time = $("#ct_limit_time").val().trim();
+    if (limit_time.length == 0) {
       parent.layer.msg('请输入截止期限');
       return;
     }
@@ -275,10 +264,14 @@ $status_option = get_select_option($status_list, $task_status);
         row[$(this).attr('name')] = $(this).val();
     });
 
-    // 新闻内容
-    row['content'] = layedit.getContent(edit_index);
-    // 首页推荐
-    row['is_hot'] = $("input[name='is_hot']:checked").val();
+    // 责任担当
+    row['respo_name'] = $("#ct_respo_id option:selected").text();
+    // 监督检查
+    row['check_name'] = $("#ct_check_id option:selected").text();
+    // 任务内容
+    row['task_intro'] = layedit.getContent(edit_index);
+    // 对外公开
+    row['is_public'] = $("input[name='is_public']:checked").val();
 
     $.ajax({
         url: '/staff/api/task.php',
@@ -293,7 +286,7 @@ $status_option = get_select_option($status_list, $task_status);
               btn: ['OK']
             });
             var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
-            parent.$table.bootstrapTable('refresh');
+            parent.table.bootstrapTable('refresh');
             parent.layer.close(index);
           } else {
             parent.layer.msg(msg.errmsg, {
@@ -314,7 +307,6 @@ $status_option = get_select_option($status_list, $task_status);
     });
 
   });
-
   </script>
 
 

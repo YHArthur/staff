@@ -1,8 +1,8 @@
 // 禁止在微信以外的浏览器里打开
 window.onload = function(){
-  if(!IsWeiXin()){
-    window.location.href="http://www.fnying.com/staff/forbiden.php?code=2";
-  }
+    if(!IsWeiXin()){
+        window.location.href="http://www.fnying.com/staff/forbiden.php?code=2";
+    }
 }
   
 $(function () {
@@ -40,11 +40,11 @@ $(function () {
       wx.getLocation({
           type: 'gcj02',
           success: function (res) {
-            staff_sign(res.latitude, res.longitude);
+              staff_sign(res.latitude, res.longitude);
             
           },
           cancel: function (res) {
-            AlertDialog('地理位置获取失败，无法签到');
+              AlertDialog('地理位置获取失败，无法签到');
           }
       });
   });
@@ -54,17 +54,16 @@ $(function () {
 
 // 员工签到处理
 function staff_sign(latitude, longitude) {
-  var $this = $(this);
-  var api_url = 'office_sign.php';
-  var post_data = {sign_type: '白金湾339签入', latitude: latitude, longitude: longitude};
-  // 员工注册处理
-  CallApi(api_url, post_data, function (response) {
-    Toast('签到成功');
-    $("#sign_rows").html('');
-    staff_sign_log(10, 0);
-  }, function (response) {
-    AlertDialog(response.errmsg);
-  });
+    var api_url = 'office_sign.php';
+    var post_data = {sign_type: '白金湾339签入', latitude: latitude, longitude: longitude};
+    // 员工注册处理
+    CallApi(api_url, post_data, function (response) {
+        Toast('签到成功');
+        $("#sign_rows").html('');
+        staff_sign_log(10, 0);
+    }, function (response) {
+        AlertDialog(response.errmsg);
+    });
 }
 
 // 展示员工签到记录
@@ -75,22 +74,22 @@ function staff_sign_log(limit, offset) {
         var log_id, staff_name, sign_type, ctime;
         var clist = response.rows;
         if (clist.length > 0) {
-          clist.forEach(function(value, index, array) {
-             log_id = value.log_id;
-             staff_name = value.staff_name;
-             sign_type = value.sign_type.replace('白金湾339', '');
-             ctime = value.ctime;
-             
-             check = '\
-              <label class="weui-cell weui-check__label" for="x' + log_id + '">\
-                <div class="weui-cell__bd">' + sign_type + ' <span>' + staff_name + '</span></div>\
-                <div class="weui-cell__ft">' + ctime.substr(5, 11) + '</div>\
-              </label>\
-              ';
-              $("#sign_rows").append(check);
-          });
+            clist.forEach(function(value, index, array) {
+                log_id = value.log_id;
+                staff_name = value.staff_name;
+                sign_type = value.sign_type.replace('白金湾339', '');
+                ctime = value.ctime;
+
+                sign_row = '\
+                <label class="weui-cell weui-check__label" for="x' + log_id + '">\
+                  <div class="weui-cell__bd">' + sign_type + ' <span>' + staff_name + '</span></div>\
+                  <div class="weui-cell__ft">' + ctime.substr(5, 11) + '</div>\
+                </label>\
+                ';
+                $("#sign_rows").append(sign_row);
+            });
         }
     }, function (response) {
-      console.log(response.errmsg)
+        console.log(response.errmsg)
     });
 }
