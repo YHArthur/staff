@@ -19,10 +19,10 @@ $table->format_columns[] = array('field'=>'task_status', 'formatter'=>'taskStatu
 $table->format_columns[] = array('field'=>'limit_time', 'formatter'=>'limitTimeFormatter');
 
 // 展示字段设置
-$table->show_columns = array("is_public", "task_name", "respo_name", "task_level", "task_value", "task_status", "task_perc", "limit_time", "check_name", "ctime");
+$table->show_columns = array("is_public", "task_name", "respo_name", "task_level", "task_value", "task_status", "task_perc", "limit_time", "check_name");
 
 // 排序
-$table->orderby = "task_level DESC, ctime";
+$table->orderby = "task_level DESC";
 
 // 默认不可添加
 $table->add_able = false;

@@ -21,7 +21,7 @@ if (!isset($_GET["id"])) {
   $task_value = 0;                                // 任务价值
   $task_perc = 0;                                 // 任务进度
   $task_status = 3;                               // 任务状态
-  $limit_time = date('Y-m-d H:i:s');              // 任务期限
+  $limit_time = date('Y-m-d') . ' 18:00:00';      // 任务期限
   $is_public = 1;                                 // 是否公开
 
 } else {

@@ -34,7 +34,7 @@ need_staff_login();
           </div>
           <p class="weui-grid__label">签到记录</p>
       </a>
-      <a href="javascript:;" class="weui-grid">
+      <a href="wx/main.php" class="weui-grid">
           <div class="weui-grid__icon">
               <i class="glyphicon glyphicon-user"></i>
           </div>
