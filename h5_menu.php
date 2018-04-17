@@ -12,6 +12,7 @@ need_staff_login();
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
   <title>风赢科技员工管理平台</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
   <link rel="stylesheet" href="wx/css/weui.css">
   <link rel="stylesheet" href="wx/css/index.css">
 </head>
