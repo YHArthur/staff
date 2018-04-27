@@ -22,7 +22,7 @@ $table->format_columns[] = array('field'=>'limit_time', 'formatter'=>'limitTimeF
 $table->show_columns = array("is_public", "task_name", "respo_name", "task_level", "task_value", "task_status", "task_perc", "limit_time", "check_name");
 
 // 排序
-$table->orderby = "task_level DESC";
+$table->orderby = "task_status DESC, task_level DESC, limit_time";
 
 // 默认不可添加
 $table->add_able = false;

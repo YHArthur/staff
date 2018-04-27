@@ -63,17 +63,19 @@ $staff_id = $_SESSION['staff_id'];
 $staff_name = $_SESSION['staff_name'];
 
 // 责任人处理
-if ($staff_id == $respo_id) {
-  $respo_name = $staff_name;
-} else {
+if (!empty($respo_name)) {
   list($respo_cd, $respo_name) = explode(" ", $respo_name);
+} else {
+  $respo_id = $staff_id;
+  $respo_name = $staff_name;
 }
 
 // 监管人处理
-if ($staff_id == $check_id) {
-  $check_name = $staff_name;
-} else {
+if (!empty($check_name)) {
   list($check_cd, $check_name) = explode(" ", $check_name);
+} else {
+  $check_id = $staff_id;
+  $check_name = $staff_name;
 }
 
 $data = array();

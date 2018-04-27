@@ -72,7 +72,6 @@ need_staff_login();
         </div>
         <?php }?>
 
-        <?php if (has_pm('www')) {?>
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title"><a data-toggle="collapse" data-parent="#menubar" href="#info_menu">
@@ -82,13 +81,13 @@ need_staff_login();
           <div id="info_menu" class="panel-collapse collapse">
             <div class="panel-body">
               <ul class="nav nav-sidebar">
+                <li><a href="javascript:;" onclick="menu_click('feature','rpt_overview')">统计报表</a></li>
                 <li><a href="javascript:;" onclick="menu_click('feature','www_email')">邮箱列表</a></li>
                 <li><a href="javascript:;" onclick="menu_click('feature','www_contact')">官网联系</a></li>
               </ul>
             </div>
           </div>
         </div>
-        <?php }?>
 
         <?php if (has_pm('hr')) {?>
         <div class="panel panel-default">
