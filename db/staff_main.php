@@ -15,10 +15,26 @@ function get_staff($staff_id)
 }
 
 //======================================
+// 函数: 取得员工记录总数
+// 参数: 无
+// 返回: 记录总数
+//======================================
+function get_staff_total()
+{
+  $db = new DB_WWW();
+
+  $sql = "SELECT COUNT(staff_id) AS log_total FROM staff_main";
+  $sql .= " WHERE is_void = 0";
+  
+  $total = $db->getField($sql, 'log_total');
+  if ($total)
+    return $total;
+  return 0;
+}
+
+//======================================
 // 函数: 取得员工列表
 // 参数: 无
-// 参数: $limit         记录条数
-// 参数: $offset        记录偏移量
 // 返回: 员工列表
 //======================================
 function get_staff_list()
@@ -27,7 +43,6 @@ function get_staff_list()
 
   $sql = "SELECT * FROM staff_main WHERE is_void = 0";
   $sql .= " ORDER BY staff_cd";
-  // $sql .= " limit {$offset},{$limit}";
 
   $db->query($sql);
   $rows = $db->fetchAll();

@@ -36,22 +36,22 @@ exit_guest();
 
 // 参数检查
 $args = array('task_name', 'task_intro', 'limit_time');
-chk_empty_args('POST', $args);
+chk_empty_args('GET', $args);
 
 // 提交参数整理
-$task_id = get_arg_str('POST', 'task_id');                // 任务ID
-$task_name = get_arg_str('POST', 'task_name', 100);       // 任务
-$task_intro = get_arg_str('POST', 'task_intro', 8192);    // 任务内容
-$respo_id = get_arg_str('POST', 'respo_id');              // 责任人ID
-$respo_name = get_arg_str('POST', 'respo_name');          // 责任人
-$check_id = get_arg_str('POST', 'check_id');              // 监管人ID
-$check_name = get_arg_str('POST', 'check_name');          // 监管人
-$is_public = get_arg_str('POST', 'is_public');            // 是否公开
-$task_level = get_arg_str('POST', 'task_level');          // 任务等级
-$task_value = get_arg_str('POST', 'task_value');          // 任务价值
-$task_perc = get_arg_str('POST', 'task_perc');            // 任务进度
-$task_status = get_arg_str('POST', 'task_status');        // 任务状态
-$limit_time = get_arg_str('POST', 'limit_time');          // 任务期限
+$task_id = get_arg_str('GET', 'task_id');                // 任务ID
+$task_name = get_arg_str('GET', 'task_name', 100);       // 任务
+$task_intro = get_arg_str('GET', 'task_intro', 8192);    // 任务内容
+$respo_id = get_arg_str('GET', 'respo_id');              // 责任人ID
+$respo_name = get_arg_str('GET', 'respo_name');          // 责任人
+$check_id = get_arg_str('GET', 'check_id');              // 监管人ID
+$check_name = get_arg_str('GET', 'check_name');          // 监管人
+$is_public = get_arg_str('GET', 'is_public');            // 是否公开
+$task_level = get_arg_str('GET', 'task_level');          // 任务等级
+$task_value = get_arg_str('GET', 'task_value');          // 任务价值
+$task_perc = get_arg_str('GET', 'task_perc');            // 任务进度
+$task_status = get_arg_str('GET', 'task_status');        // 任务状态
+$limit_time = get_arg_str('GET', 'limit_time');          // 任务期限
 
 // 提交信息整理
 $task_level = intval($task_level);
@@ -63,20 +63,16 @@ $staff_id = $_SESSION['staff_id'];
 $staff_name = $_SESSION['staff_name'];
 
 // 责任人处理
-if (!empty($respo_name)) {
+$respo_id = '';
+$respo_name = '';
+if ($respo_name != '请选择')
   list($respo_cd, $respo_name) = explode(" ", $respo_name);
-} else {
-  $respo_id = $staff_id;
-  $respo_name = $staff_name;
-}
 
 // 监管人处理
-if (!empty($check_name)) {
+$check_id = '';
+$check_name = '';
+if ($check_name != '请选择')
   list($check_cd, $check_name) = explode(" ", $check_name);
-} else {
-  $check_id = $staff_id;
-  $check_name = $staff_name;
-}
 
 $data = array();
 $data['task_id'] = $task_id;                              // 任务ID
@@ -105,14 +101,14 @@ if ($task_id == '') {
   $msg = '【' . $task_name . '】任务已成功添加';
   // 任务信息创建失败
   if ($ret == '')
-    $msg = '任务信息创建失败';
+    exit_error('110', '任务信息创建失败');
 } else {
   // 任务更新
   $ret = upd_task($data, $task_id);
   $msg = '【' . $task_name . '】任务已成功更新';
   // 任务信息更新失败
   if (!$ret)
-    $msg = '任务信息更新失败';
+    exit_error('110', '任务信息更新失败');
 }
 
 // 输出结果

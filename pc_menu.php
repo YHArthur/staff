@@ -100,6 +100,7 @@ need_staff_login();
             <div class="panel-body">
               <ul class="nav nav-sidebar">
                 <li><a href="javascript:;" onclick="menu_click('feature','staff_main')">员工情报</a></li>
+                <li><a href="javascript:;" onclick="menu_click('feature','staff_expense')">办公经费</a></li>
                 <li><a href="javascript:;" onclick="menu_click('feature','staff_office_sign')">员工考勤</a></li>
               </ul>
             </div>

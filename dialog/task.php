@@ -275,7 +275,7 @@ $status_option = get_select_option($status_list, $task_status);
 
     $.ajax({
         url: '/staff/api/task.php',
-        type: 'post',
+        type: 'get',
         data: row,
         success:function(msg) {
           // AJAX正常返回
