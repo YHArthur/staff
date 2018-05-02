@@ -45,7 +45,7 @@ $my_id = $_SESSION['staff_id'];
 $staff_rows = get_staff_list();
 $staff_list = get_staff_list_select($my_id, $staff_rows);
 $blank_array = array('0' => '请选择');
-$staff_option = get_select_option(array_merge($blank_array, $staff_list), $my_id);
+$staff_option = get_select_option(array_merge($blank_array, $staff_list), $staff_id);
 
 // 是否无效选项
 $void_list = array('1'=>'无效', '0'=>'有效');
@@ -183,7 +183,7 @@ $void_input = get_radio_input('is_void', $void_list, $is_void);
   $("#btn_ok").click(function() {
     var exp_memo = $("#ct_exp_memo").val().trim();
     if (exp_memo.length == 0) {
-      parent.layer.msg('请输入变动内容');
+      parent.layer.msg('请输入经费内容');
       return;
     }
 

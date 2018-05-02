@@ -6,10 +6,19 @@ php_begin();
 $table_name = 'staff_expense';
 $table = new DBTable('DB_WWW', $table_name);
 
+// 变动金额
+$table->format_columns[] = array('field'=>'exp_amount', 'formatter'=>'currencyFormatter');
+
+// 开始时间
+$table->format_columns[] = array('field'=>'from_date', 'formatter'=>'dateTimeFormatter');
+
+// 结束时间
+$table->format_columns[] = array('field'=>'to_date', 'formatter'=>'dateTimeFormatter');
+
 // 展示字段列表
-$table->show_columns = array("staff_name", "exp_amount", "from_date", "to_date", "max_count", "now_count", "exp_memo", "ctime");
+$table->show_columns = array("staff_name", "exp_memo", "exp_amount", "from_date", "to_date", "max_count", "now_count", "ctime");
 // 排序
-$table->orderby = "crt_time DESC";
+$table->orderby = "from_date DESC";
 
 // 默认不可添加
 $table->add_able = false;
@@ -47,12 +56,19 @@ $table->add_javascript =  <<<EOF
     function updBtnFormatter(value, row, index) {
         return '<button class="updbtn btn-warning" type="button" aria-label="修改"><i class="glyphicon glyphicon-edit"></i></button>';
     }
+    
+    // 货币金额格式化
+    function currencyFormatter(value, row, index) {
 
-    // 任务期限格式化
+        var fmt = '¥'+parseInt(value/100)+'.'+value.substr(-2,2);
+        return fmt;
+    }
+
+    // 日期格式化
     function dateTimeFormatter(value, row, index) {
 
         var date_time = new Date(value.replace(/-/g, "/"));
-        var year = date_time.getYear();
+        var year = date_time.getFullYear();
         var month = date_time.getMonth() + 1;
         var day = date_time.getDate();
         var fmt = year+'年'+month+'月'+day+'日';
