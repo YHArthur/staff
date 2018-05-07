@@ -2,6 +2,13 @@
 // 配置信息类
 class Config
 {
+  // 系统ID
+  const SYSTEM_ID = '1';
+  // 系统代号
+  const SYSTEM_CD = 'staff';
+  // 系统URL
+  const SYSTEM_URL = 'http://www.fnying.com/staff/';
+
   // 使用测试数据调试区分（false 使用正式数据 true 使用测试数据）
   const AUTO_TEST_FLAG = false;
 

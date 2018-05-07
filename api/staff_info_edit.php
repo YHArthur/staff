@@ -16,6 +16,8 @@ if (isset($_GET['staff_avata']))
   $data['staff_avata'] = get_arg_str('GET', 'staff_avata', 255);
 if (isset($_GET['staff_memo']))
   $data['staff_memo'] = get_arg_str('GET', 'staff_memo', 512);
+if (isset($_GET['nick_name']))
+  $data['nick_name'] = get_arg_str('GET', 'nick_name');
 if (isset($_GET['staff_mbti']))
   $data['staff_mbti'] = get_arg_str('GET', 'staff_mbti');
 

@@ -110,6 +110,27 @@ function get_staff_list_select($my_id, $staff_rows)
 }
 
 //======================================
+// 函数: 设定员工列表下拉框所需的数组(除去本人)
+// 参数: $my_id         我的员工ID
+// 参数: $staff_rows    员工列表数组
+// 返回: 若员工列表存在我的ID，则删除
+//======================================
+function get_staff_list_select_without_me($my_id, $staff_rows)
+{
+  $my_array = array(); 
+  $staff_list = array();
+  foreach ($staff_rows as $staff) {
+    $staff_id = $staff['staff_id'];
+    $staff_cd = $staff['staff_cd'];
+    if ($my_id != $staff_id) {
+      $staff_name = $staff['staff_name'];
+      $staff_list[$staff_id] = $staff_cd . ' ' . $staff_name;
+    }
+  }
+  return $staff_list;
+}
+
+//======================================
 // 函数: 根据月，日取得12星座
 // 参数: $m             月（2位数字，不足2位第一位补0）
 // 参数: $d             日（2位数字，不足2位第一位补0）

@@ -15,56 +15,17 @@ function get_staff_expense($exp_id)
 }
 
 //======================================
-// 函数: chk_exp_id_exist($exp_id)
-// 功能: 经费ID存在检查
-// 参数: $exp_id        经费ID
-// 返回: true           经费ID存在
-// 返回: false          经费ID不存在
-//======================================
-function chk_exp_id_exist($exp_id)
-{
-  $db = new DB_WWW();
-
-  $sql = "SELECT exp_id FROM staff_expense WHERE exp_id = '{$exp_id}'";
-  $db->query($sql);
-  $rds = $db->recordCount();
-  if ($rds == 0)
-    return false;
-  return true;
-}
-
-//======================================
-// 函数: 取得经费总数
+// 函数: 取得待处理的所有员工办公经费记录
 // 参数: 无
-// 返回: 经费总数
+// 返回: 经费记录集
 //======================================
-function get_staff_expense_total()
+function get_pending_staff_expense()
 {
   $db = new DB_WWW();
-  $time_now = date('Y-m-d H:i:s');
 
-  $sql = "SELECT COUNT(exp_id) AS id_total FROM staff_expense WHERE is_public = 1 AND is_void = 0";
-  $total = $db->getField($sql, 'id_total');
-  if ($total)
-    return $total;
-  return 0;
-}
-
-//======================================
-// 函数: 取得经费列表
-// 参数: 无
-// 参数: $limit         记录条数
-// 参数: $offset        记录偏移量
-// 返回: 经费列表明细
-//======================================
-function get_staff_expense_list($limit, $offset)
-{
-  $db = new DB_WWW();
-  $time_now = date('Y-m-d H:i:s');
-
-  $sql = "SELECT * FROM staff_expense WHERE is_public = 1 AND is_void = 0";
-  $sql .= " ORDER BY staff_expense_status DESC, ctime";
-  $sql .= " limit {$offset},{$limit}";
+  $sql = "SELECT * FROM staff_expense";
+  $sql .= " WHERE is_void = 0 AND now_count < max_count";
+  $sql .= " ORDER BY from_date";
 
   $db->query($sql);
   $rows = $db->fetchAll();

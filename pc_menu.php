@@ -1,9 +1,20 @@
 <?php
 require_once 'inc/common.php';
+require_once 'db/permit.php';
 require_once 'db/staff_weixin.php';
 require_once 'db/staff_permit.php';
 
+// 需要员工登录
 need_staff_login();
+
+$staff_id = $_SESSION['staff_id'];
+$staff_name = $_SESSION['staff_name'];
+
+// 模块图标设定
+$icon = array();
+$icon[1000] = 'king';
+$icon[1010] = 'star';
+$icon[1020] = 'bullhorn';
 ?>
 
 <!DOCTYPE html>
@@ -16,7 +27,7 @@ need_staff_login();
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>员工管理平台-风赢科技</title>
+  <title>风赢科技员工管理平台</title>
 
   <link rel="stylesheet" href="css/bootstrap.min.css">
   <link rel="stylesheet" href="css/bootstrap-table.min.css">
@@ -36,11 +47,11 @@ need_staff_login();
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="http://www.fnying.com/staff/">员工管理平台</a>
+        <a class="navbar-brand" href="h5_menu.php">风赢科技员工管理平台</a>
       </div>
       <div id="h-navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="#"><?php echo $_SESSION['staff_name']?></a></li>
+          <li><a href="#"><?php echo $staff_name?></a></li>
           <li><a href="logout.php">退出</a></li>
         </ul>
       </div>
@@ -51,62 +62,78 @@ need_staff_login();
     <div class="row">
       <!--左侧导航-->
       <div class="col-sm-3 col-md-2 sidebar panel-group" id="menubar">
-        <?php if (has_pm('root')) {?>
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title"><a data-toggle="collapse" data-parent="#menubar" href="#admin_menu">
-              <i class="glyphicon glyphicon-king"></i> 超级管理员
-            </a></h4>
-          </div>
-          <div id="admin_menu" class="panel-collapse collapse">
-            <div class="panel-body">
-              <ul class="nav nav-sidebar">
-                <li><a href="javascript:;" onclick="menu_click('feature','obj')">目标管理</a></li>
-                <li><a href="javascript:;" onclick="menu_click('feature','kpi')">衡量指标</a></li>
-                <li><a href="javascript:;" onclick="menu_click('feature','task')">任务管理</a></li>
-                <li><a href="javascript:;" onclick="menu_click('feature','staff_weixin')">微信登录</a></li>
-                <li><a href="javascript:;" onclick="menu_click('feature','staff_permit')">管理权限</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <?php }?>
+<?php
+// 取得当前员工所有有效权限
+$staff_pm_list = get_staff_permit_list($staff_id);
+// 是否有系统权限
+$sys_pm = has_sys_pm($staff_pm_list);
+// 取得系统所有权限
+$rows = get_permit_all();
+// 当前模块
+$tmp_sub = '';
 
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title"><a data-toggle="collapse" data-parent="#menubar" href="#info_menu">
-              <i class="glyphicon glyphicon-star"></i> 官网管理
-            </a></h4>
-          </div>
-          <div id="info_menu" class="panel-collapse collapse">
-            <div class="panel-body">
-              <ul class="nav nav-sidebar">
-                <li><a href="javascript:;" onclick="menu_click('feature','rpt_overview')">统计报表</a></li>
-                <li><a href="javascript:;" onclick="menu_click('feature','www_email')">邮箱列表</a></li>
-                <li><a href="javascript:;" onclick="menu_click('feature','www_contact')">官网联系</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
+// 循环系统所有权限
+foreach ($rows AS $row) {
+  $pm_id =  $row['pm_id'];        // 权限ID
+  $pm_cd =  $row['pm_cd'];        // 权限代号
+  $pm_nm =  $row['pm_nm'];        // 权限名字
+  // 系统管理员默认模块名称
+  if (substr($pm_id, 1) == '000')
+    $pm_nm = '系统管理员';
+  
+  // 模块
+  if (substr($pm_id, 3) == '0') {
+    // 前一模块菜单收尾输出
+    if ($tmp_sub != '') {
+      echo "\n              </ul>";
+      echo "\n            </div>";
+      echo "\n          </div>";
+      echo "\n        </div>";
+      echo "\n";
+    }
 
-        <?php if (has_pm('hr')) {?>
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title"><a data-toggle="collapse" data-parent="#menubar" href="#news_menu">
-              <i class="glyphicon glyphicon-bullhorn"></i> 人事管理
-            </a></h4>
-          </div>
-          <div id="news_menu" class="panel-collapse collapse">
-            <div class="panel-body">
-              <ul class="nav nav-sidebar">
-                <li><a href="javascript:;" onclick="menu_click('feature','staff_main')">员工情报</a></li>
-                <li><a href="javascript:;" onclick="menu_click('feature','staff_expense')">办公经费</a></li>
-                <li><a href="javascript:;" onclick="menu_click('feature','staff_office_sign')">员工考勤</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <?php }?>
+    // 计算模块权限
+    if ($sys_pm) {
+      $sub_pm = 2;
+    } else {
+      $sub_pm = has_sub_pm($pm_id, $staff_pm_list);
+    }
+    
+    // 员工至少有部分模块权限
+    if ($sub_pm >= 0) {
+      echo "\n".'        <div class="panel panel-default">';
+      echo "\n".'          <div class="panel-heading">';
+      echo "\n".'            <h4 class="panel-title"><a data-toggle="collapse" data-parent="#menubar" href="#' . $pm_cd . '_menu">';
+      echo "\n".'              <i class="glyphicon glyphicon-' . $icon[$pm_id] . '"></i> ' . $pm_nm;
+      echo "\n".'            </a></h4>';
+      echo "\n".'          </div>';
+      echo "\n".'          <div id="' . $pm_cd . '_menu" class="panel-collapse collapse">';
+      echo "\n".'            <div class="panel-body">';
+      echo "\n".'              <ul class="nav nav-sidebar">';
+      $tmp_sub = $pm_id;
+    }
+  } else {
+    // 计算菜单权限
+    if ($sys_pm || $sub_pm == 1) {
+      $menu_pm = true;
+    } else {
+      $menu_pm = in_array($pm_id, $staff_pm_list);
+    }
+
+    if ($menu_pm)
+      echo "\n".'                <li><a href="javascript:;" onclick="menu_click(' . "'feature','" . $pm_cd . "'" . ')">' . $pm_nm . '</a></li>';
+  }
+}
+
+if ($tmp_sub != '') {
+  // 前一模块菜单收尾输出
+  echo "\n              </ul>";
+  echo "\n            </div>";
+  echo "\n          </div>";
+  echo "\n        </div>";
+  echo "\n";
+}
+?>
 
       </div>
 

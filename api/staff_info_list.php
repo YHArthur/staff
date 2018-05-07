@@ -2,6 +2,7 @@
 require_once '../inc/common.php';
 require_once '../db/staff_main.php';
 require_once '../db/staff_office_sign.php';
+require_once '../db/staff_expense_log.php';
 require_once 'subsidy.php';
 
 header("cache-control:no-cache,must-revalidate");
@@ -27,6 +28,7 @@ header("Content-Type:application/json;charset=utf-8");
     staff_star_sign   星座
     online_status     在线状态（0签出 1签入）
     staff_subsidy     本周补助
+    exp_balance       办公经费余额
     join_date         加入时间
     
 
@@ -52,7 +54,6 @@ while ($current_day < time()) {
   $subsidy_day[] = date('Y-m-d', $current_day);
   $current_day += 60*60*24;
 }
-// var_dump($subsidy_day);
 
 // 循环取得员工记录
 foreach($rows as $row) {
@@ -86,6 +87,9 @@ foreach($rows as $row) {
   $staff_daily_signs = array();
   // 员工本周补助初始值
   $staff_subsidy = 0;
+  // 员工签到类型初期值
+  $sign_type = '000000';
+
   // 循环取得的员工考勤记录
   foreach($sign_rows as $sign_row) {
     $sign_type = $sign_row['sign_type'];
@@ -126,6 +130,14 @@ foreach($rows as $row) {
   }
   
   $staff_row['staff_subsidy'] =  $staff_subsidy;                              // 本周补助
+  
+  // 办公经费余额初期值
+  $staff_row['exp_balance'] = '00';
+  // 取得指定员工最后一次经费变动记录
+  $last_log = get_staff_last_expense_log($row['staff_id']);
+  if ($last_log)
+    $staff_row['exp_balance'] = str_pad($last_log['exp_balance'], 2, '0', STR_PAD_LEFT);
+    
   $staff_rows[] = $staff_row;
 }
 

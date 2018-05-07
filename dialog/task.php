@@ -12,9 +12,9 @@ if (!isset($_GET["id"])) {
   $task_id = '';                                  // 任务ID
   $task_name = '';                                // 任务
   $task_intro = '';                               // 任务内容
-  $respo_id = '';                                 // 责任人ID
+  $respo_id = '0';                                // 责任人ID
   $respo_name = '';                               // 责任人
-  $check_id = '';                                 // 监管人ID
+  $check_id = '0';                                // 监管人ID
   $check_name = '';                               // 监管人
 
   $task_level = 0;                                // 任务等级
@@ -56,9 +56,9 @@ $staff_id = $_SESSION['staff_id'];
 $staff_name = $_SESSION['staff_name'];
 $staff_rows = get_staff_list();
 $staff_list = get_staff_list_select($staff_id, $staff_rows);
-$blank_array = array('0' => '请选择');
-$respo_option = get_select_option(array_merge($blank_array, $staff_list), $respo_id);
-$check_option = get_select_option(array_merge($blank_array, $staff_list), $check_id);
+$staff_list['0'] = '请选择员工';
+$respo_option = get_select_option($staff_list, $respo_id);
+$check_option = get_select_option($staff_list, $check_id);
 
 // 对外公开选项
 $public_list = array('1'=>'公开', '0'=>'私人');
