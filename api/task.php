@@ -63,16 +63,22 @@ $staff_id = $_SESSION['staff_id'];
 $staff_name = $_SESSION['staff_name'];
 
 // 责任人处理
-$respo_id = '';
-$respo_name = '';
-if ($respo_name != '请选择')
+if ($respo_name == '请选择') {
+  $respo_name = '';
+} else if ($respo_id == $staff_id) {
+  $respo_name = $staff_name;
+} else {
   list($respo_cd, $respo_name) = explode(" ", $respo_name);
+}
 
 // 监管人处理
-$check_id = '';
-$check_name = '';
-if ($check_name != '请选择')
+if ($check_name == '请选择') {
+  $check_name = '';
+} else if ($check_id == $staff_id) {
+  $check_name = $staff_name;
+} else {
   list($check_cd, $check_name) = explode(" ", $check_name);
+}
 
 $data = array();
 $data['task_id'] = $task_id;                              // 任务ID

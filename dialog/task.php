@@ -6,6 +6,9 @@ require_once '../db/staff_main.php';
 // 禁止游客访问
 exit_guest();
 
+$staff_id = $_SESSION['staff_id'];
+$staff_name = $_SESSION['staff_name'];
+
 // 未设置任务ID(默认添加)
 if (!isset($_GET["id"])) {
 
@@ -13,15 +16,19 @@ if (!isset($_GET["id"])) {
   $task_name = '';                                // 任务
   $task_intro = '';                               // 任务内容
   $respo_id = '0';                                // 责任人ID
-  $respo_name = '';                               // 责任人
-  $check_id = '0';                                // 监管人ID
-  $check_name = '';                               // 监管人
+  $check_id = $staff_id;                          // 监管人ID
 
-  $task_level = 0;                                // 任务等级
+  $task_level = 2;                                // 任务等级
   $task_value = 0;                                // 任务价值
   $task_perc = 0;                                 // 任务进度
   $task_status = 3;                               // 任务状态
-  $limit_time = date('Y-m-d') . ' 18:00:00';      // 任务期限
+  // 本周五
+  $current_friday = strtotime('Sunday -2 day', strtotime(date('Y-m-d')));
+  // 距离这周五不足两天半，则下周五
+  if (($current_friday - time()) < 60*60*60)
+    $current_friday += 60*60*24*7;
+  // 默认任务期限（这周五或下周五）
+  $limit_time = date('Y-m-d', $current_friday) . ' 18:00:00';
   $is_public = 1;                                 // 是否公开
 
 } else {
@@ -36,9 +43,7 @@ if (!isset($_GET["id"])) {
   $task_name = $task['task_name'];                // 任务
   $task_intro = $task['task_intro'];              // 任务内容
   $respo_id = $task['respo_id'];                  // 责任人ID
-  $respo_name = $task['respo_name'];              // 责任人
   $check_id = $task['check_id'];                  // 监管人ID
-  $check_name = $task['check_name'];              // 监管人
 
   $task_level = $task['task_level'];              // 任务等级
   $task_value = $task['task_value'];              // 任务价值
@@ -52,8 +57,6 @@ if (!isset($_GET["id"])) {
 }
 
 // 员工选项
-$staff_id = $_SESSION['staff_id'];
-$staff_name = $_SESSION['staff_name'];
 $staff_rows = get_staff_list();
 $staff_list = get_staff_list_select($staff_id, $staff_rows);
 $staff_list['0'] = '请选择员工';

@@ -57,14 +57,19 @@ function get_staff_list()
 //======================================
 function ins_staff($data)
 {
+  // 更新时间戳
+  $data['utime'] = time();
+  // 创建时间
+  $data['ctime'] = date('Y-m-d H:i:s');
+
   $db = new DB_WWW();
 
   $sql = $db->sqlInsert("staff_main", $data);
   $q_id = $db->query($sql);
 
   if ($q_id == 0)
-    return 0;
-  return $db->insertID();
+    return false;
+  return true;
 }
 
 //======================================
@@ -75,6 +80,9 @@ function ins_staff($data)
 //======================================
 function upd_staff($data, $staff_id)
 {
+  // 更新时间戳
+  $data['utime'] = time();
+
   $db = new DB_WWW();
 
   $where = "staff_id = '{$staff_id}'";
