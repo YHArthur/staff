@@ -40,4 +40,4 @@ CREATE TABLE `task` (
   `utime` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
   `ctime` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`task_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='任务一览';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='任务一览';
