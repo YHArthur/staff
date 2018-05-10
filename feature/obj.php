@@ -47,7 +47,7 @@ $table->add_javascript =  <<<EOF
               title: '添加目标',
               shadeClose: true,
               shade: 0.8,
-              area: ['800px', '850px'],
+              area: ['800px', '750px'],
               content: 'dialog/obj.php'
           });
       });
@@ -133,7 +133,7 @@ $table->add_javascript =  <<<EOF
               maxmin: true,
               shadeClose: true,
               shade: 0.8,
-              area: ['800px', '850px'],
+              area: ['800px', '750px'],
               content: 'dialog/obj.php?id=' + row.obj_id
           });
         }

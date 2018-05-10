@@ -34,16 +34,40 @@ function chk_task_id_exist($task_id)
 }
 
 //======================================
-// 函数: 取得任务总数
-// 参数: 无
-// 返回: 任务总数
+// 函数: 取得员工相关任务总数
+// 参数: $staff_id      员工ID
+// 参数: $task_type     任务类型（1:创建,2:责任,4:监督,5:创建+监督,7:所有）
+// 参数: $public_type   公开类型（1:私人,2:公开,3:所有）
+// 返回: 记录总数
 //======================================
-function get_task_total()
+function get_staff_task_total($staff_id, $task_type = 7, $public_type = 2)
 {
   $db = new DB_WWW();
-  $time_now = date('Y-m-d H:i:s');
 
-  $sql = "SELECT COUNT(task_id) AS id_total FROM task WHERE is_public = 1 AND is_void = 0";
+  $tmp_level = intval($task_type);
+  $tmp_public = intval($public_type) - 1;
+  $type_ary = array();
+
+  $sql = "SELECT COUNT(task_id) AS id_total FROM task ";
+  $sql .= " WHERE is_void = 0";
+  if ($tmp_level >= 4) {
+    $tmp_level -= 4;
+    $type_ary[] = "check_id = '{$staff_id}'";
+  }
+  if ($tmp_level >= 2) {
+    $tmp_level -= 2;
+    $type_ary[] = "respo_id = '{$staff_id}'";
+  }
+  if ($tmp_level >= 1) {
+    $tmp_level -= 1;
+    $type_ary[] = "owner_id = '{$staff_id}'";
+  }
+  if ($task_type > 0)
+    $sql .= " AND (" . join(" OR ", $type_ary) . ")";
+  
+  if ($tmp_public < 2)
+    $sql .= " AND is_public = {$tmp_public}";
+  
   $total = $db->getField($sql, 'id_total');
   if ($total)
     return $total;
@@ -51,18 +75,41 @@ function get_task_total()
 }
 
 //======================================
-// 函数: 取得任务列表
-// 参数: 无
+// 函数: 取得员工相关任务列表
+// 参数: $staff_id      员工ID
+// 参数: $task_type     任务类型（1:创建,2:责任,4:监督,5:创建+监督,7:所有）
+// 参数: $public_type   公开类型（1:私人,2:公开,3:所有）
 // 参数: $limit         记录条数
 // 参数: $offset        记录偏移量
-// 返回: 任务列表明细
+// 返回: 记录列表
 //======================================
-function get_task_list($limit, $offset)
+function get_staff_task_list($staff_id, $task_type = 7, $public_type = 2, $limit, $offset)
 {
   $db = new DB_WWW();
-  $time_now = date('Y-m-d H:i:s');
 
-  $sql = "SELECT * FROM task WHERE is_public = 1 AND is_void = 0";
+  $tmp_level = intval($task_type);
+  $tmp_public = intval($public_type) - 1;
+  $type_ary = array();
+  
+  $sql = "SELECT * FROM task";
+  $sql .= " WHERE is_void = 0";
+  if ($tmp_level >= 4) {
+    $tmp_level -= 4;
+    $type_ary[] = "check_id = '{$staff_id}'";
+  }
+  if ($tmp_level >= 2) {
+    $tmp_level -= 2;
+    $type_ary[] = "respo_id = '{$staff_id}'";
+  }
+  if ($tmp_level >= 1) {
+    $tmp_level -= 1;
+    $type_ary[] = "owner_id = '{$staff_id}'";
+  }
+  if ($task_type > 0)
+    $sql .= " AND (" . join(" OR ", $type_ary) . ")";
+  
+  if ($tmp_public < 2)
+    $sql .= " AND is_public = {$tmp_public}";
   $sql .= " ORDER BY task_status DESC, ctime";
   $sql .= " limit {$offset},{$limit}";
 

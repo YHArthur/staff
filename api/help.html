@@ -106,24 +106,32 @@
           <h2><a href='http://www.fnying.com/staff/api/task_list.php' target='api'>http://www.fnying.com/staff/api/task_list.php</a></h2>
           <pre>
             <b>GET参数</b>
-              limit     （记录条数，可选）默认10 最大100
-              offset    （记录偏移量，可选）默认0 与limit参数一起分页使用。如设置 offset=20&limit=10 取第21-30条记录
-              
+              staff_id      员工ID
+              task_type     任务类型（1:创建,2:责任,4:监督,5:创建+监督,7:所有）默认7
+              public_type   公开类型（1:私人,2:公开,3:所有）默认2
+              limit         （记录条数，可选）默认10 最大100
+              offset        （记录偏移量，可选）默认0 与limit参数一起分页使用。如设置 offset=20&limit=10 取第21-30条记录
+
             <b>返回</b>
               total     总记录件数
               rows      记录数组
                 task_id         任务ID
                 task_name       任务
                 task_intro      任务内容
+                owner_id        创建人ID
+                owner_name      创建人
+                respo_id        责任人ID
                 respo_name      责任人
+                check_id        监督人ID
                 check_name      监督人
                 task_level      任务等级
                 task_value      任务价值
                 task_perc       任务进度
                 task_status     任务状态
                 limit_time      任务期限
+                utime           更新时间
                 ctime           创建时间
-                
+
             <b>说明</b>
               本人相关任务一览
 
