@@ -1,16 +1,10 @@
-// 禁止在微信以外的浏览器里打开
-window.onload = function(){
-    if(!IsWeiXin()){
-        window.location.href="http://www.fnying.com/staff/forbiden.php?code=2";
-    }
-}
-
+// 员工总数
 var staff_count = 0;
+// 当前位置
 var staff_pos = 0;
 
 // 展示员工信息
 function view_staff_info(my_id) {
-  
     var api_url = 'staff_info_list.php';
     CallApi(api_url, {}, function (response) {
         var staff_id, edit_url, staff_sex, staff_status, staff_subsidy, exp_balance;
@@ -19,7 +13,7 @@ function view_staff_info(my_id) {
 
             rows.forEach(function(row, index, array) {
                 staff_id = row.staff_id;
-                //得到当前员工位置
+                // 判断是否当前员工
                 if(staff_id != my_id){
                     staff_count ++;
                     edit_url = "javascript:void(0)";
@@ -105,7 +99,7 @@ function view_staff_info(my_id) {
         });
 
   }, function (response) {
-      console.log(response.errmsg);
+      AlertDialog(response.errmsg);
   });
 }
  

@@ -1,7 +1,7 @@
 // 禁止在微信以外的浏览器里打开
 window.onload = function(){
     if(!IsWeiXin()){
-        window.location.href="http://www.fnying.com/staff/forbiden.php?code=2";
+        window.location.href="http://www.fnying.com/staff/pc_forbiden.php?code=2";
     }
 }
   

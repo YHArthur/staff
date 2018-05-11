@@ -1,11 +1,3 @@
-<?php
-// require_once '../inc/common.php';
-// require_once('../db/staff_weixin.php');
-
-// 需要员工登录
-// need_staff_login();
-?>
-
 <!DOCTYPE html>
 <html>
 <head>

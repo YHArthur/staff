@@ -41,7 +41,9 @@ need_staff_login();
   <div class="weui-cells__title">历史信息<label id="sign_history"></label></div>
   <div id="sign_rows" class="weui-cells"></div>
 
-  <div class="weui-msg__extra-area">©2018 风赢科技</div>
+  <div class="weui-footer weui-footer_fixed-bottom">
+    <p class="weui-footer__text">©2018 风赢科技</p>
+  </div>
 
   <script src="https://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
   <script src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
