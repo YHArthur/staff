@@ -129,7 +129,7 @@
           </pre>
 
           <h3 id="task_list">任务一览</h3>
-          <h2><a href='http://www.fnying.com/staff/api/task_list.php' target='api'>http://www.fnying.com/staff/api/task_list.php</a></h2>
+          <h2><a href='http://www.fnying.com/staff/api/task_list.php?staff_id=640C3986-5EC2-EABA-59C1-B9C6EC4FF610' target='api'>http://www.fnying.com/staff/api/task_list.php</a></h2>
           <pre>
             <b>GET参数</b>
               staff_id      员工ID
@@ -221,6 +221,27 @@
 
           </pre>
 
+          <h3 id="get_current_subsidy">获得员工本周补贴明细</h3>
+          <h2><a href='http://www.fnying.com/staff/api/get_current_subsidy.php?staff_id=640C3986-5EC2-EABA-59C1-B9C6EC4FF610' target='api'>http://www.fnying.com/staff/api/get_current_subsidy.php</a></h2>
+          <pre>
+            <b>参数</b>
+              staff_id          员工ID
+              
+            <b>返回</b>
+              total     总记录件数
+              sum       合计补助金额
+              rows      记录数组
+                sign_date         考勤日期
+                time_begin        签到时间
+                time_end          签出时间
+                commute_subsidy   交通补助金额
+                lunch_subsidy     午餐补助金额
+                dinner_subsidy    晚餐补助金额
+                
+            <b>说明</b>
+
+          </pre>
+
         </div>
 
       </div>
@@ -240,6 +261,7 @@
             <li><a href="#task_add"><b class="text-success">任务创建</b></a></li>
             <li><a href="#office_sign"><b class="text-success">办公室签到</b></a></li>
             <li><a href="#office_sign_log"><b class="text-success">办公室签到记录</b></a></li>
+            <li><a href="#get_current_subsidy"><b class="text-success">获得员工本周补贴明细</b></a></li>
           </ul>
         </nav>
       </div>

@@ -31,7 +31,7 @@ function view_staff_info(my_id) {
                 }
                 
                 // 判断员工在线情况
-                if (row.staff_status == 1) {
+                if (row.online_status == 1) {
                     staff_status = "img/online.png";
                 } else {
                     staff_status = "img/outline.png";
@@ -51,36 +51,37 @@ function view_staff_info(my_id) {
                                 <img src="'+ row.staff_avata +'" id="image"  class="avata" name="image"/>\
                             </form>\
                             <div class="page__hd" >\
-                                <h1 class="page__title staff-name" >'+ row.staff_name + '(' + row.nick_name + ') <a target=_blank href="' + edit_url + '"><img src="' + staff_sex + '" class = "sex"></a></h1>\
-                                <h3 class="page__desc staff-number">'+ row.staff_position + ' ' +'<img src="' + staff_status + '" class = "status">' + ' ' + row.staff_cd + '</h3>\
+                                <h2 class="page__title" >'+ row.staff_name + '(' + row.nick_name + ') <a target=_blank href="' + edit_url + '"><img src="' + staff_sex + '" class = "sex"></a></h2>\
+                                <h3 class="page__desc">'+ row.staff_position + ' ' +'<img src="' + staff_status + '" class = "status">' + ' ' + row.staff_cd + '</h3>\
                             </div>\
                         </div>\
                     </div>\
                     <div class="weui-cells__title">' + row.staff_memo + '</div>\
-                    <div class="weui-cells__title">个人信息</div>\
                     <div class="weui-cell">\
-                        <div class="weui-cell__hd bt"><label class="weui-label">年龄：</label></div>\
-                        <div class="weui-cell__bd bc">'+ row.staff_age + '</div>\
+                        <div class="weui-cell__hd"><label class="weui-label">年龄：</label></div>\
+                        <div class="weui-cell__bd">'+ row.staff_age + '</div>\
                     </div>\
                     <div class="weui-cell">\
-                        <div class="weui-cell__hd bt"><label class="weui-label">星座：</label></div>\
-                        <div class="weui-cell__bd bc">'+ row.staff_star_sign +'</div>\
+                        <div class="weui-cell__hd"><label class="weui-label">星座：</label></div>\
+                        <div class="weui-cell__bd">'+ row.staff_star_sign +'</div>\
                     </div>\
+                    <a class="weui-cell weui-cell_access" href="https://baike.baidu.com/item/' + row.staff_mbti + '">\
+                        <div class="weui-cell__hd"><label class="weui-label">性格：</label></div>\
+                        <div class="weui-cell__bd">' + row.staff_mbti + '</div>\
+                        <div class="weui-cell__ft"></div>\
+                    </a>\
                     <div class="weui-cell">\
-                        <div class="weui-cell__hd bt"><label class="weui-label">性格：</label></div>\
-                        <div class="weui-cell__bd bc"><a target="_blank" href="https://baike.baidu.com/item/' + row.staff_mbti + '">' + row.staff_mbti + '</a></div>\
+                        <div class="weui-cell__hd"><label class="weui-label">加入日期：</label></div>\
+                        <div class="weui-cell__bd">'+ row.join_date + '</div>\
                     </div>\
+                    <a class="weui-cell weui-cell_access" href="current_subsidy.php?staff_id=' + staff_id + '">\
+                        <div class="weui-cell__hd"><label class="weui-label">本周补贴：</label></div>\
+                        <div class="weui-cell__bd">' + staff_subsidy + '</div>\
+                        <div class="weui-cell__ft"></div>\
+                    </a>\
                     <div class="weui-cell">\
-                        <div class="weui-cell__hd bt"><label class="weui-label">加入日期：</label></div>\
-                        <div class="weui-cell__bd bc">'+ row.join_date + '</div>\
-                    </div>\
-                    <div class="weui-cell">\
-                        <div class="weui-cell__hd bt"><label class="weui-label">本周补贴：</label></div>\
-                        <div class="weui-cell__bd bc"><a target="_blank" href=current_subsidy.php?staff_id="' + staff_id + '">' + staff_subsidy + '</a></div>\
-                    </div>\
-                    <div class="weui-cell">\
-                        <div class="weui-cell__hd bt"><label class="weui-label">经费余额：</label></div>\
-                        <div class="weui-cell__bd bc">' + exp_balance + '</div>\
+                        <div class="weui-cell__hd"><label class="weui-label">经费余额：</label></div>\
+                        <div class="weui-cell__bd">' + exp_balance + '</div>\
                     </div>\
                 </div>\
                 ';
