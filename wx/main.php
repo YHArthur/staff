@@ -4,8 +4,6 @@ require_once('../db/staff_weixin.php');
 
 // 需要员工登录
 need_staff_login();
-
-
 ?>
 
 <!DOCTYPE html>
@@ -16,34 +14,32 @@ need_staff_login();
   <title>员工个人情报-风赢科技</title>
   <link rel="stylesheet" href="css/weui.css">
   <link rel="stylesheet" href="css/index.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/css/swiper.min.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/swiper-4.2.2.min.css">
   
 </head>
 <body>
 
-  <div class="page__hd">
-    <h1 class="page__title" id="name"><?php echo $_SESSION['staff_name'] ?></h1>
-    <p class="page__desc">个人简介</p>
+  <div class='swiper-container'>
+      <div class='container swiper-wrapper' id="staff_info"></div>
+      <div class='swiper-pagination'></div>
   </div>
-  
 
-
-
-
-
-
-
-  <div class="weui-msg__extra-area">©2018 上海风赢网络科技有限公司</div>
-
+  <div class="weui-msg__extra-area">©2018 风赢科技</div>
 
   <script src="https://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
   <script src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
   <script src="js/common.js"></script>
   <script src="js/main.js"></script>
   <script src="js/wx.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/js/swiper.min.js"></script>
+  <script src="js/swiper-4.2.2.min.js"></script>
+  <script>
   
-
+  $(function () {
+      // 展示员工信息
+      view_staff_info('<?php echo $_SESSION['staff_id'];?>');
+  })
+  </script>
 
 </body>
 </html>
