@@ -49,7 +49,7 @@ if ($rec) {
     <p class="page__desc"><?php echo $page_desc ?></p>
   </div>
 
-  <div class="weui-msg__extra-area">©2018 上海风赢网络科技有限公司</div>
+  <div class="weui-msg__extra-area">©2018 风赢科技</div>
 
 </body>
 </html>

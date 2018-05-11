@@ -89,6 +89,6 @@ function staff_sign_log(limit, offset) {
           });
         }
     }, function (response) {
-        console.log(response.errmsg)
+        AlertDialog(response.errmsg);
     });
 }
