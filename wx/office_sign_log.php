@@ -1,6 +1,6 @@
 <?php
-require_once '../inc/common.php';
-require_once('../db/staff_weixin.php');
+// require_once '../inc/common.php';
+// require_once('../db/staff_weixin.php');
 
 // 需要员工登录
 // need_staff_login();
@@ -23,10 +23,9 @@ require_once('../db/staff_weixin.php');
   </div>
 
   <div class="weui-cells__title">最新签到信息</div>
-  <div id="sign_rows" class="weui-cells">
-  </div>
+  <div id="sign_rows" class="weui-cells"></div>
 
-  <div class="weui-msg__extra-area">©2018 上海风赢网络科技有限公司</div>
+  <div class="weui-msg__extra-area">©2018 风赢科技</div>
 
   <script src="https://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
   <script src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
