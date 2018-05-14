@@ -41,6 +41,12 @@ need_staff_login();
           </div>
           <p class="weui-grid__label">个人情报</p>
       </a>
+      <a href="wx/task_list.php" class="weui-grid">
+          <div class="weui-grid__icon">
+              <i class="glyphicon glyphicon-list-alt"></i>
+          </div>
+          <p class="weui-grid__label">任务一览</p>
+      </a>      
       <a href="javascript:;" class="weui-grid">
           <div class="weui-grid__icon">
               <i class="glyphicon glyphicon-plus"></i>
@@ -50,7 +56,7 @@ need_staff_login();
   </div>
 
 
-  <div class="weui-msg__extra-area">©2018 上海风赢网络科技有限公司</div>
+  <div class="weui-msg__extra-area">©2018 风赢科技</div>
   <script src="https://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
   <script src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
   <script src="wx/js/common.js"></script>
