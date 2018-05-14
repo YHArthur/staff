@@ -91,9 +91,15 @@
             <b>GET参数</b>
               staff_avata       员工头像
               nick_name         昵称（英文名）
+              staff_position    员工职位
+              staff_sex         员工性别（0不明 1男 2女）
+              staff_mbti        员工性格（MBTI）
               staff_memo        员工个人简介
-              staff_mbti        员工性格
-              
+              staff_phone       员工手机
+              identity          身份证件号
+              birth_year        出生年份
+              birth_day         生日
+
             <b>返回</b>
               errcode = 0     请求成功
 
@@ -150,10 +156,10 @@
                 respo_name      责任人
                 check_id        监督人ID
                 check_name      监督人
-                task_level      任务等级
+                task_level      任务等级（0 可选 1 一般 2 重要 3 非常重要）
                 task_value      任务价值
                 task_perc       任务进度
-                task_status     任务状态
+                task_status     任务状态（0 废止 1 完成 2 执行 3 等待）
                 limit_time      任务期限
                 utime           更新时间
                 ctime           创建时间

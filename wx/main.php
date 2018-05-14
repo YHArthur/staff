@@ -21,8 +21,8 @@ need_staff_login();
 <body>
 
   <div class='swiper-container'>
-      <div class='container swiper-wrapper' id="staff_info"></div>
-      <div class='swiper-pagination'></div>
+    <div class='container swiper-wrapper' id="staff_info"></div>
+    <div class='swiper-pagination'></div>
   </div>
 
   <div class="weui-msg__extra-area">©2018 风赢科技</div>
