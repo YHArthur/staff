@@ -28,11 +28,9 @@ need_staff_login();
   <div class="weui-msg__extra-area">©2018 风赢科技</div>
 
   <script src="https://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
-  <script src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
   <script src="js/swiper-4.2.2.min.js"></script>
   <script src="js/common.js"></script>
   <script src="js/main.js"></script>
-  <script src="js/wx.js"></script>
   <script>
   
   $(function () {

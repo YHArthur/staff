@@ -58,10 +58,6 @@ function view_staff_info(my_id) {
                     </div>\
                     <div class="weui-cells__title">' + row.staff_memo + '</div>\
                     <div class="weui-cell">\
-                        <div class="weui-cell__hd"><label class="weui-label">年龄：</label></div>\
-                        <div class="weui-cell__bd">'+ row.staff_age + '</div>\
-                    </div>\
-                    <div class="weui-cell">\
                         <div class="weui-cell__hd"><label class="weui-label">星座：</label></div>\
                         <div class="weui-cell__bd">'+ row.staff_star_sign +'</div>\
                     </div>\
