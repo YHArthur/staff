@@ -6,7 +6,7 @@
 //======================================
 function get_task($task_id)
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
 
   $sql = "SELECT * FROM task WHERE task_id = '{$task_id}'";
   $db->query($sql);
@@ -23,7 +23,7 @@ function get_task($task_id)
 //======================================
 function chk_task_id_exist($task_id)
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
 
   $sql = "SELECT task_id FROM task WHERE task_id = '{$task_id}'";
   $db->query($sql);
@@ -42,7 +42,7 @@ function chk_task_id_exist($task_id)
 //======================================
 function get_staff_task_total($staff_id, $task_type = 7, $public_type = 2)
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
 
   $tmp_level = intval($task_type);
   $tmp_public = intval($public_type) - 1;
@@ -85,7 +85,7 @@ function get_staff_task_total($staff_id, $task_type = 7, $public_type = 2)
 //======================================
 function get_staff_task_list($staff_id, $task_type = 7, $public_type = 2, $limit, $offset)
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
 
   $tmp_level = intval($task_type);
   $tmp_public = intval($public_type) - 1;
@@ -126,7 +126,7 @@ function get_staff_task_list($staff_id, $task_type = 7, $public_type = 2, $limit
 //======================================
 function ins_task($data)
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
   $data['is_void'] = 0;
   $data['utime'] = time();
   $data['ctime'] = date('Y-m-d H:i:s');
@@ -148,7 +148,7 @@ function ins_task($data)
 //======================================
 function upd_task($data, $task_id)
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
 
   $data['utime'] = time();
   $where = "task_id = '{$task_id}'";

@@ -6,7 +6,7 @@
 //======================================
 function get_staff_office_sign_total($staff_id = '')
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
 
   $sql = "SELECT COUNT(log_id) AS log_total FROM staff_office_sign";
   $sql .= " WHERE is_void = 0";
@@ -28,7 +28,7 @@ function get_staff_office_sign_total($staff_id = '')
 //======================================
 function get_staff_office_sign_list($limit, $offset, $staff_id = '')
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
 
   $sql = " SELECT * FROM staff_office_sign";
   $sql .= " WHERE is_void = 0";
@@ -50,7 +50,7 @@ function get_staff_office_sign_list($limit, $offset, $staff_id = '')
 //======================================
 function get_staff_office_sign_from_time_list($staff_id, $from_time)
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
 
   $sql = " SELECT * FROM staff_office_sign";
   $sql .= " WHERE is_void = 0";
@@ -75,7 +75,7 @@ function ins_staff_office_sign($data)
   $data['utime'] = time();
   // 创建时间
   $data['ctime'] = date('Y-m-d H:i:s');
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
 
   $sql = $db->sqlInsert("staff_office_sign", $data);
   $q_id = $db->query($sql);

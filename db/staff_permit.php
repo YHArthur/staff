@@ -6,7 +6,7 @@
 //======================================
 function get_staff_permit_list($staff_id)
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
   $data_now = date('Y-m-d H:i:s');
   
   $sql = "SELECT pm_id FROM staff_permit";
@@ -32,7 +32,7 @@ function get_staff_permit_list($staff_id)
 //======================================
 function get_staff_permit($staff_id, $pm_id)
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
 
   $sql = "SELECT * FROM staff_permit WHERE staff_id = '{$staff_id}' AND pm_id = {$pm_id}";
   $db->query($sql);
@@ -48,7 +48,7 @@ function get_staff_permit($staff_id, $pm_id)
 //======================================
 function ins_staff_permit($data)
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
   $data['utime'] = time();
   $data['ctime'] = date('Y-m-d H:i:s');
   
@@ -69,7 +69,7 @@ function ins_staff_permit($data)
 //======================================
 function upd_staff_permit($data, $staff_id, $pm_id)
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
   $data['utime'] = time();
   
   $where = "staff_id = '{$staff_id}' AND pm_id = {$pm_id}";

@@ -8,7 +8,7 @@
 //======================================
 function chk_staff_expense_log_exist($exp_id, $exp_stamp)
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
 
   $sql = "SELECT hash_id FROM staff_expense_log WHERE exp_id = '{$exp_id}' AND exp_stamp = {$exp_stamp}";
   $db->query($sql);
@@ -25,7 +25,7 @@ function chk_staff_expense_log_exist($exp_id, $exp_stamp)
 //======================================
 function get_staff_last_expense_log($staff_id)
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
 
   $sql = "SELECT * FROM staff_expense_log";
   $sql .= " WHERE staff_id = '{$staff_id}'";
@@ -43,7 +43,7 @@ function get_staff_last_expense_log($staff_id)
 //======================================
 function get_staff_expense_log_total($staff_id)
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
 
   $sql = "SELECT COUNT(hash_id) AS id_total FROM staff_expense_log WHERE staff_id = '{$staff_id}'";
   $total = $db->getField($sql, 'id_total');
@@ -61,7 +61,7 @@ function get_staff_expense_log_total($staff_id)
 //======================================
 function get_staff_expense_log_list($staff_id, $limit, $offset)
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
 
   $sql = "SELECT * FROM staff_expense_log";
   $sql .= " WHERE staff_id = '{$staff_id}'";
@@ -81,7 +81,7 @@ function get_staff_expense_log_list($staff_id, $limit, $offset)
 //======================================
 function ins_staff_expense_log($data)
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
   $hash_str = $data['prvs_hash'] . $data['staff_id'] . $data['exp_id'] . $data['exp_amount'] . $data['exp_stamp'];
   $data['hash_id'] = hash('sha256', $hash_str);
   $sql = $db->sqlInsert("staff_expense_log", $data);

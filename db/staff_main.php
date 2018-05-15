@@ -6,7 +6,7 @@
 //======================================
 function get_staff($staff_id)
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
 
   $sql = "SELECT * FROM staff_main WHERE staff_id = '{$staff_id}'";
   $db->query($sql);
@@ -21,7 +21,7 @@ function get_staff($staff_id)
 //======================================
 function get_staff_total()
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
 
   $sql = "SELECT COUNT(staff_id) AS log_total FROM staff_main";
   $sql .= " WHERE is_void = 0";
@@ -39,7 +39,7 @@ function get_staff_total()
 //======================================
 function get_staff_list()
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
 
   $sql = "SELECT * FROM staff_main WHERE is_void = 0";
   $sql .= " ORDER BY staff_cd";
@@ -62,7 +62,7 @@ function ins_staff($data)
   // 创建时间
   $data['ctime'] = date('Y-m-d H:i:s');
 
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
 
   $sql = $db->sqlInsert("staff_main", $data);
   $q_id = $db->query($sql);
@@ -83,7 +83,7 @@ function upd_staff($data, $staff_id)
   // 更新时间戳
   $data['utime'] = time();
 
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
 
   $where = "staff_id = '{$staff_id}'";
   $sql = $db->sqlUpdate("staff_main", $data, $where);

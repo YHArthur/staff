@@ -7,7 +7,7 @@
 //======================================
 function get_staff_weixin($unionid)
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
 
   $sql = "SELECT * FROM staff_weixin WHERE unionid = '{$unionid}'";
   $db->query($sql);
@@ -23,7 +23,7 @@ function get_staff_weixin($unionid)
 //======================================
 function exist_staff_weixin($unionid)
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
 
   $sql = "SELECT unionid FROM staff_weixin WHERE unionid = '{$unionid}'";
   $db->query($sql);
@@ -47,7 +47,7 @@ function ins_staff_weixin($data)
   // 创建时间
   $data['ctime'] = date('Y-m-d H:i:s');
 
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
 
   $sql = $db->sqlInsert("staff_weixin", $data);
   $q_id = $db->query($sql);
@@ -69,7 +69,7 @@ function upd_staff_weixin($data, $unionid)
   // 更新时间
   $data['utime'] = time();
 
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
 
   $where = "unionid = '{$unionid}'";
   $sql = $db->sqlUpdate("staff_weixin", $data, $where);

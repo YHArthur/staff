@@ -6,7 +6,7 @@
 //======================================
 function get_staff_expense($exp_id)
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
 
   $sql = "SELECT * FROM staff_expense WHERE exp_id = '{$exp_id}'";
   $db->query($sql);
@@ -21,7 +21,7 @@ function get_staff_expense($exp_id)
 //======================================
 function get_pending_staff_expense()
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
 
   $sql = "SELECT * FROM staff_expense";
   $sql .= " WHERE is_void = 0 AND now_count < max_count";
@@ -40,7 +40,7 @@ function get_pending_staff_expense()
 //======================================
 function ins_staff_expense($data)
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
   $data['utime'] = time();
   $data['ctime'] = date('Y-m-d H:i:s');
 
@@ -61,7 +61,7 @@ function ins_staff_expense($data)
 //======================================
 function upd_staff_expense($data, $exp_id)
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
 
   $data['utime'] = time();
   $where = "exp_id = '{$exp_id}'";

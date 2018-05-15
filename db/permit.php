@@ -6,7 +6,7 @@
 //======================================
 function get_permit_all()
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
 
   $sql = "SELECT * FROM permit WHERE LEFT(pm_id, 1) = '" . Config::SYSTEM_ID . "' ORDER BY pm_id";
   $db->query($sql);

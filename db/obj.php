@@ -6,7 +6,7 @@
 //======================================
 function get_obj($obj_id)
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
 
   $sql = "SELECT * FROM obj WHERE obj_id = '{$obj_id}'";
   $db->query($sql);
@@ -23,7 +23,7 @@ function get_obj($obj_id)
 //======================================
 function chk_obj_id_exist($obj_id)
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
 
   $sql = "SELECT obj_id FROM obj WHERE obj_id = '{$obj_id}'";
   $db->query($sql);
@@ -40,7 +40,7 @@ function chk_obj_id_exist($obj_id)
 //======================================
 function get_obj_total()
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
   $time_now = date('Y-m-d H:i:s');
 
   $sql = "SELECT COUNT(obj_id) AS id_total FROM obj WHERE is_public = 1 AND is_void = 0";
@@ -59,7 +59,7 @@ function get_obj_total()
 //======================================
 function get_obj_list($limit, $offset)
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
   $time_now = date('Y-m-d H:i:s');
 
   $sql = "SELECT * FROM obj WHERE is_public = 1 AND is_void = 0";
@@ -79,7 +79,7 @@ function get_obj_list($limit, $offset)
 //======================================
 function ins_obj($data)
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
   $data['is_void'] = 0;
   $data['utime'] = time();
   $data['ctime'] = date('Y-m-d H:i:s');
@@ -101,7 +101,7 @@ function ins_obj($data)
 //======================================
 function upd_obj($data, $obj_id)
 {
-  $db = new DB_WWW();
+  $db = new DB_SATFF();
 
   $data['utime'] = time();
   $where = "obj_id = '{$obj_id}'";
