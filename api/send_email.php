@@ -24,7 +24,7 @@ $args = array('title', 'body');
 chk_empty_args('GET', $args);
 
 // 邮件标题
-$title = get_arg_str('GET', 'title');
+$title = get_arg_str('GET', 'title', 512);
 // 邮件内容
 $body = get_arg_str('GET', 'body', 2048);
 

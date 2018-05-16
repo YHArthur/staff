@@ -29,7 +29,7 @@ $table->add_javascript =  <<<EOF
               title: '批量发送邮件',
               shadeClose: true,
               shade: 0.8,
-              area: ['800px', '450px'],
+              area: ['800px', '550px'],
               content: 'dialog/send_email.php'
           });
       });
