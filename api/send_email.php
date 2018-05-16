@@ -20,26 +20,37 @@ GET参数
 
 php_begin();
 
-$args = array('body');
+$args = array('title', 'body');
 chk_empty_args('GET', $args);
 
-//获取内容
-$body = get_arg_str('GET', 'body', 1024);    //邮件内容
+// 获取内容
 $title = get_arg_str('GET', 'title');    //邮件主题
-$name = 'boss';
-$miss = array();
-//获取邮箱列表
-$email_list = get_email_list();
-foreach($email_list as $email){
-  $email = $email['email'];
+$body = get_arg_str('GET', 'body', 1024);    //邮件内容
+
+$name = '';
+$success_count = 0;
+$failure_address = array();
+
+// 取得有效订阅的所有邮件地址
+$rows = get_valid_email_all();
+
+foreach($rows as $row){
+  $email = $row['email'];
+  // 发送Email
   $ret = send_email($name, $email, $title, $body);
   if (!$ret){
-    exit_error('110', 'Email地址确认邮件发送失败，请稍后再试');
-    $miss[] = $email;
+    $failure_address[] = $email;
     continue;
+  } else {
+    $success_count++;
   }
 }
-$msg = count($miss) + "封邮件发送失败";
-exit_ok($msg);
 
+$msg = '成功发送' . $success_count . '封邮件。';
+// 有发送失败的情况
+if (count($failure_address) > 0) {
+  $msg .=  join(",",$failure_address) . '地址发送失败';
+}
+
+exit_ok($msg);
 ?>
