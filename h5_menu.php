@@ -20,7 +20,7 @@ need_staff_login();
 
   <div class="page__hd">
       <h1 class="page__title"><?php echo $_SESSION['staff_name']?></h1>
-      <p class="page__desc">风赢科技员工管理平台</p>
+      <p class="page__desc"><a href="pc_menu.php">风赢科技员工管理平台</a></p>
   </div>
   <div class="weui-grids">
       <a href="../report/index.php" class="weui-grid">
