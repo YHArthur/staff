@@ -23,9 +23,10 @@ php_begin();
 $args = array('title', 'body');
 chk_empty_args('GET', $args);
 
-// 获取内容
-$title = get_arg_str('GET', 'title');    //邮件主题
-$body = get_arg_str('GET', 'body', 1024);    //邮件内容
+// 邮件标题
+$title = get_arg_str('GET', 'title');
+// 邮件内容
+$body = get_arg_str('GET', 'body', 2048);
 
 $name = '';
 $success_count = 0;
