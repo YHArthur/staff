@@ -20,9 +20,12 @@ GET参数
 
 php_begin();
 
+$args = array('body');
+chk_empty_args('GET', $args);
+
 //获取内容
-$body = $_GET['body'];        //邮件内容
-$title = $_GET['subject'];    //邮件主题
+$body = get_arg_str('GET', 'body', 1024);    //邮件内容
+$title = get_arg_str('GET', 'title');    //邮件主题
 $name = 'boss';
 $miss = array();
 //获取邮箱列表
@@ -36,13 +39,7 @@ foreach($email_list as $email){
     continue;
   }
 }
-
-$rtn_ary = array();
-$rtn_ary['errcode'] = '0';
-$rtn_ary['errmsg'] = '';
-$rtn_ary['rows'] = $miss;
-$rtn_str = json_encode($rtn_ary);
-php_end($rtn_str);
+$msg = count($miss) + "封邮件发送失败";
+exit_ok($msg);
 
 ?>
- 
