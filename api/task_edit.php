@@ -17,11 +17,10 @@ if (!isset($_SESSION['staff_id']))
 // 参数检查
 $args = array('task_id');
 chk_empty_args('GET', $args);
-
+$task_id =  get_arg_str('GET', 'task_id');
+$ret = "";
 // 更新数据数组
 $data = array();
-if(!empty($_GET['task_id']))
-  $data['task_id'] =  get_arg_str('GET', 'task_id');
 
 if(!empty($_GET['task_name']))
   $data['task_name'] = get_arg_str('GET', 'task_name',255);
@@ -53,11 +52,11 @@ if(!empty($_GET['limit_time']))
   $data['limit_time'] = get_arg_str('GET', 'limit_time');
 // print_r($data);
 // 更新员工信息
-if ($data['task_id'])
-   $ret = upd_task($data, $data['task_id']);
+if (count($data))
+   $ret = upd_task($data, $task_id);
 
 if (!$ret)
-  exit_error('110', '员工任务修改失败');
+  exit_error('110', '任务信息无修改');
 // 正常返回
 exit_ok('修改成功');
 
