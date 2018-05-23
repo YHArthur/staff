@@ -45,10 +45,11 @@ if(!empty($_GET['staff_phone']))
   $data['staff_phone'] = get_arg_str('GET', 'staff_phone');
 if(!empty($_GET['identity']))
   $data['identity'] = get_arg_str('GET', 'identity');
-if(!empty($_GET['birth_year']))
-  $data['birth_year'] = get_arg_str('GET', 'birth_year');
-if(!empty($_GET['birth_day']))
-  $data['birth_day'] = get_arg_str('GET', 'birth_day');
+if(!empty($_GET['birthday'])){
+  $birthday = get_arg_str('GET', 'birthday');
+  $data['birth_year'] = substr($birthday,0,4);
+  $data['birth_day']  = substr($birthday,5,2) .'.'. substr($birthday,8,2);
+}
 
 // 更新员工信息
 if (empty($data))
