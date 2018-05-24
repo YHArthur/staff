@@ -20,10 +20,9 @@ function task_info(){
   post_data = {"task_id":task_id};
   CallApi(api_url, post_data, function (response) {
     old = response.rows;
-    var j= '';
-    var nowtime =  Date.parse(new Date())/1000;
-    var later_end =Math.ceil((nowtime - old.ctime)/(24*60*60));
-    var later = "";
+    var fmt = limitTimeFormatter(old)
+    var star= '';
+
     if($('#task_level_l_l').length>0){
       $('#task_level_l_l').val(old.task_level);
     }
@@ -31,7 +30,7 @@ function task_info(){
       $('#task_status_l').val(old.task_status);
     }
     for(var i=0;i<old.task_level;i++){
-      j+='⭐';
+      star+='⭐';
     }
     if($('#task_status').length>0){
       switch(parseInt(old.task_status)){
@@ -42,7 +41,13 @@ function task_info(){
           $('#task_status').addClass('complete');
           break;
         case 2:
-          $('#task_status').addClass('executing');
+          var diff_day=CurrentStatus(old);
+          if(diff_day<0){
+            $('#task_status').addClass('delate');
+          }else{
+            $('#task_status').addClass('executing');
+          }
+          /*$('#task_status').addClass('executing');*/
           break;
         case 3:
           $('#task_status').addClass('wait');
@@ -63,7 +68,7 @@ function task_info(){
 
     //任务等级
     if($('#task_level').length>0){
-      $('#task_level').val(j);
+      $('#task_level').val(star);
     }else if($('#task_level_check').length>0){
       $('#task_level_check').val(old.task_level);
     }
@@ -118,7 +123,7 @@ function task_info(){
     $('#task_intro').val(old.task_intro.replace(/<[^>]+>/g,""));
     old['limit_time'] = old.limit_time.substr(5,5);
     old['task_intro'] = old.task_intro.replace(/<[^>]+>/g,"");
-    old['task_level'] = j;
+    old['task_level'] = star;
     old['ctime'] = old.ctime.substr(5,5);
     }, function (response) {
       AlertDialog(response.errmsg);
@@ -143,10 +148,17 @@ function get_info_change(){
     NEW[$(this).attr('name')] = $(this).text();
   });
 }
+$('#change').click(function(){
+  get_info_change();
+  task_edit(old,NEW);
+})
 
 //任务信息修改
 var post_data = {};
 $('#showTooltips').click(function(){
+  task_edit(old,NEW);
+})
+function task_edit(old,NEW){
   for(index in  NEW){
     if(old[index] != NEW[index]){
       post_data[index] = NEW[index]; 
@@ -160,4 +172,45 @@ $('#showTooltips').click(function(){
       console.log(response);
       AlertDialog(response.errmsg);
     });
-})
+}
+
+function limitTimeFormatter(row) {
+
+  var limit_time = new Date(row.limit_time.replace(/-/g, "/"));
+  var month = limit_time.getMonth() + 1;
+  var day = limit_time.getDate();
+  var fmt = month+'月'+day+'日';
+  if (row.task_status <= 1)
+    return fmt;
+
+  // 相差日期计算
+  var current_time = new Date();
+  var diff_day = parseInt((limit_time.getTime() - current_time.getTime()) / (1000 * 3600 * 24));
+  if (diff_day == 0) {
+    fmt += '【<span class="bg-warning">当天</span>】';
+    return fmt;
+  } else if (diff_day < 0) {
+    fmt += '【<span class="bg-danger">延迟 ';
+    diff_day *= -1;
+  } else {
+    fmt += '【<span>还剩 ';
+  }
+  if (diff_day <= 7) {
+    fmt += diff_day + ' 天</span>】';
+  } else if (diff_day <= 30) {
+    fmt += parseInt(diff_day / 7) + ' 周</span>】';
+  } else {
+    fmt += parseInt(diff_day / 30) + ' 个月</span>】';
+  }
+  return fmt;
+}
+
+function CurrentStatus(row) {
+
+  var limit_time = new Date(row.limit_time.replace(/-/g, "/"));
+  
+  // 相差日期计算
+  var current_time = new Date();
+  var diff_day = parseInt((limit_time.getTime() - current_time.getTime()) / (1000 * 3600 * 24));
+  return diff_day;
+}
