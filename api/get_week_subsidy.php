@@ -6,14 +6,16 @@ require_once 'subsidy.php';
 header("cache-control:no-cache,must-revalidate");
 header("Content-Type:application/json;charset=utf-8");
 /*
-========================== 获得员工本周补贴明细 ==========================
+========================== 获得员工周补贴明细 ==========================
 参数
   staff_id          员工ID
+  week              前几周（默认0）
   
 返回
-  total     总记录件数
-  sum       合计补助金额
-  rows      记录数组
+  week_begin        周开始日（月-日）
+  week_end          周结束日（月-日）
+  sum               合计补助金额
+  rows              记录数组
     sign_date         考勤日期
     time_begin        签到时间
     time_end          签出时间
@@ -32,23 +34,28 @@ chk_empty_args('GET', $args);
 
 // 提交参数整理
 $staff_id = get_arg_str('GET', 'staff_id');
+$week = get_arg_str('GET', 'week');
+
+$week = intval($week);
 
 // 初始化返回数组
 $rtn_rows = array();
 // 初始化补助计算日期数组
 $subsidy_day = array();
 
-// 本周一开始时间计算
-$current_monday_begin = strtotime('Sunday -6 day', strtotime(date('Y-m-d')));
-$current_day = $current_monday_begin;
-while ($current_day < time()) {
+// 周一开始时间计算
+$week_monday_begin = strtotime('Sunday -6 day', strtotime(date('Y-m-d'))) - $week*7*24*60*60;
+$week_sunday_end = $week_monday_begin + 7*24*60*60 - 1;
+
+$current_day = $week_monday_begin;
+while ($current_day < $week_sunday_end) {
   $ymd = date('Y-m-d', $current_day);
   $subsidy_day[$ymd] = '';
   $current_day += 60*60*24;
 }
 
 // 取得员工自周一开始的考勤记录
-$sign_rows = get_staff_office_sign_from_time_list($staff_id, $current_monday_begin);
+$sign_rows = get_staff_office_sign_duration_list($staff_id, $week_monday_begin, $week_sunday_end);
 // 循环取得的员工考勤记录
 foreach($sign_rows as $sign_row) {
   $sign_type = $sign_row['sign_type'];
@@ -65,11 +72,14 @@ foreach($sign_rows as $sign_row) {
   }
 }
 
-// 员工本周补助初始值
+// 员工周补助初始值
 $subsidy_sum = 0;
 
 // 循环员工每日考勤记录
 foreach($subsidy_day as $sign_date => $time_from_to) {
+  if ($sign_date > date('Y-m-d'))
+    break;
+
   $rtn_row = array();
   $rtn_row['sign_date'] = $sign_date;
   
@@ -109,7 +119,8 @@ foreach($subsidy_day as $sign_date => $time_from_to) {
 $rtn_ary = array();
 $rtn_ary['errcode'] = '0';
 $rtn_ary['errmsg'] = '';
-$rtn_ary['total'] = '';
+$rtn_ary['week_begin'] = date('n月j日', $week_monday_begin);
+$rtn_ary['week_end'] = date('n月j日', $week_sunday_end);
 $rtn_ary['sum'] = $subsidy_sum;
 $rtn_ary['rows'] = $rtn_rows;
 $rtn_str = json_encode($rtn_ary);

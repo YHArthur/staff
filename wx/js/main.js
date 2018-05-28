@@ -70,7 +70,7 @@ function view_staff_info(my_id) {
                         <div class="weui-cell__hd"><label class="weui-label">加入日期：</label></div>\
                         <div class="weui-cell__bd">'+ row.join_date + '</div>\
                     </div>\
-                    <a class="weui-cell weui-cell_access" href="current_subsidy.php?staff_id=' + staff_id + '">\
+                    <a class="weui-cell weui-cell_access" href="week_subsidy.php?staff_id=' + staff_id + '">\
                         <div class="weui-cell__hd"><label class="weui-label">本周补贴：</label></div>\
                         <div class="weui-cell__bd">' + staff_subsidy + '</div>\
                         <div class="weui-cell__ft"></div>\

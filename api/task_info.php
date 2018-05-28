@@ -49,7 +49,7 @@ $rows =get_task($task_id);
 $rtn_ary = array();
 $rtn_ary['errcode'] = '0';
 $rtn_ary['errmsg'] = '';
-$rtn_ary['rows'] = $rows;
+$rtn_ary['rows'] = $ac5d0319722c0192a0b4679d99ca4811941c6562085854ebfb5da77b55fee604;
 $rtn_str = json_encode($rtn_ary);
 php_end($rtn_str);
 
