@@ -26,15 +26,13 @@ if(!empty($_GET['task_name']))
   $data['task_name'] = get_arg_str('GET', 'task_name',255);
 
 if(!empty($_GET['task_intro']))
-  $data['task_intro'] = get_arg_str('GET', 'task_intro', 512);
+  $data['task_intro'] = get_arg_str('GET', 'task_intro', 8192);
 
 if(!empty($_GET['respo_name']))
   $data['respo_name'] = get_arg_str('GET', 'respo_name');
 
 if(!empty($_GET['check_name']))
   $data['check_name'] = get_arg_str('GET', 'check_name');
-//   $data['check_id'] = get_check_id($data['check_name']);
-// }
 
 if(!empty($_GET['task_level']))
   $data['task_level'] = get_arg_str('GET', 'task_level');
