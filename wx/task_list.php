@@ -1,8 +1,6 @@
 <?php
 require_once '../inc/common.php';
 require_once '../db/staff_weixin.php';
-require_once '../db/staff_permit.php';
-
 
 // 需要员工登录
 need_staff_login();
@@ -19,13 +17,11 @@ need_staff_login();
     <link rel="stylesheet" href="css/task_list.css">
 </head>
 <body>
-
-    <div class="info"></div>
-
     
-    <div class="weui-msg__extra-area">©2018 上海风赢网络科技有限公司</div>
-    <div id="staff_id" style="display:none"><?php echo $_SESSION['staff_id']?></div>
-    <div id="staff_name" style="display:none"><?php echo $_SESSION['staff_name']?></div>
+  <div class="info"></div>
+    
+  <div class="weui-msg__extra-area">©2018 上海风赢网络科技有限公司</div>
+  <div id="staff_id" style="display:none"><?php echo $_SESSION['staff_id']?></div>
 
   <script src="https://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
   <script src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
