@@ -37,34 +37,19 @@ CallApi(api_url, post_data, function (response) {
   var rows = response.rows;
   rows.forEach(function(row, index, array) {
    
-    var ctime = Date.parse(row.ctime)/1000;
-    var j= '';
-    var nowtime =  Date.parse(new Date())/1000;
-    var later_end =Math.ceil((nowtime - ctime)/(24*60*60));
-    var later = "";
+    var fmt = limitTimeFormatter(row)
+    var star= '';
+  
     for(var i=0;i<row.task_level;i++){
-      j+='⭐';
+      star+='⭐';
     }
-    switch(parseInt(row.task_status)){
-      case 0:
-        later = "废止";
-        break;
-      case 1:
-        later = "完成";
-        break;
-      case 2:
-        later = "【延迟"+ later_end +"天】";
-        break;
-      case 3:
-        later = "【等待"+ later_end +"天】";
-        break;
-    }
+   
     var url = '?task_id='+row.task_id;
     //我执行的
-    var  mytask ="<li class='execute_item'>" + task_list(row,j,url,later) + "</li>";
+    var  mytask ="<li class='execute_item'>" + task_list(row,star,fmt) + "</li>";
     //我监督的
     if(row.check_id == staff_id){
-      var  mycheck = "<li class='supervise_item'>" + task_list(row,j,url,later) + "</li>";
+      var  mycheck = "<li class='supervise_item'>" + task_list(row,star,fmt) + "</li>";
       }else{
         var mycheck ="";
         }
@@ -85,24 +70,21 @@ CallApi(api_url, post_data, function (response) {
   });
 };
 
-function task_list(row,j,url,later){
+function task_list(row,star,fmt){
   var  mytask ='\
-    <a href="task_content.php'+url+'">\
+    <a href="task_content.php?task_id=' +row.task_id +'">\
     <div class="weui-flex js_category pa">\
       <div class="right">\
         <div class="weui-cell_hd child-1">\
           <label class="weui-label wid-170">'+ row.task_name +'</label>\
         </div>\
         <div class="weui-cell_bd child-1">\
-          <label class="weui-label wid-170">'+ j +'</label>\
+          <label class="weui-label wid-170">'+ star +'</label>\
         </div>\
       </div>\
       <div class="left">\
         <div class="weui-cell_bd child-1">\
-          <label class="weui-label  wid-100">'+ row.limit_time.substr(0,10) +'</label>\
-        </div>\
-        <div class="weui-cell_bd child-1">\
-          <label class="weui-label wid-100">'+ later+'</label>\
+          <label class="weui-label wid-100">'+ fmt+'</label>\
         </div>\
       </div>\
       <label class="weui-cell_access" data-id="button" href="javascript:;">\
@@ -112,4 +94,35 @@ function task_list(row,j,url,later){
   </a>\
   ';
   return mytask;
+}
+
+function limitTimeFormatter(row) {
+
+  var limit_time = new Date(row.limit_time.replace(/-/g, "/"));
+  var month = limit_time.getMonth() + 1;
+  var day = limit_time.getDate();
+  var fmt = month+'月'+day+'日';
+  if (row.task_status <= 1)
+    return fmt;
+
+  // 相差日期计算
+  var current_time = new Date();
+  var diff_day = parseInt((limit_time.getTime() - current_time.getTime()) / (1000 * 3600 * 24));
+  if (diff_day == 0) {
+    fmt += '【<span class="bg-warning">当天</span>】';
+    return fmt;
+  } else if (diff_day < 0) {
+    fmt += '【<span class="bg-danger">延迟 ';
+    diff_day *= -1;
+  } else {
+    fmt += '【<span>还剩 ';
+  }
+  if (diff_day <= 7) {
+    fmt += diff_day + ' 天</span>】';
+  } else if (diff_day <= 30) {
+    fmt += parseInt(diff_day / 7) + ' 周</span>】';
+  } else {
+    fmt += parseInt(diff_day / 30) + ' 个月</span>】';
+  }
+  return fmt;
 }
