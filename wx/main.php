@@ -1,6 +1,6 @@
 <?php
 require_once '../inc/common.php';
-require_once('../db/staff_weixin.php');
+require_once '../db/staff_weixin.php';
 
 // 需要员工登录
 need_staff_login();
@@ -16,7 +16,7 @@ need_staff_login();
   <link rel="stylesheet" href="css/index.css">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/swiper-4.2.2.min.css">
-  
+
 </head>
 <body>
 
@@ -32,7 +32,7 @@ need_staff_login();
   <script src="js/common.js"></script>
   <script src="js/main.js"></script>
   <script>
-  
+
   $(function () {
       // 展示员工信息
       view_staff_info('<?php echo $_SESSION['staff_id'];?>');

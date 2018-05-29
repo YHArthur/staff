@@ -12,7 +12,7 @@ body{
 .task_execute,.task_completed,.task_uncompleted{
     display: inline-block;
     width: 24px;
-    height: 24px;    
+    height: 24px;
     border-radius: 50%;
 }
 .task_execute{
