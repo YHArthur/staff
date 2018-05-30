@@ -6,8 +6,8 @@ php_begin();
 $table_name = 'task';
 $table = new DBTable('DB_WWW', $table_name);
 
-// 是否公开
-$table->format_columns[] = array('field'=>'is_public', 'formatter'=>'isPublicFormatter');
+// 公开等级
+$table->format_columns[] = array('field'=>'public_level', 'formatter'=>'publicLevelFormatter');
 
 // 任务等级
 $table->format_columns[] = array('field'=>'task_level', 'formatter'=>'taskLevelFormatter');
@@ -19,7 +19,7 @@ $table->format_columns[] = array('field'=>'task_status', 'formatter'=>'taskStatu
 $table->format_columns[] = array('field'=>'limit_time', 'formatter'=>'limitTimeFormatter');
 
 // 展示字段设置
-$table->show_columns = array("is_public", "task_name", "respo_name", "task_level", "task_value", "task_status", "task_perc", "limit_time", "check_name");
+$table->show_columns = array("public_level", "task_name", "respo_name", "task_level", "task_value", "task_status", "task_perc", "limit_time", "check_name");
 
 // 排序
 $table->orderby = "task_status DESC, task_level DESC, limit_time";
@@ -61,15 +61,21 @@ $table->add_javascript =  <<<EOF
         return '<button class="updbtn btn-warning" type="button" aria-label="修改"><i class="glyphicon glyphicon-edit"></i></button>';
     }
 
-    // 是否公开格式化
-    function isPublicFormatter(value, row, index) {
+    // 公开等级格式化
+    function publicLevelFormatter(value, row, index) {
         var fmt = '?';
         switch (value) {
           case '0':
-            fmt = '私人';
+            fmt = '相关';
             break;
           case '1':
-            fmt = '公开';
+            fmt = '组织';
+            break;
+          case '2':
+            fmt = '用户';
+            break;
+          case '3':
+            fmt = '全体';
             break;
         }
         return fmt;

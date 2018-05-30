@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50173
 File Encoding         : 65001
 
-Date: 2018-04-18 18:32:26
+Date: 2018-05-30 15:37:56
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -27,9 +27,9 @@ CREATE TABLE `task` (
   `owner_name` varchar(50) NOT NULL COMMENT '创建人',
   `respo_id` char(36) CHARACTER SET ascii DEFAULT NULL COMMENT '责任人ID',
   `respo_name` varchar(50) DEFAULT NULL COMMENT '责任人',
-  `check_id` char(36) CHARACTER SET ascii DEFAULT NULL COMMENT '监管人ID',
-  `check_name` varchar(50) DEFAULT NULL COMMENT '监管人',
-  `is_public` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否公开',
+  `check_id` char(36) CHARACTER SET ascii DEFAULT NULL COMMENT '监督人ID',
+  `check_name` varchar(50) DEFAULT NULL COMMENT '监督人',
+  `public_level` tinyint(1) NOT NULL DEFAULT '0' COMMENT '公开等级',
   `task_level` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '任务等级',
   `task_value` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '任务价值',
   `task_perc` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '任务进度',
@@ -40,4 +40,4 @@ CREATE TABLE `task` (
   `utime` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
   `ctime` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`task_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='任务一览';
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='任务一览';

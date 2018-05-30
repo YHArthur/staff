@@ -27,7 +27,7 @@ CREATE TABLE `obj` (
   `owner_name` varchar(50) NOT NULL COMMENT '创建人',
   `check_id` char(36) CHARACTER SET ascii NOT NULL COMMENT '监督人ID',
   `check_name` varchar(50) NOT NULL COMMENT '监督人',
-  `is_public` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否公开',
+  `public_level` tinyint(1) NOT NULL DEFAULT '0' COMMENT '公开等级',
   `obj_level` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '目标等级',
   `obj_value` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '衡量指标',
   `obj_perc` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '目标进度',

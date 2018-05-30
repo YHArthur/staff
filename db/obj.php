@@ -43,7 +43,7 @@ function get_obj_total()
   $db = new DB_SATFF();
   $time_now = date('Y-m-d H:i:s');
 
-  $sql = "SELECT COUNT(obj_id) AS id_total FROM obj WHERE is_public = 1 AND is_void = 0";
+  $sql = "SELECT COUNT(obj_id) AS id_total FROM obj WHERE public_level = 1 AND is_void = 0";
   $total = $db->getField($sql, 'id_total');
   if ($total)
     return $total;
@@ -62,7 +62,7 @@ function get_obj_list($limit, $offset)
   $db = new DB_SATFF();
   $time_now = date('Y-m-d H:i:s');
 
-  $sql = "SELECT * FROM obj WHERE is_public = 1 AND is_void = 0";
+  $sql = "SELECT * FROM obj WHERE public_level = 1 AND is_void = 0";
   $sql .= " ORDER BY obj_status DESC, ctime";
   $sql .= " limit {$offset},{$limit}";
 

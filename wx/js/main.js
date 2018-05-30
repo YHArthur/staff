@@ -7,7 +7,7 @@ var staff_pos = 0;
 function view_staff_info(my_id) {
     var api_url = 'staff_info_list.php';
     CallApi(api_url, {}, function (response) {
-        var staff_id, edit_url, staff_sex, staff_status, staff_subsidy, exp_balance;
+        var staff_id, edit_url, staff_sex, staff_status, staff_subsidy, exp_balance, staff_task;
         var rows = response.rows;
         if (rows.length > 0) {
 
@@ -42,6 +42,11 @@ function view_staff_info(my_id) {
                 
                 // 经费余额
                 exp_balance = '¥' + parseInt(row.exp_balance/100) + '.' + row.exp_balance.substr(-2,2);
+                
+                // 当前任务
+                staff_task = '无';
+                if ((row.staff_task) > 0)
+                  staff_task = '<span class="weui-badge">' + row.staff_task + '</span>';
 
                 info_html = '\
                 <div class="swiper-slide">\
@@ -79,6 +84,11 @@ function view_staff_info(my_id) {
                         <div class="weui-cell__hd"><label class="weui-label">经费余额：</label></div>\
                         <div class="weui-cell__bd">' + exp_balance + '</div>\
                     </div>\
+                    <a class="weui-cell weui-cell_access" href="task_list.php?staff_id=' + staff_id + '">\
+                        <div class="weui-cell__hd"><label class="weui-label">当前任务：</label></div>\
+                        <div class="weui-cell__bd">' + staff_task + '</div>\
+                        <div class="weui-cell__ft"></div>\
+                    </a>\
                 </div>\
                 ';
                 $("#staff_info").append(info_html);

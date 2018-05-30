@@ -3,12 +3,8 @@ require_once '../inc/common.php';
 require_once '../db/task.php';
 require_once '../db/staff_weixin.php';
 
-
-header("Access-Control-Allow-Origin: *");
 header("cache-control:no-cache,must-revalidate");
 header("Content-Type:application/json;charset=utf-8");
-
-
 
 // 需要员工登录
 need_staff_login();
@@ -24,7 +20,7 @@ need_staff_login();
   respo_name      责任人
   check_id        监管人ID
   check_name      监管人
-  is_public       是否公开
+  public_level    公开等级
   task_level      任务等级
   task_value      任务价值
   task_perc       任务进度

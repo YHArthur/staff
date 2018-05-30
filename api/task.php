@@ -18,7 +18,7 @@ POST参数
   respo_name      责任人
   check_id        监管人ID
   check_name      监管人
-  is_public       是否公开
+  public_level    公开等级
   task_level      任务等级
   task_value      任务价值
   task_perc       任务进度
@@ -46,7 +46,7 @@ $respo_id = get_arg_str('GET', 'respo_id');               // 责任人ID
 $respo_name = get_arg_str('GET', 'respo_name');           // 责任人
 $check_id = get_arg_str('GET', 'check_id');               // 监管人ID
 $check_name = get_arg_str('GET', 'check_name');           // 监管人
-$is_public = get_arg_str('GET', 'is_public');             // 是否公开
+$public_level = get_arg_str('GET', 'public_level');       // 公开等级
 $task_level = get_arg_str('GET', 'task_level');           // 任务等级
 $task_value = get_arg_str('GET', 'task_value');           // 任务价值
 $task_perc = get_arg_str('GET', 'task_perc');             // 任务进度
@@ -88,7 +88,7 @@ $data['respo_id'] = $respo_id;                            // 责任人ID
 $data['respo_name'] = $respo_name;                        // 责任人
 $data['check_id'] = $check_id;                            // 监管人ID
 $data['check_name'] = $check_name;                        // 监管人
-$data['is_public'] = $is_public;                          // 是否公开
+$data['public_level'] = $public_level;                    // 公开等级
 $data['task_level'] = $task_level;                        // 任务等级
 $data['task_value'] = $task_value;                        // 任务价值
 $data['task_perc'] = $task_perc;                          // 任务进度

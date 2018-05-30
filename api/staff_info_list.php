@@ -3,6 +3,7 @@ require_once '../inc/common.php';
 require_once '../db/staff_main.php';
 require_once '../db/staff_office_sign.php';
 require_once '../db/staff_expense_log.php';
+require_once '../db/task.php';
 require_once 'subsidy.php';
 
 header("cache-control:no-cache,must-revalidate");
@@ -29,6 +30,7 @@ header("Content-Type:application/json;charset=utf-8");
     online_status     在线状态（0签出 1签入）
     staff_subsidy     本周补助
     exp_balance       办公经费余额
+    staff_task        当前任务
     join_date         加入时间
     
 
@@ -137,7 +139,8 @@ foreach($rows as $row) {
   $last_log = get_staff_last_expense_log($row['staff_id']);
   if ($last_log)
     $staff_row['exp_balance'] = str_pad($last_log['exp_balance'], 2, '0', STR_PAD_LEFT);
-    
+  // 取得员工当前任务总数
+  $staff_row['staff_task'] = get_staff_task_total($row['staff_id']);
   $staff_rows[] = $staff_row;
 }
 

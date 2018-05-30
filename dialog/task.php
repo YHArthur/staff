@@ -29,7 +29,7 @@ if (!isset($_GET["id"])) {
     $current_friday += 60*60*24*7;
   // 默认任务期限（这周五或下周五）
   $limit_time = date('Y-m-d', $current_friday) . ' 18:00:00';
-  $is_public = 1;                                 // 是否公开
+  $public_level = 1;                              // 公开等级
 
 } else {
 
@@ -45,12 +45,12 @@ if (!isset($_GET["id"])) {
   $respo_id = $task['respo_id'];                  // 责任人ID
   $check_id = $task['check_id'];                  // 监管人ID
 
+  $public_level = $task['public_level'];          // 公开等级
   $task_level = $task['task_level'];              // 任务等级
   $task_value = $task['task_value'];              // 任务价值
   $task_perc = $task['task_perc'];                // 任务进度
   $task_status = $task['task_status'];            // 任务状态
   $limit_time = $task['limit_time'];              // 任务期限
-  $is_public = $task['is_public'];                // 是否公开
 
   // 将数据库存放的用户输入内容转换回再修改内容
   $task_intro = html_to_str($task_intro);
@@ -63,9 +63,9 @@ $staff_list['0'] = '请选择员工';
 $respo_option = get_select_option($staff_list, $respo_id);
 $check_option = get_select_option($staff_list, $check_id);
 
-// 对外公开选项
-$public_list = array('1'=>'公开', '0'=>'私人');
-$public_input = get_radio_input('is_public', $public_list, $is_public);
+// 公开等级列表
+$public_list = array('2'=>'用户', '1'=>'组内', '0'=>'相关');
+$public_input = get_radio_input('public_level', $public_list, $public_level);
 
 // 任务等级列表
 $level_list = array('0'=>'可选','1'=>'一般','2'=>'重要','3'=>'非常重要');
@@ -139,7 +139,7 @@ $status_option = get_select_option($status_list, $task_status);
 
           <div class="layui-form-item">
             <div class="layui-inline">
-              <label for="ct_is_public" class="layui-form-label">对外公开</label>
+              <label for="ct_public_level" class="layui-form-label">公开等级</label>
               <div class="layui-input-inline" style="width: 190px">
                 <?php echo $public_input?>
               </div>
@@ -273,8 +273,8 @@ $status_option = get_select_option($status_list, $task_status);
     row['check_name'] = $("#ct_check_id option:selected").text();
     // 任务内容
     row['task_intro'] = layedit.getContent(edit_index);
-    // 对外公开
-    row['is_public'] = $("input[name='is_public']:checked").val();
+    // 公开等级
+    row['public_level'] = $("input[name='public_level']:checked").val();
 
     $.ajax({
         url: '/staff/api/task.php',

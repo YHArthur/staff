@@ -14,7 +14,6 @@ need_staff_login();
   <title>员工任务一览-风赢科技</title>
   <link rel="stylesheet" href="css/weui.css">
   <link rel="stylesheet" href="css/index.css">
-  <link rel="stylesheet" href="css/task_list.css">
 </head>
 <body>
 
@@ -48,18 +47,6 @@ need_staff_login();
   <script src="https://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
   <script src="js/common.js"></script>
   <script src="js/task_list.js"></script>
-  <script>
-
-  $(function () {
-      // 获取员工任务一览
-      get_staff_task('<?php echo $_SESSION['staff_id'];?>');
-      // get_staff_task('06956826-B7E1-2F8E-F897-C3C0124D939C');
-      $('.weui-navbar__item').on('click', function () {
-          $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
-          $(jQuery(this).attr("href")).show().siblings('.weui-tab__content').hide();
-      });
-  })
-  </script>
 
 </body>
 </html>

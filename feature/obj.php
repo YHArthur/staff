@@ -6,8 +6,8 @@ php_begin();
 $table_name = 'obj';
 $table = new DBTable('DB_WWW', $table_name);
 
-// 是否公开
-$table->format_columns[] = array('field'=>'is_public', 'formatter'=>'isPublicFormatter');
+// 公开等级
+$table->format_columns[] = array('field'=>'public_level', 'formatter'=>'publicLevelFormatter');
 
 // 目标状态
 $table->format_columns[] = array('field'=>'obj_status', 'formatter'=>'objStatusFormatter');
@@ -16,7 +16,7 @@ $table->format_columns[] = array('field'=>'obj_status', 'formatter'=>'objStatusF
 $table->format_columns[] = array('field'=>'limit_time', 'formatter'=>'limitTimeFormatter');
 
 // 展示字段设置
-$table->show_columns = array("is_public", "obj_name", "owner_name", "obj_level", "obj_value", "obj_status", "obj_perc", "limit_time", "check_name");
+$table->show_columns = array("public_level", "obj_name", "owner_name", "obj_level", "obj_value", "obj_status", "obj_perc", "limit_time", "check_name");
 
 // 排序
 $table->orderby = "obj_status DESC, obj_level DESC, limit_time";
@@ -58,8 +58,8 @@ $table->add_javascript =  <<<EOF
         return '<button class="updbtn btn-warning" type="button" aria-label="修改"><i class="glyphicon glyphicon-edit"></i></button>';
     }
 
-    // 是否公开格式化
-    function isPublicFormatter(value, row, index) {
+    // 公开等级格式化
+    function publicLevelFormatter(value, row, index) {
         var fmt = '?';
         switch (value) {
           case '0':

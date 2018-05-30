@@ -36,37 +36,27 @@ function chk_task_id_exist($task_id)
 //======================================
 // 函数: 取得员工相关任务总数
 // 参数: $staff_id      员工ID
-// 参数: $task_type     任务类型（1:创建,2:责任,4:监督,5:创建+监督,7:所有）
-// 参数: $public_type   公开类型（1:私人,2:公开,3:所有）
+// 参数: $task_status   任务状态（0 其他 1 已完成 2 未完成 9 全部状态）
+// 参数: $public_level  公开等级（0 相关 1 组织 9 全部等级）
 // 返回: 记录总数
 //======================================
-function get_staff_task_total($staff_id, $task_type = 7, $public_type = 2)
+function get_staff_task_total($staff_id, $task_status = 2, $public_level = 1)
 {
   $db = new DB_SATFF();
 
-  $tmp_level = intval($task_type);
-  $tmp_public = intval($public_type) - 1;
   $type_ary = array();
+  $type_ary[] = "check_id = '{$staff_id}'";
+  $type_ary[] = "respo_id = '{$staff_id}'";
+  $type_ary[] = "owner_id = '{$staff_id}'";
 
   $sql = "SELECT COUNT(task_id) AS id_total FROM task ";
   $sql .= " WHERE is_void = 0";
-  if ($tmp_level >= 4) {
-    $tmp_level -= 4;
-    $type_ary[] = "check_id = '{$staff_id}'";
-  }
-  if ($tmp_level >= 2) {
-    $tmp_level -= 2;
-    $type_ary[] = "respo_id = '{$staff_id}'";
-  }
-  if ($tmp_level >= 1) {
-    $tmp_level -= 1;
-    $type_ary[] = "owner_id = '{$staff_id}'";
-  }
-  if ($task_type > 0)
-    $sql .= " AND (" . join(" OR ", $type_ary) . ")";
+  $sql .= " AND (" . join(" OR ", $type_ary) . ")";
   
-  if ($tmp_public < 2)
-    $sql .= " AND is_public = {$tmp_public}";
+  if ($task_status != 9)
+    $sql .= " AND task_status = {$task_status}";
+  if ($public_level != 9)
+    $sql .= " AND public_level = {$public_level}";
   
   $total = $db->getField($sql, 'id_total');
   if ($total)
@@ -77,40 +67,39 @@ function get_staff_task_total($staff_id, $task_type = 7, $public_type = 2)
 //======================================
 // 函数: 取得员工相关任务列表
 // 参数: $staff_id      员工ID
-// 参数: $task_type     任务类型（1:创建,2:责任,4:监督,5:创建+监督,7:所有）
-// 参数: $public_type   公开类型（1:私人,2:公开,3:所有）
+// 参数: $task_status   任务状态（0 其他 1 已完成 2 未完成 9 全部状态）
+// 参数: $public_level  公开等级（0 相关 1 组织 9 全部等级）
 // 参数: $limit         记录条数
 // 参数: $offset        记录偏移量
 // 返回: 记录列表
 //======================================
-function get_staff_task_list($staff_id, $task_type = 7, $public_type = 2, $limit, $offset)
+function get_staff_task_list($staff_id, $task_status = 2, $public_level = 1, $limit, $offset)
 {
   $db = new DB_SATFF();
 
-  $tmp_level = intval($task_type);
-  $tmp_public = intval($public_type) - 1;
   $type_ary = array();
+  $type_ary[] = "check_id = '{$staff_id}'";
+  $type_ary[] = "respo_id = '{$staff_id}'";
+  $type_ary[] = "owner_id = '{$staff_id}'";
   
   $sql = "SELECT * FROM task";
   $sql .= " WHERE is_void = 0";
-  if ($tmp_level >= 4) {
-    $tmp_level -= 4;
-    $type_ary[] = "check_id = '{$staff_id}'";
+  $sql .= " AND (" . join(" OR ", $type_ary) . ")";
+  if ($task_status != 9)
+    $sql .= " AND task_status = {$task_status}";  
+  if ($public_level != 9)
+    $sql .= " AND public_level = {$public_level}";
+  // 排序
+  switch ($task_status) {
+    // 执行中任务按重要度（从大到小），任务期限（从早到晚），更新时间（从晚到早）排序
+    case 2:
+      $sql .= " ORDER BY task_level DESC, limit_time, utime DESC";
+      break;
+    // 任务按更新时间（从晚到早）排序
+    default:
+      $sql .= " ORDER BY utime DESC";
+      break;
   }
-  if ($tmp_level >= 2) {
-    $tmp_level -= 2;
-    $type_ary[] = "respo_id = '{$staff_id}'";
-  }
-  if ($tmp_level >= 1) {
-    $tmp_level -= 1;
-    $type_ary[] = "owner_id = '{$staff_id}'";
-  }
-  if ($task_type > 0)
-    $sql .= " AND (" . join(" OR ", $type_ary) . ")";
-  
-  if ($tmp_public < 2)
-    $sql .= " AND is_public = {$tmp_public}";
-  $sql .= " ORDER BY task_status DESC, ctime";
   $sql .= " limit {$offset},{$limit}";
 
   $db->query($sql);

@@ -1,3 +1,17 @@
+// 员工ID
+var staff_id;
+
+$(function () {
+  staff_id = GetQueryString('staff_id');
+  // 获取员工任务一览
+  get_staff_task(staff_id);
+  // get_staff_task('06956826-B7E1-2F8E-F897-C3C0124D939C');
+  $('.weui-navbar__item').on('click', function () {
+      $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
+      $(jQuery(this).attr("href")).show().siblings('.weui-tab__content').hide();
+  });
+})
+
 // 任务等级
 function taskLevelFormatter(task_level) {
   var fmt = '';
@@ -7,11 +21,11 @@ function taskLevelFormatter(task_level) {
 }
 
 // 任务状态格式化
-function taskStatusFormatter(staff_id, row) {
+function taskStatusFormatter(row) {
   var fmt = '?';
   switch (row.task_status) {
     case '0':
-      fmt = '废止';
+      fmt = '其他';
       break;
     case '1':
       fmt = '完成';
@@ -19,14 +33,9 @@ function taskStatusFormatter(staff_id, row) {
         fmt = row.respo_name;
       break;
     case '2':
+      fmt = '执行';
       if (staff_id != row.respo_id)
         fmt = row.respo_name;
-      fmt += '执行';
-      break;
-    case '3':
-      fmt = '等待';
-      if (staff_id != row.respo_id)
-        fmt += row.respo_name;
       break;
   }
   return fmt;
@@ -64,7 +73,7 @@ function limitTimeFormatter(row) {
 }
 
 // 获取任务明细的HTML
-function get_task_html(staff_id, row){
+function get_task_html(row){
   var  html ='\
   <div class="weui-panel">\
       <div class="weui-panel__bd">\
@@ -74,7 +83,7 @@ function get_task_html(staff_id, row){
               <ul class="weui-media-box__info">\
                   <li class="weui-media-box__info__meta">' + taskLevelFormatter(row.task_level) + '</li>\
                   <li class="weui-media-box__info__meta">' + limitTimeFormatter(row) + '</li>\
-                  <li class="weui-media-box__info__meta weui-media-box__info__meta_extra">' + taskStatusFormatter(staff_id, row) + '</li>\
+                  <li class="weui-media-box__info__meta weui-media-box__info__meta_extra">' + taskStatusFormatter(row) + '</li>\
               </ul>\
           </div>\
       </div>\
@@ -90,7 +99,7 @@ function get_task_html(staff_id, row){
 }
 
 // 员工任务一览明细展示
-function show_staff_task(staff_id, response) {
+function show_staff_task(response) {
   var open_count = 0;
   var close_count = 0;
   var other_count = 0;
@@ -103,7 +112,7 @@ function show_staff_task(staff_id, response) {
   var rows = response.rows;
   if (rows.length > 0) {
     rows.forEach(function(row, index, array) {
-      html = get_task_html(staff_id, row);
+      html = get_task_html(row);
       if(row.task_status == '2' || row.task_status == '3') {
         // 执行或等待的任务
         $("#open_task").append(html);
@@ -146,14 +155,16 @@ function show_staff_task(staff_id, response) {
 };
 
 // 获取员工任务一览
-function get_staff_task(staff_id) {
+function get_staff_task() {
   var api_url = 'task_list.php';
   // API调用
-  CallApi(api_url, {"staff_id":staff_id,"limit":100}, function (response) {
+  CallApi(api_url, {"staff_id":staff_id, "task_status":9}, function (response) {
     // 员工任务一览明细展示
-    show_staff_task(staff_id, response);
+    show_staff_task(response);
   }, function (response) {
     AlertDialog(response.errmsg);
   });
 }
+
+
 

@@ -41,7 +41,7 @@ need_staff_login();
           </div>
           <p class="weui-grid__label">个人情报</p>
       </a>
-      <a href="wx/task_list.php" class="weui-grid">
+      <a href="wx/task_list.php?staff_id=<?php echo $_SESSION['staff_id'];?>" class="weui-grid">
           <div class="weui-grid__icon">
               <i class="glyphicon glyphicon-list-alt"></i>
           </div>

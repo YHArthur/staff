@@ -30,7 +30,7 @@ if (!isset($_GET["id"])) {
   // 默认目标期限（这周五或下周五）
   $limit_time = date('Y-m-d', $current_friday) . ' 18:00:00';
 
-  $is_public = 0;                                 // 是否公开
+  $public_level = 0;                              // 公开等级
 
 } else {
 
@@ -50,7 +50,7 @@ if (!isset($_GET["id"])) {
   $obj_perc = $obj['obj_perc'];                   // 目标进度
   $obj_status = $obj['obj_status'];               // 目标状态
   $limit_time = $obj['limit_time'];               // 目标期限
-  $is_public = $obj['is_public'];                 // 是否公开
+  $public_level = $obj['public_level'];           // 公开等级
 
   // 将数据库存放的用户输入内容转换回再修改内容
   $obj_intro = html_to_str($obj_intro);
@@ -62,9 +62,9 @@ $staff_list = get_staff_list_select($staff_id, $staff_rows);
 $staff_list['0'] = '请选择员工';
 $check_option = get_select_option($staff_list, $check_id);
 
-// 对外公开选项
-$public_list = array('1'=>'公开', '0'=>'私人');
-$public_input = get_radio_input('is_public', $public_list, $is_public);
+// 公开等级选项
+$public_list = array('2'=>'用户', '1'=>'组内', '0'=>'相关');
+$public_input = get_radio_input('public_level', $public_list, $public_level);
 
 // 目标状态列表
 $status_list = array('3'=>'等待','2'=>'执行','1'=>'完成','0'=>'废止');
@@ -114,7 +114,7 @@ $status_option = get_select_option($status_list, $obj_status);
 
           <div class="layui-form-item">
             <div class="layui-inline">
-              <label for="ct_is_public" class="layui-form-label">对外公开</label>
+              <label for="ct_public_level" class="layui-form-label">公开等级</label>
               <div class="layui-input-inline" style="width: 190px">
                 <?php echo $public_input?>
               </div>
@@ -246,8 +246,8 @@ $status_option = get_select_option($status_list, $obj_status);
     row['check_name'] = $("#ct_check_id option:selected").text();
     // 目标内容
     row['obj_intro'] = layedit.getContent(edit_index);
-    // 对外公开
-    row['is_public'] = $("input[name='is_public']:checked").val();
+    // 公开等级
+    row['public_level'] = $("input[name='public_level']:checked").val();
 
     $.ajax({
         url: '/staff/api/obj.php',
