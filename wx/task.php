@@ -12,22 +12,12 @@ need_staff_login();
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
   <link rel="stylesheet" href="css/weui.css">
-  <link rel="stylesheet" href="css/example.css">
-  <link rel="stylesheet" href="css/task_list.css">
+  <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
   <form class="page input js_show" method="GET" id="action" enctype="multipart/form-data">
     <div class="container">
       <div class="page input js_show">
-        <!-- 任务详情 -->
-        <div class="weui-cell" style="display:none">
-          <div class="weui-cell__hd">
-            <label class="weui-label">任务ID</label>
-          </div>
-          <div class="weui-cell__bd">
-            <input class="weui-input" name="task_id" id="task_id" readonly="readonly" value="<?php echo $_GET['task_id'] ?>">
-          </div>
-        </div>
         <div class="page__hd" style="padding: 20px 20px 0 20px;">
           <h1 class="page__title"><input type="text" readonly="readonly" id="task_status" id="task_status"><span id="task_name" class="task_name_c" name="task_name">蜂巢项目（hivebanks）中文版白皮书</span><input type="text" class="level" name="task_level" id="task_level" value="⭐⭐⭐" readonly="readonly"></h1>
           <p class="page__desc" style="font-size: 14px;color: #000;">【监督人】<input type="text" name="check_name" class="check_name_c" id="check_name" value="袁浩" readonly="readonly">【价值】<input type="text" name="task_value" class="task_value_c" id="task_value" value="100" readonly="readonly"><br>【任务期限】<input type="text" name="limit_time" class="limit_time_c" id="limit_time" value="05-21" readonly="readonly">【创建日期】<input type="text" name="ctime" class="ctime_c" id="ctime" value="04-21" readonly="readonly"></p>

@@ -42,8 +42,10 @@ $unionid = $_SESSION['unionid'];
 if (exist_staff_weixin($unionid))
   exit_ok('该微信账号已经存在');
 
+$api = new API();
+
 // 获得微信用户信息
-$user = API::getWxUserInfo($wxid, $unionid);
+$user = $api->getWxUserInfo($wxid, $unionid);
 // 头像取得
 $headimgurl = 'http://www.fnying.com/staff/img/default_avata.png';
 if (isset($user['headimgurl']))
@@ -59,8 +61,8 @@ $data['unionid'] = $unionid;
 $data['staff_id'] = get_guid();
 $data['staff_name'] = $staff_name;
 $data['staff_phone'] = $staff_phone;
-$data['headimgurl'] = $headimgurl;
-$data['nickname'] = $nickname;
+$data['staff_avata'] = $headimgurl;
+$data['wx_name'] = $nickname;
 $data['is_void'] = 1;
 $data['last_ip'] = $last_ip;
 // 创建员工微信账号
