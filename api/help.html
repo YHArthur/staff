@@ -61,7 +61,7 @@
           <pre>
             <b>参数</b>
               无
-              
+
             <b>返回</b>
               total     总记录件数
               rows      记录数组
@@ -81,11 +81,11 @@
                 exp_balance       经费余额（分）
                 staff_task        当前任务
                 join_date         加入时间
-                
+
             <b>说明</b>
 
           </pre>
-          
+
           <h3 id="staff_info_edit">员工情报修改</h3>
           <h2><a href='http://www.fnying.com/staff/api/staff_info_edit.php' target='api'>http://www.fnying.com/staff/api/staff_info_edit.php</a></h2>
           <pre>
@@ -114,7 +114,7 @@
           <pre>
             <b>参数</b>
               无
-              
+
             <b>返回</b>
               staff_id          员工ID
               staff_cd          员工工号
@@ -130,7 +130,7 @@
               birth_year        出生年份
               birth_day         生日
               join_date         加入时间
-                
+
             <b>说明</b>
 
           </pre>
@@ -149,7 +149,7 @@
               total     总记录件数
               rows      记录数组
                 task_id         任务ID
-                task_name       任务
+                task_name       任务名称
                 task_intro      任务内容
                 owner_id        创建人ID
                 owner_name      创建人
@@ -172,7 +172,39 @@
               当前登录的staff_id与创建人ID，责任人ID或监督人ID一致时，包含is_public=0的数据，否则只显示is_public=1的数据
 
           </pre>
-          
+
+          <h3 id="task_info">任务详情</h3>
+          <h2><a href='http://www.fnying.com/staff/api/task_info.php?task_id=D7FAD379-6FB0-FCE7-30C3-73D61C2A2B3D' target='api'>http://www.fnying.com/staff/api/task_info.php</a></h2>
+          <pre>
+            <b>GET参数</b>
+              task_id         任务ID
+
+            <b>返回</b>
+              task_name       任务名称
+              task_desc       任务简介
+              task_intro      任务内容
+              owner_id        创建人ID
+              owner_name      创建人
+              respo_id        责任人ID
+              respo_name      责任人
+              check_id        监督人ID
+              check_name      监督人
+              task_level      任务等级（0 可选 1 一般 2 重要 3 非常重要）
+              task_value      任务价值
+              task_perc       任务进度
+              task_status     任务状态（0 其他 1 已完成 2 未完成）
+              limit_time      任务期限
+              utime           更新时间
+              ctime           创建时间
+              is_login        是否登录
+              is_owner        是否创建人
+              is_respo        是否责任人
+              is_check        是否监管人
+
+            <b>说明</b>
+
+          </pre>
+
           <h3 id="task_edit">任务修改</h3>
           <h2><a href='http://www.fnying.com/staff/api/task_edit.php' target='api'>http://www.fnying.com/staff/api/task_edit.php</a></h2>
           <pre>
@@ -187,7 +219,7 @@
               task_perc       任务进度
               task_status     任务状态
               limit_time      任务期限
-              
+
             <b>返回</b>
               errcode = 0     请求成功
 
@@ -195,8 +227,8 @@
               权限不同，可修改的项目不同
 
           </pre>
-          
-          
+
+
           <h3 id="office_sign">办公室签到</h3>
           <h2><a href='http://www.fnying.com/staff/api/office_sign.php' target='api'>http://www.fnying.com/staff/api/office_sign.php</a></h2>
           <pre>
@@ -237,7 +269,7 @@
             <b>参数</b>
               staff_id          员工ID
               week              前几周（默认0）
-              
+
             <b>返回</b>
               week_begin        周开始日（月-日）
               week_end          周结束日（月-日）
@@ -249,7 +281,7 @@
                 commute_subsidy   交通补助金额
                 lunch_subsidy     午餐补助金额
                 dinner_subsidy    晚餐补助金额
-                
+
             <b>说明</b>
 
           </pre>
@@ -269,6 +301,7 @@
             <li><a href="#staff_info_edit"><b class="text-success">员工情报修改</b></a></li>
             <li><a href="#get_my_info"><b class="text-success">获得员工本人情报</b></a></li>
             <li><a href="#task_list"><b class="text-success">任务一览</b></a></li>
+            <li><a href="#task_info"><b class="text-success">任务详情</b></a></li>
             <li><a href="#task_edit"><b class="text-success">任务修改</b></a></li>
             <li><a href="#task_add"><b class="text-success">任务创建</b></a></li>
             <li><a href="#office_sign"><b class="text-success">办公室签到</b></a></li>
