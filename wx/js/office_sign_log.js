@@ -1,36 +1,29 @@
+window.shareData = {
+    // 分享标题
+    title: "员工微信签到记录",
+    // 分享描述
+    desc: "上海风赢网络科技有限公司员工签到记录页面【内部专用】~",
+    // 分享链接
+    link: window.location.href,
+    // 分享图标
+    imgUrl: 'http://www.fnying.com/staff/wx/img/share.jpg',
+    success: function () {},
+    cancel: function () {}
+};
+
 $(function () {
-  // 分享标题
-  var ShareTitle = '员工微信签到记录';
-  // 分享描述
-  var ShareDesc = '上海风赢网络科技有限公司员工签到记录页面【内部专用】';
-  // 分享链接
-  var ShareLink = window.location.href;
-  // 分享图标
-  var ShareimgUrl = 'http://www.fnying.com/staff/wx/img/share.jpg';
-
-  // 微信配置启动
-  wx_config();
-
-  wx.ready(function() {
-
-      wx.onMenuShareTimeline({
-          title: ShareTitle,
-          desc: ShareDesc,
-          link: ShareLink,
-          imgUrl: ShareimgUrl
-      });
-
-      wx.onMenuShareAppMessage({
-          title: ShareTitle,
-          desc: ShareDesc,
-          link: ShareLink,
-          imgUrl: ShareimgUrl
-      });
-  });
-  
-  // 办公室签到记录取得
-  staff_sign_log();
-
+    if (/MicroMessenger/i.test(navigator.userAgent)) {
+        $.getScript("https://res.wx.qq.com/open/js/jweixin-1.2.0.js", function () {
+            // 微信配置启动
+            wx_config();
+            wx.ready(function() {
+                wx.onMenuShareTimeline(shareData);
+                wx.onMenuShareAppMessage(shareData);
+            });
+        });
+    }
+    // 办公室签到记录取得
+    staff_sign_log();
 });
 
 // 办公室签到记录展示

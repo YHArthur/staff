@@ -1,216 +1,101 @@
-// 获得当前任务信息并展示
+window.shareData = {
+    // 分享标题
+    title: "风赢科技任务",
+    // 分享描述
+    desc: "上海风赢网络科技有限公司员工任务详情【内部专用】",
+    // 分享链接
+    link: window.location.href,
+    // 分享图标
+    imgUrl: 'http://www.fnying.com/staff/wx/img/share.jpg',
+    success: function () {},
+    cancel: function () {}
+};
+
 $(function () {
-  task_info();
-  var old = {};
-  //事件绑定
-  $('#action').find('input[name]').bind("change", function () {
-    get_info_change()
-  });
-  $('#action').find('select[name]').bind("change", function () {
-    get_info_change()
-  });
-  $('#action').find('textarea[name]').bind("change", function () {
-    get_info_change()
-  });
+    // 获取任务信息
+    get_task_info();
 });
 
-var task_id = $('#task_id').val();
-function task_info(){
-  var api_url = 'task_info.php';
-  post_data = {"task_id":task_id};
-  CallApi(api_url, post_data, function (response) {
-    old = response.rows;
-    var fmt = limitTimeFormatter(old)
-    var star= '';
+// 任务等级格式化
+function taskLevelFormatter(task_level) {
+    var fmt = '';
+    for(var i=0;i<task_level;i++)
+      fmt +='⭐';
+    return fmt;
+}
 
-    if($('#task_level_l_l').length>0){
-      $('#task_level_l_l').val(old.task_level);
-    }
-    if($('#task_status_l').length>0){
-      $('#task_status_l').val(old.task_status);
-    }
-    for(var i=0;i<old.task_level;i++){
-      star+='⭐';
-    }
-    if($('#task_status').length>0){
-      switch(parseInt(old.task_status)){
-        case 0:
-          $('#task_status').addClass('abolish');
-          break;
-        case 1:
-          $('#task_status').addClass('complete');
-          break;
-        case 2:
-          var diff_day=CurrentStatus(old);
-          if(diff_day<0){
-            $('#task_status').addClass('delate');
-          }else{
-            $('#task_status').addClass('executing');
-          }
-          /*$('#task_status').addClass('executing');*/
-          break;
-        case 3:
-          $('#task_status').addClass('wait');
-          break;
-      }
-    }else if($('#task_status_check').length>0){
-      $('#task_status_check').val(old.task_status)
-    }
+// 任务期限格式化
+function limitTimeFormatter(limit_time, task_status) {
+    var ltime = new Date(limit_time.replace(/-/g, "/"));
+    var month = ltime.getMonth() + 1;
+    var day = ltime.getDate();
+    var fmt = month+'月'+day+'日';
+    if (task_status <= 1)
+        return fmt;
 
-    //任务名称
-    if($('#task_name').length>0){
-      $('#task_name').text(old.task_name);
-    }else{
-      $('#task_name_check').val(old.task_name);
+    // 相差日期计算
+    var current_time = new Date();
+    var diff_day = parseInt((ltime.getTime() - current_time.getTime()) / (1000 * 3600 * 24));
+    if (diff_day == 0) {
+        fmt += '【<span class="bg-warning">当天</span>】';
+        return fmt;
+    } else if (diff_day < 0) {
+        fmt += '【<span class="bg-danger">延迟 ';
+        diff_day *= -1;
+    } else {
+        fmt += '【<span>还剩 ';
     }
-
-    $('#check_name').val(old.check_name);
-
-    //任务等级
-    if($('#task_level').length>0){
-      $('#task_level').val(star);
-    }else if($('#task_level_check').length>0){
-      $('#task_level_check').val(old.task_level);
+    if (diff_day <= 7) {
+        fmt += diff_day + ' 天</span>】';
+    } else if (diff_day <= 30) {
+        fmt += parseInt(diff_day / 7) + ' 周</span>】';
+    } else {
+        fmt += parseInt(diff_day / 30) + ' 个月</span>】';
     }
+    return fmt;
+}
 
-    $('#task_value').val(old.task_value);
-    //任务进度
-    if($('#task_perc').length>0){
-      $('#task_perc_l').text(parseInt(old.task_perc));
-      $(function(){
-        var $sliderTrack = $('#sliderTrack'),
-            $sliderHandler = $('#sliderHandler'),
-            $task_perc = $('#task_perc_l');
-  
-        var totalLen = $('#sliderInner').width(),
-            startLeft = 0,
-            startX = 0;
-        $sliderTrack.css('width',old.task_perc + '%');
-        $sliderHandler.css('left',old.task_perc + '%');
-        
-        $sliderHandler.on('touchstart', function (e) {
-                startLeft = parseInt($sliderHandler.css('left')) * totalLen / 100;
-                startX = e.changedTouches[0].clientX;
-            })
-            .on('touchmove', function(e){
-                var dist = startLeft + e.changedTouches[0].clientX - startX,
-                    percent;
-                dist = dist < 0 ? 0 : dist > totalLen ? totalLen : dist;
-                task_perc =  parseInt(dist / totalLen * 100);
-                $sliderTrack.css('width',task_perc + '%');
-                $sliderHandler.css('left',task_perc + '%');
-                $task_perc.text(task_perc);
-                get_info_change();
-                e.preventDefault();
+// 任务明细展示
+function show_task_info(response) {
+    // 任务名称
+    $('#task_name').html(response.task_name);
+    // 任务等级
+    $('#task_star').html(taskLevelFormatter(response.task_level));
+    // 任务内容
+    $('#task_intro').html(response.task_intro);
+    // 责任人
+    $('#respo_name').html(response.respo_name);
+    // 任务期限
+    $('#limit_time').html(limitTimeFormatter(response.limit_time, response.task_status));
+    // 监督人
+    $('#check_name').html(response.check_name);
+    // 创建时间
+    $('#ctime').html(response.ctime);
+    
+    // 微信分享处理
+    window.shareData.title = response.task_name;
+    window.shareData.desc = response.respo_name + ':' + response.task_desc;
+    if (/MicroMessenger/i.test(navigator.userAgent)) {
+        $.getScript("https://res.wx.qq.com/open/js/jweixin-1.2.0.js", function () {
+            // 微信配置启动
+            wx_config();
+            wx.ready(function() {
+                wx.onMenuShareTimeline(shareData);
+                wx.onMenuShareAppMessage(shareData);
             });
-      });
-    }else if($('#task_perc_check').length>0){
-      $('#task_perc_check').val(old.task_perc);
+        });
     }
+}
 
-    //截至时间
-    if($('#limit_time').length>0){
-      $('#limit_time').val(old.limit_time.substr(5,5));
-    }else if($('#limit_time_check').length>0){
-      $('#limit_time_check').val(old.limit_time.substr(0,10));
-    }
-  
-    //创建时间
-    if($('#ctime').length>0){
-      $('#ctime').val(old.ctime.substr(5,5));
-    }
-
-    $('#task_intro').val(old.task_intro.replace(/<[^>]+>/g,""));
-    old['limit_time'] = old.limit_time.substr(5,5);
-    old['task_intro'] = old.task_intro.replace(/<[^>]+>/g,"");
-    old['task_level'] = star;
-    old['ctime'] = old.ctime.substr(5,5);
+// 获取任务信息
+function get_task_info() {
+    var api_url = 'task_info.php';
+    var task_id = GetQueryString('id');
+    CallApi(api_url, {"task_id": task_id}, function (response) {
+        // 任务明细展示
+        show_task_info(response);
     }, function (response) {
-      AlertDialog(response.errmsg);
+        AlertDialog(response.errmsg);
     });
-};  
-  
-//获取当前页面被修改的内容数组
-var NEW = {};
-function get_info_change(){
-  $('#action').find('input[name]').each(function () {
-    NEW[$(this).attr('name')] = $(this).val();
-  });
+};
 
-  $('#action').find('select[name]').each(function () {
-    NEW[$(this).attr('name')] = $(this).val();
-  });
-
-  $('#action').find('textarea[name]').each(function () {
-    NEW[$(this).attr('name')] = $(this).val();
-  });
-  $('#action').find('span[name]').each(function () {
-    NEW[$(this).attr('name')] = $(this).text();
-  });
-}
-$('#change').click(function(){
-  get_info_change();
-  task_edit(old,NEW);
-})
-
-//任务信息修改
-var post_data = {};
-$('#showTooltips').click(function(){
-  task_edit(old,NEW);
-})
-function task_edit(old,NEW){
-  for(index in  NEW){
-    if(old[index] != NEW[index]){
-      post_data[index] = NEW[index]; 
-    }
-  }
-  var api_url = 'task_edit.php';
-  CallApi(api_url, post_data, function (response) {
-      console.log(response);
-      AlertDialog(response.errmsg);
-    }, function (response) {
-      console.log(response);
-      AlertDialog(response.errmsg);
-    });
-}
-
-function limitTimeFormatter(row) {
-
-  var limit_time = new Date(row.limit_time.replace(/-/g, "/"));
-  var month = limit_time.getMonth() + 1;
-  var day = limit_time.getDate();
-  var fmt = month+'月'+day+'日';
-  if (row.task_status <= 1)
-    return fmt;
-
-  // 相差日期计算
-  var current_time = new Date();
-  var diff_day = parseInt((limit_time.getTime() - current_time.getTime()) / (1000 * 3600 * 24));
-  if (diff_day == 0) {
-    fmt += '【<span class="bg-warning">当天</span>】';
-    return fmt;
-  } else if (diff_day < 0) {
-    fmt += '【<span class="bg-danger">延迟 ';
-    diff_day *= -1;
-  } else {
-    fmt += '【<span>还剩 ';
-  }
-  if (diff_day <= 7) {
-    fmt += diff_day + ' 天</span>】';
-  } else if (diff_day <= 30) {
-    fmt += parseInt(diff_day / 7) + ' 周</span>】';
-  } else {
-    fmt += parseInt(diff_day / 30) + ' 个月</span>】';
-  }
-  return fmt;
-}
-
-function CurrentStatus(row) {
-
-  var limit_time = new Date(row.limit_time.replace(/-/g, "/"));
-  
-  // 相差日期计算
-  var current_time = new Date();
-  var diff_day = parseInt((limit_time.getTime() - current_time.getTime()) / (1000 * 3600 * 24));
-  return diff_day;
-}
