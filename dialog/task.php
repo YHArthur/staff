@@ -72,7 +72,7 @@ $level_list = array('0'=>'可选','1'=>'一般','2'=>'重要','3'=>'非常重要
 $level_option = get_select_option($level_list, $task_level);
 
 // 任务状态列表
-$status_list = array('3'=>'等待','2'=>'执行','1'=>'完成','0'=>'废止');
+$status_list = array('2'=>'执行','1'=>'完成','0'=>'废止');
 $status_option = get_select_option($status_list, $task_status);
 ?>
 
@@ -278,7 +278,7 @@ $status_option = get_select_option($status_list, $task_status);
 
     $.ajax({
         url: '/staff/api/task.php',
-        type: 'get',
+        type: 'post',
         data: row,
         success:function(msg) {
           // AJAX正常返回
