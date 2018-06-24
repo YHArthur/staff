@@ -1,5 +1,6 @@
 <?php
 require_once '../inc/common.php';
+require_once '../db/staff_main.php';
 require_once '../db/staff_office_sign.php';
 require_once 'subsidy.php';
 
@@ -12,6 +13,8 @@ header("Content-Type:application/json;charset=utf-8");
   week              前几周（默认0）
   
 返回
+  staff_name        员工姓名
+  join_date         加入时间
   week_begin        周开始日（月-日）
   week_end          周结束日（月-日）
   sum               合计补助金额
@@ -37,6 +40,14 @@ $staff_id = get_arg_str('GET', 'staff_id');
 $week = get_arg_str('GET', 'week');
 
 $week = intval($week);
+
+// 取得指定员工ID的员工记录
+$staff = get_staff($staff_id);
+if (!$staff)
+  exit_error('120', '该员工ID不存在');
+
+$staff_name = $staff['staff_name'];
+$join_date = substr($staff['join_date'], 0, 10);
 
 // 初始化返回数组
 $rtn_rows = array();
@@ -119,6 +130,8 @@ foreach($subsidy_day as $sign_date => $time_from_to) {
 $rtn_ary = array();
 $rtn_ary['errcode'] = '0';
 $rtn_ary['errmsg'] = '';
+$rtn_ary['staff_name'] = $staff_name;
+$rtn_ary['join_date'] = $join_date;
 $rtn_ary['week_begin'] = date('n月j日', $week_monday_begin);
 $rtn_ary['week_end'] = date('n月j日', $week_sunday_end);
 $rtn_ary['sum'] = $subsidy_sum;

@@ -11,7 +11,7 @@
 
   <div class="page__hd">
     <h1 class="page__title">周补贴明细</h1>
-    <p class="page__desc"><span id="week_begin"></span>-<span id="week_end"></span> 合计：<span id="week_sum"></span></p>
+    <p class="page__desc"><span id="week_begin"></span>-<span id="week_end"></span> <span id="staff_name"></span> 合计：<span id="week_sum"></span></p>
   </div>
 
   <input type="hidden" id="week" value='0'>

@@ -5,9 +5,10 @@ $(function () {
 
 // 员工本周补贴明细展示
 function show_week_subsidy(response) {
-  var sign_info, rest_break, dt, time_begin, time_end, commute_subsidy, lunch_subsidy, dinner_subsidy;
+  var first_day, sign_info, rest_break, dt, time_begin, time_end, commute_subsidy, lunch_subsidy, dinner_subsidy;
   var weekday = ["星期天", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
   var rows = response.rows;
+  $("#staff_name").html(response.staff_name);
   $("#week_begin").html(response.week_begin);
   $("#week_end").html(response.week_end);
   $("#week_sum").html('¥' + parseInt(response.sum) + '.00');
@@ -15,7 +16,7 @@ function show_week_subsidy(response) {
   $("#btn_list").html('');
   
   if (rows.length > 0) {
-      var first_day = rows[0].sign_date;
+      first_day = rows[0].sign_date;
       rows.forEach(function(row, index, array) {
           sign_info = row.sign_date;
           dt = new Date(sign_info.replace(/-/g, "/"));
@@ -53,9 +54,9 @@ function show_week_subsidy(response) {
       });
   }
   
-  // 签到系统启动时间
-  if (first_day > '2018-04-02') {
-      // 上一周按钮
+  // 第一天大于签到系统启动时间并且大于员工加入时间
+  if (first_day > '2018-04-02' && first_day > response.join_date) {
+      // 显示上一周按钮
       var lastbtn = '\
         <div class="weui-flex__item button_sp_area">\
           <a id="lastWeekBtn" href="javascript:;" onclick="change_week(1)" class="weui-btn weui-btn_primary">上一周</a>\
@@ -68,7 +69,7 @@ function show_week_subsidy(response) {
   if (isNaN(week))
     week = 0;
 
-  // 下一周按钮
+  // 显示下一周按钮
   if (week > 0) {
       var nextbtn = '\
       <div class="weui-flex__item button_sp_area">\

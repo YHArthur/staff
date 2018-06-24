@@ -66,20 +66,20 @@ function staff_sign_log(limit, offset) {
     var api_url = 'office_sign_log.php';
     var post_data = {"limit": limit, "offset": offset};
     CallApi(api_url, post_data, function (response) {
-        var log_id, staff_name, sign_type, ctime;
+        var staff_id, staff_name, sign_type, ctime;
         var rows = response.rows;
         if (rows.length > 0) {
             rows.forEach(function(row, index, array) {
-                log_id = row.log_id;
+                staff_id = row.staff_id;
                 staff_name = row.staff_name;
                 sign_type = row.sign_type.replace('白金湾339', '');
                 ctime = row.ctime;
 
                 sign_row = '\
-                <label class="weui-cell weui-check__label" for="x' + log_id + '">\
+                <a class="weui-cell weui-cell_access" href="week_subsidy.php?staff_id=' + staff_id + '">\
                   <div class="weui-cell__bd">' + sign_type + ' <span>' + staff_name + '</span></div>\
                   <div class="weui-cell__ft">' + ctime.substr(5, 11) + '</div>\
-                </label>\
+                </a>\
                 ';
                 $("#sign_rows").append(sign_row);
             });
