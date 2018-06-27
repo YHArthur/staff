@@ -16,6 +16,40 @@ function get_staff_weixin($unionid)
 }
 
 //======================================
+// 功能: 取得注册后待申请的员工微信账号记录
+// 参数: $staff_id      员工ID
+// 返回: 员工微信账号记录数组
+// 说明:
+//======================================
+function get_staff_weixin_sign($staff_id)
+{
+  $db = new DB_SATFF();
+
+  $sql = "SELECT * FROM staff_weixin WHERE staff_id = '{$staff_id}' AND is_void = 1";
+  $db->query($sql);
+  $row = $db->fetchRow();
+  return $row;
+}
+
+//======================================
+// 功能: 审核通过待申请的员工微信账号记录
+// 参数: $staff_id      员工ID
+// 返回: true           操作成功
+// 返回: false          操作成功
+//======================================
+function confim_staff_weixin($staff_id)
+{
+  $db = new DB_SATFF();
+
+  $sql = "UPDATE staff_weixin SET is_void = 0, utime = " . time() . " WHERE staff_id = '{$staff_id}' AND is_void = 1";
+  $q_id = $db->query($sql);
+
+  if ($q_id == 0)
+    return false;
+  return true;
+}
+
+//======================================
 // 函数: 微信统一标识存在检查
 // 参数: $unionid       微信统一标识
 // 返回: true           存在
@@ -32,7 +66,6 @@ function exist_staff_weixin($unionid)
     return false;
   return true;
 }
-
 
 //======================================
 // 函数: 创建员工微信账号

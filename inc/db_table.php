@@ -13,6 +13,7 @@ class DBTable {
   public $columns = array();              // 全体字段列表
   public $show_columns = array();         // 展示字段列表
   public $format_columns = array();       // 字段转换样式列表
+  public $event_columns = array();        // 字段事件列表
   public $edit_columns = array();         // 可编辑字段列表（默认除关键字外全体）
   public $srh_columns = array();          // 可检索字段列表（默认全体）
   public $sort_columns = array();         // 可排序字段列表（默认全体）
@@ -1071,6 +1072,11 @@ EOF;
       foreach ($this->format_columns as $f_column) {
         if ($f_column['field'] == $col_name)
           $js_str .= $html->out("formatter: {$f_column['formatter']},");
+      }
+      // 字段事件处理
+      foreach ($this->event_columns as $e_column) {
+        if ($e_column['field'] == $col_name)
+          $js_str .= $html->out("events: {$e_column['events']},");
       }
 
       // 列对齐

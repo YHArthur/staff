@@ -5,6 +5,11 @@ window.onload = function(){
     }
 }
 
+var sign_type;
+sign_type = GetQueryString('lc');
+if (!sign_type)
+    sign_type = '白金湾339';
+
 window.shareData = {
     // 分享标题
     title: "员工微信签出",
@@ -50,7 +55,7 @@ $(function () {
 // 员工签到处理
 function staff_sign(latitude, longitude) {
     var api_url = 'office_sign.php';
-    var post_data = {sign_type: '白金湾339签出', latitude: latitude, longitude: longitude};
+    var post_data = {sign_type: sign_type + '签出', latitude: latitude, longitude: longitude};
     // 员工签到处理
     CallApi(api_url, post_data, function (response) {
         Toast('签出成功');
@@ -63,6 +68,8 @@ function staff_sign(latitude, longitude) {
 
 // 展示员工签到记录
 function staff_sign_log(limit, offset) {
+    $("#sign_type").html(sign_type);
+
     var api_url = 'office_sign_log.php';
     var post_data = {"limit": limit, "offset": offset};
     CallApi(api_url, post_data, function (response) {
@@ -72,7 +79,7 @@ function staff_sign_log(limit, offset) {
             rows.forEach(function(row, index, array) {
                 staff_id = row.staff_id;
                 staff_name = row.staff_name;
-                sign_type = row.sign_type.replace('白金湾339', '');
+                sign_type = row.sign_type.replace('白金湾', '');
                 ctime = row.ctime;
 
                 sign_row = '\

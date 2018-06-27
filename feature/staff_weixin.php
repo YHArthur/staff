@@ -8,10 +8,15 @@ $table = new DBTable('DB_WWW', $table_name);
 
 // 展示字段列表
 $table->show_columns = array("staff_name", "staff_phone", "staff_avata", "wx_name", "ctime", "is_void");
-// 字段转换样式列表
+
+// 头像样式
 $table->format_columns[] = array('field'=>'staff_avata', 'formatter'=>'imageFormatter');
-// 是否无效
+// 是否无效样式
 $table->format_columns[] = array('field'=>'is_void', 'formatter'=>'isVoidFormatter');
+
+// 账号审核事件
+$table->event_columns[] = array('field'=>'is_void', 'events'=>'confimEvents');
+
 // 是否可添加记录
 $table->add_able = false;
 // 排序
@@ -20,10 +25,9 @@ $table->orderby = "CTIME DESC";
 // 额外增加的JS代码
 $table->add_javascript =  <<<EOF
 
-
     // 正式员工审核通过处理
     function getChkBtn(value, row, index) {
-        return '<button class="updfeedback btn-warning" type="button" aria-label="审核"><i class="glyphicon glyphicon-ok"></i> 审核</button>';
+        return '<button class="wxconfim btn-warning" type="button" aria-label="审核"><i class="glyphicon glyphicon-ok"></i> 审核</button>';
     }
 
     // 是否无效
@@ -41,17 +45,17 @@ $table->add_javascript =  <<<EOF
     }
     
 
-    window.updfeedbackEvents = {
-        'click .updfeedback': function (e, value, row) {
+    window.confimEvents = {
+        'click .wxconfim': function (e, value, row) {
           layer.open({
               type: 2,
-              title: row.uname + ' 的故障申述处理',
+              title: '【' + row.staff_name + '】微信账号审核',
               fix: false,
               maxmin: true,
               shadeClose: true,
               shade: 0.8,
               area: ['800px', '850px'],
-              content: 'dialog/dat_feedback.php?logid=' + row.logid
+              content: 'dialog/staff_weixin_confim.php?staff_id=' + row.staff_id
           });
         }
     };    

@@ -34,7 +34,7 @@ need_staff_login();
     </div>
     <div class="weui-cell">
       <div class="weui-cell__hd"><label class="weui-label">签到地点</label></div>
-      <div class="weui-cell__bd"><label id="sign_type">白金湾339</label></div>
+      <div class="weui-cell__bd">白金湾<label id="sign_type"></label></div>
     </div>
   </div>
 

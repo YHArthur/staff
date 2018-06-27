@@ -1,5 +1,20 @@
 <?php
 //======================================
+// 函数: 取得员工新工号
+// 参数: 无
+// 返回: 新工号
+//======================================
+function get_new_staff_cd()
+{
+  $db = new DB_SATFF();
+
+  $sql = "SELECT Max(staff_cd) AS max_cd FROM staff_main";
+  $max_cd = $db->getField($sql, 'max_cd');
+  $max_cd++;
+  return str_pad($max_cd, 3, "0", STR_PAD_LEFT);
+}
+
+//======================================
 // 函数: 取得指定员工ID的员工记录
 // 参数: $staff_id      员工ID
 // 返回: 员工记录数组

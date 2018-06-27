@@ -34,7 +34,7 @@ function show_sign_log(response) {
       rows.forEach(function(row, index, array) {
           staff_id = row.staff_id;
           staff_name = row.staff_name;
-          sign_type = row.sign_type.replace('白金湾339', '');
+          sign_type = row.sign_type.replace('白金湾', '');
           ctime = row.ctime;
 
           sign_row = '\

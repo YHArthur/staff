@@ -11,7 +11,7 @@
 
   <div class="page__hd">
     <h1 class="page__title">签到记录</h1>
-    <p class="page__desc">白金湾339</p>
+    <p class="page__desc">白金湾3楼B座</p>
   </div>
 
   <div class="weui-cells__title">最新签到信息</div>
