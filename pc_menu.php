@@ -73,7 +73,7 @@ $sys_pm = has_sys_pm($staff_pm_list);
 // 取得系统所有权限
 $rows = get_permit_all();
 // 当前模块
-$tmp_sub = '';
+$tmp_sub = false;
 
 // 循环系统所有权限
 foreach ($rows AS $row) {
@@ -84,15 +84,17 @@ foreach ($rows AS $row) {
   if (substr($pm_id, 1) == '000')
     $pm_nm = '系统管理员';
   
+
   // 模块
   if (substr($pm_id, 3) == '0') {
     // 前一模块菜单收尾输出
-    if ($tmp_sub != '') {
+    if ($tmp_sub) {
       echo "\n              </ul>";
       echo "\n            </div>";
       echo "\n          </div>";
       echo "\n        </div>";
       echo "\n";
+      $tmp_sub = false;
     }
 
     // 计算模块权限
@@ -113,7 +115,7 @@ foreach ($rows AS $row) {
       echo "\n".'          <div id="' . $pm_cd . '_menu" class="panel-collapse collapse">';
       echo "\n".'            <div class="panel-body">';
       echo "\n".'              <ul class="nav nav-sidebar">';
-      $tmp_sub = $pm_id;
+      $tmp_sub = true;
     }
   } else {
     // 计算菜单权限

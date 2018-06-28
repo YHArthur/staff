@@ -15,8 +15,11 @@ $table->format_columns[] = array('field'=>'from_date', 'formatter'=>'dateTimeFor
 // 结束时间
 $table->format_columns[] = array('field'=>'to_date', 'formatter'=>'dateTimeFormatter');
 
+// 是否无效
+$table->format_columns[] = array('field'=>'is_void', 'formatter'=>'isVoidFormatter');
+
 // 展示字段列表
-$table->show_columns = array("staff_name", "exp_memo", "exp_amount", "from_date", "to_date", "max_count", "now_count", "ctime");
+$table->show_columns = array("staff_name", "is_void", "exp_memo", "exp_amount", "from_date", "to_date", "max_count", "now_count", "ctime");
 // 排序
 $table->orderby = "from_date DESC";
 
@@ -72,6 +75,20 @@ $table->add_javascript =  <<<EOF
         var month = date_time.getMonth() + 1;
         var day = date_time.getDate();
         var fmt = year+'年'+month+'月'+day+'日';
+        return fmt;
+    }
+
+    // 是否无效
+    function isVoidFormatter(value, row, index) {
+        var fmt = '?';
+        switch (value) {
+          case '0':
+            fmt = '有效';
+            break;
+          case '1':
+            fmt = '无效';
+            break;
+        }
         return fmt;
     }
 
