@@ -55,8 +55,13 @@ $my_id = $_SESSION['staff_id'];
 $my_name = $_SESSION['staff_name'];
 
 // 员工姓名处理
-if ($staff_name != '请选择')
+if ($staff_name == '请选择员工') {
+  $staff_name = '';
+} else if ($my_id == $staff_id) {
+  $staff_name = $my_name;
+} else {
   list($staff_cd, $staff_name) = explode(" ", $staff_name);
+}
 
 $data = array();
 $data['exp_id'] = $exp_id;                                // 经费ID

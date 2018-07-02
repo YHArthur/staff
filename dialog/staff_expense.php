@@ -214,6 +214,24 @@ $void_input = get_radio_input('is_void', $void_list, $is_void);
         row[$(this).attr('name')] = $(this).val();
     });
 
+    // 员工ID
+    if (row['staff_id'] == 0) {
+      parent.layer.msg('请选择员工');
+      return;
+    }
+
+    // 变动金额
+    if (row['exp_amount'] == 0) {
+      parent.layer.msg('变动金额不能为0');
+      return;
+    }
+
+    // 变动次数
+    if (row['max_count'] == 0) {
+      parent.layer.msg('变动次数不能为0');
+      return;
+    }
+
     // 员工姓名
     row['staff_name'] = $("#ct_staff_id option:selected").text();
     // 是否无效
