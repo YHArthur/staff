@@ -94,8 +94,10 @@ $void_input = get_radio_input('is_void', $void_list, $is_void);
 
             <div class="layui-inline">
               <label for="ct_exp_amount" class="layui-form-label">变动金额</label>
-              <div class="layui-input-inline" style="width: 190px;">
+              <div class="input-group" style="width: 190px;">
+                <div class="input-group-addon">RMB</div>
                 <input type="number" class="layui-input" id="ct_exp_amount" name="exp_amount" required lay-verify="required" autocomplete="off"  value="<?php echo $exp_amount?>" placeholder="变动金额">
+                <div class="input-group-addon">分</div>
               </div>
             </div>
 
