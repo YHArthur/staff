@@ -2,7 +2,7 @@ window.shareData = {
     // 分享标题
     title: "员工微信签到记录",
     // 分享描述
-    desc: "上海风赢网络科技有限公司员工签到记录页面【内部专用】~",
+    desc: "上海风赢网络科技有限公司员工签到记录页面【内部专用】",
     // 分享链接
     link: window.location.href,
     // 分享图标
@@ -23,7 +23,7 @@ $(function () {
         });
     }
     // 办公室签到记录取得
-    staff_sign_log();
+    staff_sign_log(14, 0);
 });
 
 // 办公室签到记录展示
@@ -49,10 +49,10 @@ function show_sign_log(response) {
 }
 
 // 办公室签到记录取得
-function staff_sign_log() {
+function staff_sign_log(limit, offset) {
     var api_url = 'office_sign_log.php';
     // API调用
-    CallApi(api_url, {}, function (response) {
+    CallApi(api_url, {"limit": limit, "offset": offset}, function (response) {
         // 办公室签到记录展示
         show_sign_log(response);
     }, function (response) {

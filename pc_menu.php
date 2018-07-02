@@ -83,7 +83,7 @@ foreach ($rows AS $row) {
   // 系统管理员默认模块名称
   if (substr($pm_id, 1) == '000')
     $pm_nm = '系统管理员';
-  
+
 
   // 模块
   if (substr($pm_id, 3) == '0') {
@@ -103,7 +103,7 @@ foreach ($rows AS $row) {
     } else {
       $sub_pm = has_sub_pm($pm_id, $staff_pm_list);
     }
-    
+
     // 员工至少有部分模块权限
     if ($sub_pm >= 0) {
       echo "\n".'        <div class="panel panel-default">';

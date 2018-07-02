@@ -42,7 +42,7 @@ $obj_name = get_arg_str('GET', 'obj_name', 50);           // 目标
 $obj_intro = get_arg_str('GET', 'obj_intro', 8192);       // 目标内容
 $check_id = get_arg_str('GET', 'check_id');               // 监管人ID
 $check_name = get_arg_str('GET', 'check_name');           // 监管人
-$is_public = get_arg_str('GET', 'is_public');             // 是否公开
+$public_level = get_arg_str('GET', 'public_level');       // 公开等级
 $obj_level = get_arg_str('GET', 'obj_level');             // 目标等级
 $obj_value = get_arg_str('GET', 'obj_value');             // 目标价值
 $obj_perc = get_arg_str('GET', 'obj_perc');               // 目标进度
@@ -50,6 +50,7 @@ $obj_status = get_arg_str('GET', 'obj_status');           // 目标状态
 $limit_time = get_arg_str('GET', 'limit_time');           // 目标期限
 
 // 提交信息整理
+$public_level = intval($public_level);
 $obj_level = intval($obj_level);
 $obj_value = intval($obj_value);
 $obj_perc = intval($obj_perc);
@@ -73,7 +74,7 @@ $data['obj_name'] = $obj_name;                            // 目标
 $data['obj_intro'] = $obj_intro;                          // 目标内容
 $data['check_id'] = $check_id;                            // 监管人ID
 $data['check_name'] = $check_name;                        // 监管人
-$data['is_public'] = $is_public;                          // 是否公开
+$data['public_level'] = $public_level;                    // 公开等级
 $data['obj_level'] = $obj_level;                          // 目标等级
 $data['obj_value'] = $obj_value;                          // 目标价值
 $data['obj_perc'] = $obj_perc;                            // 目标进度
