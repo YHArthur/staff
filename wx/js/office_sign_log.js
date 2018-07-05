@@ -23,7 +23,7 @@ $(function () {
         });
     }
     // 办公室签到记录取得
-    staff_sign_log(14, 0);
+    staff_sign_log(20, 0);
 });
 
 // 办公室签到记录展示

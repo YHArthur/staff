@@ -22,7 +22,7 @@ $table->show_columns = array("staff_cd", "staff_name", "staff_sex", "birth_year"
 $table->add_able = false;
 
 // 排序
-$table->orderby = "CTIME DESC";
+$table->orderby = "is_void, join_date DESC, staff_cd DESC";
 
 // 额外增加的JS代码
 $table->add_javascript =  <<<EOF

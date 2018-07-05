@@ -63,7 +63,7 @@ $staff_id = $_SESSION['staff_id'];
 $staff_name = $_SESSION['staff_name'];
 
 // 责任人处理
-if ($respo_name == '请选择') {
+if ($respo_name == '请选择员工') {
   $respo_name = '';
 } else if ($respo_id == $staff_id) {
   $respo_name = $staff_name;
@@ -72,7 +72,7 @@ if ($respo_name == '请选择') {
 }
 
 // 监管人处理
-if ($check_name == '请选择') {
+if ($check_name == '请选择员工') {
   $check_name = '';
 } else if ($check_id == $staff_id) {
   $check_name = $staff_name;

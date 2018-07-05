@@ -3,11 +3,14 @@ require_once '../inc/common.php';
 
 php_begin();
 
-$table_name = 'staff_expense';
+$table_name = 'fin_cycle_cost';
 $table = new DBTable('DB_WWW', $table_name);
 
-// 变动金额
-$table->format_columns[] = array('field'=>'exp_amount', 'formatter'=>'currencyFormatter');
+// 是否无效
+$table->format_columns[] = array('field'=>'is_void', 'formatter'=>'isVoidFormatter');
+
+// 支出金额
+$table->format_columns[] = array('field'=>'cost_amount', 'formatter'=>'currencyFormatter');
 
 // 开始时间
 $table->format_columns[] = array('field'=>'from_date', 'formatter'=>'dateTimeFormatter');
@@ -15,13 +18,11 @@ $table->format_columns[] = array('field'=>'from_date', 'formatter'=>'dateTimeFor
 // 结束时间
 $table->format_columns[] = array('field'=>'to_date', 'formatter'=>'dateTimeFormatter');
 
-// 是否无效
-$table->format_columns[] = array('field'=>'is_void', 'formatter'=>'isVoidFormatter');
+// 展示字段设置
+$table->show_columns = array("staff_cd", "staff_name", "cost_memo", "cost_amount", "from_date", "to_date", "month_gap", "term_day", "is_fix", "is_void", "cname");
 
-// 展示字段列表
-$table->show_columns = array("staff_name", "is_void", "exp_memo", "exp_amount", "from_date", "to_date", "max_count", "now_count", "ctime");
 // 排序
-$table->orderby = "from_date DESC";
+$table->orderby = "is_void, from_date DESC";
 
 // 默认不可添加
 $table->add_able = false;
@@ -35,22 +36,38 @@ $table->add_columns[] = array('title'=>'修改经费', 'field'=>'upd_btn', 'alig
 // 额外增加的工具栏代码
 $table->add_toolbar = <<<EOF
       <button id="add_btn" class="btn btn-warning">
-        <i class="glyphicon glyphicon-plus-sign"></i> 添加经费条目
+        <i class="glyphicon glyphicon-plus-sign"></i> 添加支出条目
+      </button>
+
+      <button id="add_staff_btn" class="btn btn-warning">
+        <i class="glyphicon glyphicon-user"></i> 添加入职员工
       </button>
 EOF;
 
 // 额外增加的JS代码
 $table->add_javascript =  <<<EOF
     $(function () {
-      // 经费条目按钮点击事件
+      // 添加支出条目按钮点击事件
       $('#add_btn').click(function() {
           layer.open({
               type: 2,
-              title: '添加经费条目',
+              title: '添加支出条目',
               shadeClose: true,
               shade: 0.8,
               area: ['800px', '450px'],
-              content: 'dialog/staff_expense.php'
+              content: 'dialog/fin_cycle_cost.php'
+          });
+      });
+
+      // 添加入职员工按钮点击事件
+      $('#add_staff_btn').click(function() {
+          layer.open({
+              type: 2,
+              title: '添加入职员工',
+              shadeClose: true,
+              shade: 0.8,
+              area: ['800px', '450px'],
+              content: 'dialog/fin_cycle_cost_staff.php'
           });
       });
     });
@@ -68,7 +85,6 @@ $table->add_javascript =  <<<EOF
 
     // 日期格式化
     function dateTimeFormatter(value, row, index) {
-
         var date_time = new Date(value.replace(/-/g, "/"));
         var year = date_time.getFullYear();
         var month = date_time.getMonth() + 1;
@@ -95,17 +111,16 @@ $table->add_javascript =  <<<EOF
         'click .updbtn': function (e, value, row) {
           layer.open({
               type: 2,
-              title: '修改经费',
+              title: '修改支出条目',
               fix: false,
               maxmin: true,
               shadeClose: true,
               shade: 0.8,
               area: ['800px', '450px'],
-              content: 'dialog/staff_expense.php?id=' + row.exp_id
+              content: 'dialog/fin_cycle_cost_staff.php?id=' + row.cost_id
           });
         }
     };
-
 EOF;
 
 // 根据参数分析表格处理

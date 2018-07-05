@@ -25,7 +25,7 @@ window.shareData = {
 
 $(function () {
   // 展示员工签到记录
-  staff_sign_log(10, 0);
+  staff_sign_log(20, 0);
 
   if (IsWeiXin()) {
       $.getScript("https://res.wx.qq.com/open/js/jweixin-1.2.0.js", function () {
@@ -60,7 +60,7 @@ function staff_sign(latitude, longitude) {
     CallApi(api_url, post_data, function (response) {
         Toast('签出成功');
         $("#sign_rows").html('');
-        staff_sign_log(10, 0);
+        staff_sign_log(20, 0);
     }, function (response) {
         AlertDialog(response.errmsg);
     });
