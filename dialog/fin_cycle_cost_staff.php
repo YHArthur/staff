@@ -6,52 +6,67 @@ require_once '../db/staff_main.php';
 // 禁止游客访问
 exit_guest();
 
-// 未设置周期支出费用ID(默认添加)
-if (!isset($_GET["id"])) {
+$tax_salary = 5000.00;                                   // 默认税前工资
+$base_salary = 5000.00;                                  // 最低基本工资
+$subsidy_rate = 0.05;                                    // 默认办公津贴比例
+$from_date = date('Y-m-d');                              // 支付开始日
+$to_date = date('Y-03-31', strtotime("1 year"));         // 支付截止日
 
-  $cost_id = '';                                  // 周期支出费用ID
-  $staff_id = '';                                 // 员工ID
-  $staff_name = '';                               // 员工姓名
-  $cost_amount = 0;                               // 支出金额
-  $from_date = date('Y-m-d') . ' 00:00:00';       // 开始时间
-  $to_date = date('Y-m-d') . ' 00:00:00';         // 结束时间
-  $sub_id = '0';                                  // 会计科目ID
-  $cost_memo = '';                                // 支出摘要
-  $is_month = 1;                                  // 是否每月支出
-  $is_year = 0;                                   // 是否每年支付
-  $is_void = 0;                                   // 是否无效
+$pay_level = 1;                                          // 默认缴费档次
 
-} else {
+$com_pension_rate = 0.2;                        // 单位养老保险比例
+$per_pension_rate = 0.08;                       // 个人养老保险比例
+$com_medical_rate = 0.095;                      // 单位医疗保险比例
+$per_medical_rate = 0.02;                       // 个人医疗保险比例
 
-  $cost_id = $_GET["id"];                         // 周期支出费用ID
-  // 取得指定周期支出费用ID的经费记录
-  $cost = get_fin_cycle_cost($cost_id);
-  if (!$cost)
-    exit('cost id is not exist');
+$com_jobless_rate = 0.005;                      // 单位失业保险比例
+$per_jobless_rate = 0.005;                      // 个人失业保险比例
+$com_injury_rate = 0.0023;                      // 单位工伤保险比例
+$com_bear_rate = 0.01;                          // 单位生育保险比例
+$com_housing_fund_rate = 0.07;                  // 单位公积金比例
+$per_housing_fund_rate = 0.07;                  // 个人公积金比例
 
-  $cost_id = $cost['cost_id'];                    // 周期支出费用ID
-  $staff_id = $cost['staff_id'];                  // 员工ID
-  $staff_name = $cost['staff_name'];              // 员工姓名
-  $cost_amount = $cost['cost_amount'];            // 支出金额
-  $from_date = $cost['from_date'];                // 开始时间
-  $to_date = $cost['to_date'];                    // 结束时间
-  $sub_id = $cost['sub_id'];                      // 会计科目ID
-  $cost_memo = $cost['cost_memo'];                // 支出摘要
-  $is_month = $cost['is_month'];                  // 是否每月支出
-  $is_year = $cost['is_year'];                    // 是否每年支付
-  $is_void = $cost['is_void'];                    // 是否无效
+$com_all_rate = 0.3823;                         // 单位全体缴费比例
+$per_all_rate = 0.175;                          // 个人全体缴费比例
+
+$bef_tax_sum = $tax_salary - $base_salary * $per_all_rate;    // 税前总额
+$count_tax_sum = $bef_tax_sum - 3500;                         // 记税总额
+
+// 个人所得税计算
+if ($count_tax_sum <= 0) {
+  $tax_sum = 0;
+} elseif ($count_tax_sum <= 1500) {
+  $tax_sum = $count_tax_sum * 0.03;
+} elseif ($count_tax_sum <= 4500) {
+  $tax_sum = $count_tax_sum * 0.1 - 105;
+} elseif ($count_tax_sum <= 9000) {
+  $tax_sum = $count_tax_sum * 0.2 - 555;
+} elseif ($count_tax_sum <= 35000) {
+  $tax_sum = $count_tax_sum * 0.25 - 1005;
+} elseif ($count_tax_sum <= 55000) {
+  $tax_sum = $count_tax_sum * 0.3 - 2755;
+} elseif ($count_tax_sum <= 80000) {
+  $tax_sum = $count_tax_sum * 0.35 - 5505;
+} elseif ($count_tax_sum > 80000) {
+  $tax_sum = $count_tax_sum * 0.45 - 13505;
 }
+
+// 单位支出
+$com_pay_sum = $tax_salary * (1 + $com_all_rate + $subsidy_rate);
+
+// 税后所得
+$aft_tax_sum = $bef_tax_sum - $tax_sum;
 
 // 员工选项
 $my_id = $_SESSION['staff_id'];
 $staff_rows = get_staff_list();
 $staff_list = get_staff_list_select($my_id, $staff_rows);
 $staff_list['0'] = '请选择员工';
-$staff_option = get_select_option($staff_list, $staff_id);
+$staff_option = get_select_option($staff_list, $my_id);
 
-// 是否无效选项
-$void_list = array('1'=>'无效', '0'=>'有效');
-$void_input = get_radio_input('is_void', $void_list, $is_void);
+// 缴费档次选项
+$pay_list = array('1'=>'低', '2'=>'中', '3'=>'高');
+$pay_input = get_radio_input('pay_level', $pay_list, $pay_level);
 ?>
 
 <html lang="zh-CN">
@@ -62,7 +77,7 @@ $void_input = get_radio_input('is_void', $void_list, $is_void);
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>周期支出管理</title>
+  <title>员工周期支出添加</title>
 
   <link rel="stylesheet" href="../css/bootstrap.min.css">
   <link rel="stylesheet" href="../js/layui/css/layui.css">
@@ -75,18 +90,9 @@ $void_input = get_radio_input('is_void', $void_list, $is_void);
     <div class="modal-body">
       <form id="ct_form" class="layui-form">
 
-          <input type="hidden" name="cost_id" id="cost_id" value="<?php echo $cost_id?>">
-
-          <div class="layui-form-item">
-              <label for="ct_cost_memo" class="layui-form-label">支出摘要</label>
-              <div class="layui-input-block">
-                <input type="text" class="layui-input" id="ct_cost_memo" name="cost_memo" required lay-verify="required" autocomplete="off"  value="<?php echo $cost_memo?>" placeholder="支出摘要">
-              </div>
-          </div>
-
           <div class="layui-form-item">
             <div class="layui-inline">
-              <label for="ct_staff_id" class="layui-form-label">相关员工</label>
+              <label for="ct_staff_id" class="layui-form-label">员工姓名</label>
               <div class="layui-input-inline" style="width: 190px;">
                 <select name="staff_id" id="ct_staff_id">
                 <?php echo $staff_option?>
@@ -95,53 +101,153 @@ $void_input = get_radio_input('is_void', $void_list, $is_void);
             </div>
 
             <div class="layui-inline">
-              <label for="ct_cost_amount" class="layui-form-label">支出金额</label>
+              <label for="ct_pay_level" class="layui-form-label">缴费档次</label>
+              <div class="layui-input-inline" style="width: 200px;">
+                <?php echo $pay_input?>
+              </div>
+            </div>
+          </div>
+
+          <div class="layui-form-item">
+            <div class="layui-inline">
+              <label for="ct_from_date" class="layui-form-label" style="width: 110px;">开始日期</label>
+              <div class="layui-input-inline">
+                <input type="Datatime" class="layui-input" id="ct_from_date" name="from_date" value="<?php echo $from_date?>" placeholder="开始日期" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD'})">
+              </div>
+            </div>
+
+            <div class="layui-inline">
+              <label for="ct_to_date" class="layui-form-label" style="width: 110px;">结束日期</label>
+              <div class="layui-input-inline">
+                <input type="Datatime" class="layui-input" id="ct_to_date" name="to_date" value="<?php echo $to_date?>" placeholder="结束时间" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD'})">
+              </div>
+            </div>
+          </div>
+
+          <div class="layui-form-item">
+            <div class="layui-inline">
+              <label for="ct_tax_salary" class="layui-form-label">税前月薪</label>
               <div class="input-group" style="width: 190px;">
-                <div class="input-group-addon">RMB</div>
-                <input type="number" class="layui-input" id="ct_cost_amount" name="cost_amount" required lay-verify="required" autocomplete="off"  value="<?php echo $cost_amount?>" placeholder="支出金额">
-                <div class="input-group-addon">分</div>
-              </div>
-            </div>
-
-          </div>
-
-          <div class="layui-form-item">
-            <div class="layui-inline">
-              <label for="ct_from_date" class="layui-form-label" style="width: 110px;">开始时间</label>
-              <div class="layui-input-inline">
-                <input type="Datatime" class="layui-input" id="ct_from_date" name="from_date" value="<?php echo $from_date?>" placeholder="开始时间" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD hh:mm:ss'})">
+                <div class="input-group-addon">¥</div>
+                <input type="number" class="layui-input" id="ct_tax_salary" name="tax_salary" required lay-verify="required" autocomplete="off" value="<?php echo $tax_salary?>" placeholder="0.00">
               </div>
             </div>
 
             <div class="layui-inline">
-              <label for="ct_to_date" class="layui-form-label" style="width: 110px;">结束时间</label>
-              <div class="layui-input-inline">
-                <input type="Datatime" class="layui-input" id="ct_to_date" name="to_date" value="<?php echo $to_date?>" placeholder="结束时间" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD hh:mm:ss'})">
+              <label for="ct_office_subsidy" class="layui-form-label">办公津贴</label>
+              <div class="input-group" style="width: 190px;">
+                <div class="input-group-addon">¥</div>
+                <input type="number" class="layui-input" id="ct_office_subsidy" name="office_subsidy" required lay-verify="required" autocomplete="off" value="<?php echo $tax_salary * $subsidy_rate?>" placeholder="0.00">
               </div>
             </div>
           </div>
 
           <div class="layui-form-item">
             <div class="layui-inline">
-              <label for="ct_is_month" class="layui-form-label">是否每月支出</label>
+              <label for="ct_base_salary" class="layui-form-label">基本工资</label>
+              <div class="input-group" style="width: 190px;">
+                <div class="input-group-addon">¥</div>
+                <input type="number" class="layui-input" id="ct_base_salary" name="base_salary" required lay-verify="required" autocomplete="off" value="<?php echo $base_salary?>" placeholder="0.00">
+              </div>
+            </div>
+
+            <div class="layui-inline">
+              <label for="ct_effic_salary" class="layui-form-label">绩效工资</label>
+              <div class="input-group" style="width: 190px;">
+                <div class="input-group-addon">¥</div>
+                <input type="number" class="layui-input" id="ct_effic_salary" name="effic_salary" required lay-verify="required" autocomplete="off" value="<?php echo $tax_salary - $base_salary?>" placeholder="0.00" disabled>
+              </div>
+            </div>
+          </div>
+
+          <div class="layui-form-item">
+            <div class="layui-inline" style="width: 25px;"></div>
+            <div class="layui-inline" style="width: 580px;">
+              <table class="layui-table">
+                <colgroup>
+                  <col width="150">
+                  <col width="150">
+                  <col width="150">
+                  <col>
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th class="c" colspan="2">五险一金缴费项目</th>
+                    <th class="c">单位缴纳</th>
+                    <th class="c">个人缴纳</th>
+                  </tr> 
+                </thead>
+                <tbody>
+                  <tr>
+                    <td rowspan="5" class="c">五险</td>
+                    <td>养老保险</td>
+                    <td class="r" id=""><?php echo $base_salary * $com_pension_rate?></td>
+                    <td class="r" id=""><?php echo $base_salary * $per_pension_rate?></td>
+                  </tr>
+                  <tr>
+                    <td>医疗保险</td>
+                    <td class="r" id=""><?php echo $base_salary * $com_medical_rate?></td>
+                    <td class="r" id=""><?php echo $base_salary * $per_medical_rate?></td>
+                  </tr>
+                  <tr>
+                    <td>失业保险</td>
+                    <td class="r" id=""><?php echo $base_salary * $com_jobless_rate?></td>
+                    <td class="r" id=""><?php echo $base_salary * $per_jobless_rate?></td>
+                  </tr>
+                  <tr>
+                    <td>工伤保险</td>
+                    <td class="r" id=""><?php echo $base_salary * $com_injury_rate?></td>
+                    <td class="r">-</td>
+                  </tr>
+                  <tr>
+                    <td>生育保险</td>
+                    <td class="r" id=""><?php echo $base_salary * $com_bear_rate?></td>
+                    <td class="r">-</td>
+                  </tr>
+                  <tr>
+                    <td class="c">一金</td>
+                    <td>住房公积金</td>
+                    <td class="r" id=""><?php echo $base_salary * $com_housing_fund_rate?></td>
+                    <td class="r" id=""><?php echo $base_salary * $per_housing_fund_rate?></td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <th class="c" colspan="2">合计</th>
+                    <td class="r" id=""><?php echo $base_salary * $com_all_rate?></th>
+                    <td class="r" id=""><?php echo $base_salary * $per_all_rate?></th>
+                  </tr> 
+                </tfoot>
+              </table>
+            </div>
+          </div>
+
+          <div class="layui-form-item">
+            <div class="layui-inline">
+              <label class="layui-form-label">税前总额</label>
               <div class="layui-input-inline" style="width: 190px;">
-                <input type="number" class="layui-input" name="is_month" id="ct_is_month" value="<?php echo $is_month?>" placeholder="是否每月支出">
+                <label class="layui-form-label">¥ <?php echo $bef_tax_sum?></label>
               </div>
             </div>
 
             <div class="layui-inline">
-              <label for="ct_is_year" class="layui-form-label">是否每年支付</label>
-              <div class="layui-input-inline" style="width: 190px;">
-                <input type="number" class="layui-input" name="is_year" id="ct_is_year" value="<?php echo $is_year?>" placeholder="是否每年支付">
+              <label class="layui-form-label">缴纳个税</label>
+              <div class="input-group" style="width: 190px;">
+                <label class="layui-form-label">¥ <?php echo $tax_sum?></label>
               </div>
             </div>
-          </div>
 
-          <div class="layui-form-item">
             <div class="layui-inline">
-              <label for="ct_is_void" class="layui-form-label">是否有效</label>
-              <div class="layui-input-inline" style="width: 190px">
-                <?php echo $void_input?>
+              <label class="layui-form-label">单位支出</label>
+              <div class="input-group" style="width: 200px;">
+                <label class="layui-form-label">¥ <?php echo $com_pay_sum?></label>
+              </div>
+            </div>
+
+            <div class="layui-inline">
+              <label class="layui-form-label">税后工资</label>
+              <div class="input-group" style="width: 190px;">
+                <label class="layui-form-label">¥ <?php echo $aft_tax_sum?></label>
               </div>
             </div>
           </div>

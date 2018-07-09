@@ -66,7 +66,7 @@ $table->add_javascript =  <<<EOF
               title: '添加入职员工',
               shadeClose: true,
               shade: 0.8,
-              area: ['800px', '450px'],
+              area: ['800px', '850px'],
               content: 'dialog/fin_cycle_cost_staff.php'
           });
       });
