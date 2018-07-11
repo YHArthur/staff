@@ -21,7 +21,7 @@ $table->format_columns[] = array('field'=>'is_void', 'formatter'=>'isVoidFormatt
 // 展示字段列表
 $table->show_columns = array("staff_name", "is_void", "exp_memo", "exp_amount", "from_date", "to_date", "max_count", "now_count", "ctime");
 // 排序
-$table->orderby = "from_date DESC";
+$table->orderby = "is_void, from_date DESC";
 
 // 默认不可添加
 $table->add_able = false;

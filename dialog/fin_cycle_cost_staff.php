@@ -6,56 +6,13 @@ require_once '../db/staff_main.php';
 // 禁止游客访问
 exit_guest();
 
-$tax_salary = 5000.00;                                   // 默认税前工资
-$base_salary = 5000.00;                                  // 最低基本工资
-$subsidy_rate = 0.05;                                    // 默认办公津贴比例
+$tax_salary = 10000.00;                                  // 默认税前工资
+$base_salary = 4000.00;                                  // 最低基本工资
+
 $from_date = date('Y-m-d');                              // 支付开始日
 $to_date = date('Y-03-31', strtotime("1 year"));         // 支付截止日
 
 $pay_level = 1;                                          // 默认缴费档次
-
-$com_pension_rate = 0.2;                        // 单位养老保险比例
-$per_pension_rate = 0.08;                       // 个人养老保险比例
-$com_medical_rate = 0.095;                      // 单位医疗保险比例
-$per_medical_rate = 0.02;                       // 个人医疗保险比例
-
-$com_jobless_rate = 0.005;                      // 单位失业保险比例
-$per_jobless_rate = 0.005;                      // 个人失业保险比例
-$com_injury_rate = 0.0023;                      // 单位工伤保险比例
-$com_bear_rate = 0.01;                          // 单位生育保险比例
-$com_housing_fund_rate = 0.07;                  // 单位公积金比例
-$per_housing_fund_rate = 0.07;                  // 个人公积金比例
-
-$com_all_rate = 0.3823;                         // 单位全体缴费比例
-$per_all_rate = 0.175;                          // 个人全体缴费比例
-
-$bef_tax_sum = $tax_salary - $base_salary * $per_all_rate;    // 税前总额
-$count_tax_sum = $bef_tax_sum - 3500;                         // 记税总额
-
-// 个人所得税计算
-if ($count_tax_sum <= 0) {
-  $tax_sum = 0;
-} elseif ($count_tax_sum <= 1500) {
-  $tax_sum = $count_tax_sum * 0.03;
-} elseif ($count_tax_sum <= 4500) {
-  $tax_sum = $count_tax_sum * 0.1 - 105;
-} elseif ($count_tax_sum <= 9000) {
-  $tax_sum = $count_tax_sum * 0.2 - 555;
-} elseif ($count_tax_sum <= 35000) {
-  $tax_sum = $count_tax_sum * 0.25 - 1005;
-} elseif ($count_tax_sum <= 55000) {
-  $tax_sum = $count_tax_sum * 0.3 - 2755;
-} elseif ($count_tax_sum <= 80000) {
-  $tax_sum = $count_tax_sum * 0.35 - 5505;
-} elseif ($count_tax_sum > 80000) {
-  $tax_sum = $count_tax_sum * 0.45 - 13505;
-}
-
-// 单位支出
-$com_pay_sum = $tax_salary * (1 + $com_all_rate + $subsidy_rate);
-
-// 税后所得
-$aft_tax_sum = $bef_tax_sum - $tax_sum;
 
 // 员工选项
 $my_id = $_SESSION['staff_id'];
@@ -77,7 +34,7 @@ $pay_input = get_radio_input('pay_level', $pay_list, $pay_level);
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>员工周期支出添加</title>
+  <title>新员工周期支出添加</title>
 
   <link rel="stylesheet" href="../css/bootstrap.min.css">
   <link rel="stylesheet" href="../js/layui/css/layui.css">
@@ -137,7 +94,7 @@ $pay_input = get_radio_input('pay_level', $pay_list, $pay_level);
               <label for="ct_office_subsidy" class="layui-form-label">办公津贴</label>
               <div class="input-group" style="width: 190px;">
                 <div class="input-group-addon">¥</div>
-                <input type="number" class="layui-input" id="ct_office_subsidy" name="office_subsidy" required lay-verify="required" autocomplete="off" value="<?php echo $tax_salary * $subsidy_rate?>" placeholder="0.00">
+                <input type="number" class="layui-input" id="ct_office_subsidy" name="office_subsidy" required lay-verify="required" autocomplete="off" value="0.00" placeholder="0.00">
               </div>
             </div>
           </div>
@@ -147,7 +104,7 @@ $pay_input = get_radio_input('pay_level', $pay_list, $pay_level);
               <label for="ct_base_salary" class="layui-form-label">基本工资</label>
               <div class="input-group" style="width: 190px;">
                 <div class="input-group-addon">¥</div>
-                <input type="number" class="layui-input" id="ct_base_salary" name="base_salary" required lay-verify="required" autocomplete="off" value="<?php echo $base_salary?>" placeholder="0.00">
+                <input type="number" class="layui-input" id="ct_base_salary" name="base_salary" required lay-verify="required" autocomplete="off" value="<?php echo $base_salary?>" placeholder="0.00" disabled>
               </div>
             </div>
 
@@ -155,7 +112,7 @@ $pay_input = get_radio_input('pay_level', $pay_list, $pay_level);
               <label for="ct_effic_salary" class="layui-form-label">绩效工资</label>
               <div class="input-group" style="width: 190px;">
                 <div class="input-group-addon">¥</div>
-                <input type="number" class="layui-input" id="ct_effic_salary" name="effic_salary" required lay-verify="required" autocomplete="off" value="<?php echo $tax_salary - $base_salary?>" placeholder="0.00" disabled>
+                <input type="number" class="layui-input" id="ct_effic_salary" name="effic_salary" required lay-verify="required" autocomplete="off" value="0.00" placeholder="0.00" disabled>
               </div>
             </div>
           </div>
@@ -165,8 +122,8 @@ $pay_input = get_radio_input('pay_level', $pay_list, $pay_level);
             <div class="layui-inline" style="width: 580px;">
               <table class="layui-table">
                 <colgroup>
-                  <col width="150">
-                  <col width="150">
+                  <col width="100">
+                  <col width="180">
                   <col width="150">
                   <col>
                 </colgroup>
@@ -175,48 +132,48 @@ $pay_input = get_radio_input('pay_level', $pay_list, $pay_level);
                     <th class="c" colspan="2">五险一金缴费项目</th>
                     <th class="c">单位缴纳</th>
                     <th class="c">个人缴纳</th>
-                  </tr> 
+                  </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td rowspan="5" class="c">五险</td>
-                    <td>养老保险</td>
-                    <td class="r" id=""><?php echo $base_salary * $com_pension_rate?></td>
-                    <td class="r" id=""><?php echo $base_salary * $per_pension_rate?></td>
+                    <td>养老保险 (20%, 8%)</td>
+                    <td class="r" id="com_pension_fee"></td>
+                    <td class="r" id="per_pension_fee"></td>
                   </tr>
                   <tr>
-                    <td>医疗保险</td>
-                    <td class="r" id=""><?php echo $base_salary * $com_medical_rate?></td>
-                    <td class="r" id=""><?php echo $base_salary * $per_medical_rate?></td>
+                    <td>医疗保险 (9.5%, 2%)</td>
+                    <td class="r" id="com_medical_fee"></td>
+                    <td class="r" id="per_medical_fee"></td>
                   </tr>
                   <tr>
-                    <td>失业保险</td>
-                    <td class="r" id=""><?php echo $base_salary * $com_jobless_rate?></td>
-                    <td class="r" id=""><?php echo $base_salary * $per_jobless_rate?></td>
+                    <td>失业保险 (0.5%, 0.5%)</td>
+                    <td class="r" id="com_jobless_fee"></td>
+                    <td class="r" id="per_jobless_fee"></td>
                   </tr>
                   <tr>
-                    <td>工伤保险</td>
-                    <td class="r" id=""><?php echo $base_salary * $com_injury_rate?></td>
+                    <td>工伤保险 (0.23%)</td>
+                    <td class="r" id="com_injury_fee"></td>
                     <td class="r">-</td>
                   </tr>
                   <tr>
-                    <td>生育保险</td>
-                    <td class="r" id=""><?php echo $base_salary * $com_bear_rate?></td>
+                    <td>生育保险 (1%)</td>
+                    <td class="r" id="com_bear_fee"></td>
                     <td class="r">-</td>
                   </tr>
                   <tr>
                     <td class="c">一金</td>
-                    <td>住房公积金</td>
-                    <td class="r" id=""><?php echo $base_salary * $com_housing_fund_rate?></td>
-                    <td class="r" id=""><?php echo $base_salary * $per_housing_fund_rate?></td>
+                    <td>住房公积金 (7%, 7%)</td>
+                    <td class="r" id="com_housing_fund_fee"></td>
+                    <td class="r" id="per_housing_fund_fee"></td>
                   </tr>
                 </tbody>
                 <tfoot>
                   <tr>
-                    <th class="c" colspan="2">合计</th>
-                    <td class="r" id=""><?php echo $base_salary * $com_all_rate?></th>
-                    <td class="r" id=""><?php echo $base_salary * $per_all_rate?></th>
-                  </tr> 
+                    <th class="c" colspan="2" id="insur_sum">合计缴费  ¥  (55.73%) ¥</th>
+                    <td class="r" id="com_all_fee"></th>
+                    <td class="r" id="per_all_fee"></th>
+                  </tr>
                 </tfoot>
               </table>
             </div>
@@ -226,28 +183,35 @@ $pay_input = get_radio_input('pay_level', $pay_list, $pay_level);
             <div class="layui-inline">
               <label class="layui-form-label">税前总额</label>
               <div class="layui-input-inline" style="width: 190px;">
-                <label class="layui-form-label">¥ <?php echo $bef_tax_sum?></label>
+                <label class="layui-form-label" id="bef_tax_sum">¥ </label>
               </div>
             </div>
 
             <div class="layui-inline">
               <label class="layui-form-label">缴纳个税</label>
               <div class="input-group" style="width: 190px;">
-                <label class="layui-form-label">¥ <?php echo $tax_sum?></label>
+                <label class="layui-form-label" id="tax_sum">¥ </label>
               </div>
             </div>
 
             <div class="layui-inline">
               <label class="layui-form-label">单位支出</label>
               <div class="input-group" style="width: 200px;">
-                <label class="layui-form-label">¥ <?php echo $com_pay_sum?></label>
+                <label class="layui-form-label" id="com_pay_sum">¥ </label>
               </div>
             </div>
 
             <div class="layui-inline">
               <label class="layui-form-label">税后工资</label>
               <div class="input-group" style="width: 190px;">
-                <label class="layui-form-label">¥ <?php echo $aft_tax_sum?></label>
+                <label class="layui-form-label" id="aft_tax_sum">¥ </label>
+              </div>
+            </div>
+
+            <div class="layui-inline">
+              <label class="layui-form-label">实际收入</label>
+              <div class="input-group" style="width: 190px;">
+                <label class="layui-form-label" id="per_get_sum">¥ </label>
               </div>
             </div>
           </div>
@@ -271,6 +235,14 @@ $pay_input = get_radio_input('pay_level', $pay_list, $pay_level);
   <script src="../js/layui/layui.js"></script>
 
   <script>
+
+  $(function () {
+    // 计算基础项目
+    basecal();
+    // 重新计算所有项目
+    recal();
+  });
+
   var edit_index = 0;
   var layer = new Object();
   var form = new Object();
@@ -281,6 +253,14 @@ $pay_input = get_radio_input('pay_level', $pay_list, $pay_level);
     layer = layui.layer;
     form = layui.form();
     laydate = layui.laydate;
+
+    // 缴费档次点击事件
+    $(".layui-form-radio").click(function() {
+      // 计算基础项目
+      basecal();
+      // 计算其它项目
+      recal();
+    });
   });
 
   // 关闭按钮点击事件
@@ -289,14 +269,170 @@ $pay_input = get_radio_input('pay_level', $pay_list, $pay_level);
     parent.layer.close(index);
   });
 
-  // 确认按钮点击事件
-  $("#btn_ok").click(function() {
-    var cost_memo = $("#ct_cost_memo").val().trim();
-    if (cost_memo.length == 0) {
-      parent.layer.msg('请输入支出摘要');
-      return;
+  // 计算基础项目
+  function basecal() {
+    // 缴费档次
+    var pay_level = $("input[name='pay_level']:checked").val();
+    // 税前月薪
+    var tax_salary = $("#ct_tax_salary").val() * 1.00;
+    // 最低办公津贴比例
+    var min_subsidy_rate = 0.05;
+    // 办公津贴比例
+    var subsidy_rate = min_subsidy_rate;
+    // 最低基本工资
+    var min_base_salary = 4000.00;
+    // 基本工资
+    var base_salary = min_base_salary;
+    // 缴费档次
+    switch(pay_level)
+    {
+      // 中
+      case '2':
+        subsidy_rate = min_subsidy_rate * 2;
+        base_salary = (tax_salary + min_base_salary) / 2
+        break;
+      // 高
+      case '3':
+        subsidy_rate = min_subsidy_rate;
+        base_salary = tax_salary;
+        break;
+      // 低
+      default:
+        subsidy_rate = min_subsidy_rate * 3;
+        base_salary = min_base_salary;
+        break;
+    }
+    // 计算办公津贴
+    var office_subsidy = tax_salary * subsidy_rate;
+    $("#ct_office_subsidy").val(office_subsidy.toFixed(2));
+    // 基本工资变更
+    $("#ct_base_salary").val(base_salary.toFixed(2));
+    // 计算绩效工资
+    var effic_salary = tax_salary * (1 + min_subsidy_rate) - base_salary - office_subsidy;
+    // 绩效工资变更
+    $("#ct_effic_salary").val(effic_salary.toFixed(2));
+
+  }
+
+  // 重新计算其他项目
+  function recal() {
+    var com_pension_rate = 0.2;                        // 单位养老保险比例
+    var per_pension_rate = 0.08;                       // 个人养老保险比例
+    var com_medical_rate = 0.095;                      // 单位医疗保险比例
+    var per_medical_rate = 0.02;                       // 个人医疗保险比例
+
+    var com_jobless_rate = 0.005;                      // 单位失业保险比例
+    var per_jobless_rate = 0.005;                      // 个人失业保险比例
+    var com_injury_rate = 0.0023;                      // 单位工伤保险比例
+    var com_bear_rate = 0.01;                          // 单位生育保险比例
+    var com_housing_fund_rate = 0.07;                  // 单位公积金比例
+    var per_housing_fund_rate = 0.07;                  // 个人公积金比例
+
+    var com_all_rate = 0.3823;                         // 单位全体缴费比例
+    var per_all_rate = 0.175;                          // 个人全体缴费比例
+
+    // 税前月薪
+    var tax_salary = $("#ct_tax_salary").val() * 1;
+    // 基本工资
+    var base_salary = $("#ct_base_salary").val() * 1;
+    // 办公津贴
+    var office_subsidy = $("#ct_office_subsidy").val() * 1;
+    // 绩效工资
+    var effic_salary = $("#ct_effic_salary").val() * 1;
+
+    if (base_salary >= 0) {
+      // 养老保险
+      var com_pension_fee = base_salary * com_pension_rate;
+      $("#com_pension_fee").html(com_pension_fee.toFixed(2));
+      var per_pension_fee = base_salary * per_pension_rate;
+      $("#per_pension_fee").html(per_pension_fee.toFixed(2));
+      // 医疗保险
+      var com_medical_fee = base_salary * com_medical_rate;
+      $("#com_medical_fee").html(com_medical_fee.toFixed(2));
+      var per_medical_fee = base_salary * per_medical_rate;
+      $("#per_medical_fee").html(per_medical_fee.toFixed(2));
+      // 失业保险
+      var com_jobless_fee = base_salary * com_jobless_rate;
+      $("#com_jobless_fee").html(com_jobless_fee.toFixed(2));
+      var per_jobless_fee = base_salary * per_jobless_rate;
+      $("#per_jobless_fee").html(per_jobless_fee.toFixed(2));
+      // 工伤保险
+      var com_injury_fee = base_salary * com_injury_rate;
+      $("#com_injury_fee").html(com_injury_fee.toFixed(2));
+      // 生育保险
+      var com_bear_fee = base_salary * com_bear_rate;
+      $("#com_bear_fee").html(com_bear_fee.toFixed(2));
+      // 住房公积金
+      var com_housing_fund_fee = base_salary * com_housing_fund_rate;
+      $("#com_housing_fund_fee").html(com_housing_fund_fee.toFixed(2));
+      var per_housing_fund_fee = base_salary * per_housing_fund_rate;
+      $("#per_housing_fund_fee").html(per_housing_fund_fee.toFixed(2));
+      // 合计
+      var com_all_fee = base_salary * com_all_rate;
+      $("#com_all_fee").html(com_all_fee.toFixed(2));
+      var per_all_fee = base_salary * per_all_rate;
+      $("#per_all_fee").html(per_all_fee.toFixed(2));
+      var insur_sum = com_all_fee + per_all_fee;
+      $("#insur_sum").html('合计缴费  ¥  ' + insur_sum.toFixed(2) + '  (55.73%)');
     }
 
+    // 计算税前总额
+    var bef_tax_sum = base_salary - per_all_fee;
+    $("#bef_tax_sum").html('¥ ' + bef_tax_sum.toFixed(2));
+
+    // 个人所得税计算
+    var tax_sum = 0;
+    // 计算记税总额
+    var count_tax_sum = bef_tax_sum - 3500;
+    if (count_tax_sum <= 0) {
+      tax_sum = 0;
+    } else if (count_tax_sum <= 1500) {
+      tax_sum = count_tax_sum * 0.03;
+    } else if (count_tax_sum <= 4500) {
+      tax_sum = count_tax_sum * 0.1 - 105;
+    } else if (count_tax_sum <= 9000) {
+      tax_sum = count_tax_sum * 0.2 - 555;
+    } else if (count_tax_sum <= 35000) {
+      tax_sum = count_tax_sum * 0.25 - 1005;
+    } else if (count_tax_sum <= 55000) {
+      tax_sum = count_tax_sum * 0.3 - 2755;
+    } else if (count_tax_sum <= 80000) {
+      tax_sum = count_tax_sum * 0.35 - 5505;
+    } else if (count_tax_sum > 80000) {
+      tax_sum = count_tax_sum * 0.45 - 13505;
+    }
+    $("#tax_sum").html('¥ ' + tax_sum.toFixed(2));
+
+    // 计算单位支出
+    var com_pay_sum = base_salary * (1 + com_all_rate) + effic_salary + office_subsidy;
+    $("#com_pay_sum").html('¥ ' + com_pay_sum.toFixed(2));
+
+    // 计算税后工资
+    var aft_tax_sum = bef_tax_sum - tax_sum + effic_salary;
+    $("#aft_tax_sum").html('¥ ' + aft_tax_sum.toFixed(2));
+
+    // 计算实际收入
+    var per_get_sum = aft_tax_sum + office_subsidy;
+    $("#per_get_sum").html('¥ ' + per_get_sum.toFixed(2));
+  }
+
+  // 税前月薪变更事件
+  $("#ct_tax_salary").on('input',function(){
+    // 计算基础项目
+    basecal();
+    // 计算其它项目
+    recal();
+  });
+
+
+  // 办公津贴变更事件
+  $("#ct_office_subsidy").on('input',function(){
+    // 重新计算所有项目
+    recal();
+  });
+
+  // 确认按钮点击事件
+  $("#btn_ok").click(function() {
     var from_date = $("#ct_from_date").val().trim();
     if (from_date.length == 0) {
       parent.layer.msg('请输入开始时间');
@@ -330,19 +466,29 @@ $pay_input = get_radio_input('pay_level', $pay_list, $pay_level);
       return;
     }
 
-    // 支出金额
-    if (row['cost_amount'] == 0) {
-      parent.layer.msg('支出金额不能为0');
+    // 税前月薪
+    if (row['tax_salary'] <= 0) {
+      parent.layer.msg('请设定税前月薪');
+      return;
+    }
+
+    // 基本工资
+    if (row['base_salary'] <= 0) {
+      parent.layer.msg('请设定基本工资');
+      return;
+    }
+
+    // 基本工资
+    if (row['base_salary'] < 3500) {
+      parent.layer.msg('基本工资不能少于3500');
       return;
     }
 
     // 员工姓名
     row['staff_name'] = $("#ct_staff_id option:selected").text();
-    // 是否无效
-    row['is_void'] = $("input[name='is_void']:checked").val();
 
     $.ajax({
-        url: '/staff/api/staff_cost.php',
+        url: '/staff/api/fin_cycle_cost_staff.php',
         type: 'get',
         data: row,
         success:function(msg) {

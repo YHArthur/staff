@@ -15,8 +15,8 @@ $icon = array();
 $icon[1000] = 'king';
 $icon[1010] = 'star';
 $icon[1020] = 'bullhorn';
-$icon[1030] = 'yen';
-$icon[1040] = 'list-alt';
+$icon[1030] = 'usd';
+$icon[1040] = 'check';
 $icon[1050] = 'list-alt';
 ?>
 

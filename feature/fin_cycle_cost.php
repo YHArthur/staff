@@ -40,7 +40,7 @@ $table->add_toolbar = <<<EOF
       </button>
 
       <button id="add_staff_btn" class="btn btn-warning">
-        <i class="glyphicon glyphicon-user"></i> 添加入职员工
+        <i class="glyphicon glyphicon-user"></i> 添加员工支出
       </button>
 EOF;
 
