@@ -559,6 +559,7 @@ class DBTable {
     </h1>
 
     <div id="toolbar">
+
 EOF;
 
     if ($this->add_able) {
@@ -590,6 +591,7 @@ EOF;
       data-show-toggle="true"
       data-show-columns="true"
       data-show-export="true"
+
 EOF;
 
     if ($this->detail_able) {
@@ -611,7 +613,7 @@ EOF;
       data-show-footer="false"
       data-side-pagination="server"
       data-url="$data_url"
-      data-response-handler="responseHandler">
+      data-response-handler="responseHandler"
     </table>
 
 EOF;
@@ -854,12 +856,13 @@ EOF;
 
     // 操作
     function operateFormatter(value, row, index) {
-        
+
 EOF;
 
     $js_str  .= $html->out("return '" . $operate_str . "';");
 
     $js_str  .= <<<EOF
+
     }
 
     window.operateEvents = {
