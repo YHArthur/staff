@@ -173,7 +173,7 @@ function initTable() {
     // sometimes footer render error.
     setTimeout(function () {
         table.bootstrapTable('resetView');
-    }, 200);
+    }, 500);
     
     // 点击行事件
     table.on('click-row.bs.table', function (e, row) {
@@ -347,7 +347,32 @@ function getHeight() {
     return $(window).height() - $('h1').outerHeight(true) - $('nav').outerHeight(true);
 }
 
+// 员工信息及相邻员工信息展示
+function show_staff_neighbor(response) {
+  $("#cur_name").html(response.cur_name);
+  $("#aft_name").html(response.aft_name);
+  $("#bef_name").html(response.bef_name);
+}
+
+// 获取员工信息及相邻员工信息
+function get_staff_neighbor() {
+    var api_url = 'staff_neighbor.php';
+    var cur_id = $("#cur_id").val();
+    if (!cur_id)
+      return;
+    // API调用
+    CallApi(api_url, {"staff_id":cur_id}, function (response) {
+        // 员工信息及相邻员工信息展示
+        show_staff_neighbor(response);
+    }, function (response) {
+        CallApiError(response);
+    });
+}
+
 $(function () {
+    // 获取员工信息及相邻员工信息
+    get_staff_neighbor();
+
     var scripts = [
             location.search.substring(1) || 'js/bootstrap-table.min.js',
             'js/bootstrap-table-zh-CN.min.js',

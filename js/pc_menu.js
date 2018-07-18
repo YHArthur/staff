@@ -86,6 +86,47 @@ $(function () {
   });
 });
 
+// 调用API失败通用处理
+function CallApiError(response) {
+    show_NG_msg('错误代码：' + response.errcode, response.errmsg);
+    return false;
+}
+
+// 调用API共通函数
+function CallApi(api_url, post_data, suc_func, error_func) {
+
+    var api_site = 'http://www.fnying.com/staff/api/';
+
+    post_data = post_data || {};
+    suc_func = suc_func || $.noop;
+    error_func = error_func || CallApiError;
+
+    //console.log('Call API:' + api_url);
+    //console.log(JSON.stringify(post_data));
+
+    $.ajax({
+        url: api_site + api_url,
+        dataType: "jsonp",
+        data: post_data,
+        success: function(response) {
+            //console.log(JSON.stringify(response));
+            // API返回失败
+            if (response.errcode != 0) {
+                error_func(response);
+            } else {
+                // 成功处理数据
+                suc_func(response);
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            // API错误异常
+            var response = {"errcode": -1, "errmsg": '系统异常，请稍候再试'};
+            // 异常处理
+            error_func(response);
+        }
+    });
+}
+
 function getScript(url, callback) {
     var head = document.getElementsByTagName('head')[0];
     var script = document.createElement('script');

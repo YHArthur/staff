@@ -14,11 +14,6 @@ if (!isset($_SESSION['staff_id'])) {
 $cur_id = $_SESSION['staff_id'];
 $cur_name = $_SESSION['staff_name'];
 
-// 取得员工列表
-$staff_rows = get_staff_list();
-// 取得自己及前后员工列表
-// $neighbor_rows = get_neighbor_staff_list();
-
 $rtn_str  = <<<EOF
 
     <div class="row">
@@ -32,6 +27,8 @@ $rtn_str  = <<<EOF
         <h1 style="text-align: center;"><small class="text-muted" id="aft_name">456</small></h1>
       </div>
     </div>
+
+    <input type="hidden" id="cur_id" value="{$cur_id}">
 
     <div id="toolbar">
         <button id="add_btn" class="btn btn-warning">
@@ -61,9 +58,7 @@ $rtn_str  = <<<EOF
       data-response-handler="responseHandler"
     </table>
 
-    <script>
-    getScript('js/task_list.js');
-    </script>
+    <script src='js/task_list.js'></script>
 
 EOF;
 
