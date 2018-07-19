@@ -18,13 +18,13 @@ $rtn_str  = <<<EOF
 
     <div class="row">
       <div class="col-md-4">
-       <h1 style="text-align: center;"><small class="text-muted" id="bef_name">123</small></h1>
+       <h1 style="text-align: center;"><small class="text-muted" id="bef_name"></small></h1>
       </div>
       <div class="col-md-4">
         <h1 style="text-align: center;"><span id="cur_name">{$cur_name}</span>的任务一览</h1>
       </div>
       <div class="col-md-4">
-        <h1 style="text-align: center;"><small class="text-muted" id="aft_name">456</small></h1>
+        <h1 style="text-align: center;"><small class="text-muted" id="aft_name"></small></h1>
       </div>
     </div>
 
@@ -54,11 +54,14 @@ $rtn_str  = <<<EOF
       data-page-list="[10, 25, 50, 100, 200]"
       data-show-footer="false"
       data-side-pagination="server"
-      data-url="/staff/feature/task.php?m=data"
       data-response-handler="responseHandler"
     </table>
 
-    <script src='js/task_list.js'></script>
+    <!--<script src='js/task_list.js'></script>-->
+    <script>
+      getScript('js/task_list.js');
+    </script>
+    
 
 EOF;
 

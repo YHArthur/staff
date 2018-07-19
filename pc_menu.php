@@ -159,6 +159,10 @@ if ($tmp_sub != '') {
   <script src="http://libs.baidu.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
   <script src="http://cdn.bootcss.com/Chart.js/2.1.6/Chart.bundle.min.js"></script>
   <script src="js/layer/layer.js"></script>
+  <script src="js/bootstrap-table.min.js"></script>
+  <script src="js/bootstrap-table-zh-CN.min.js"></script>
+  <script src="js/bootstrap-table-export.js"></script>
+  <script src="js/tableExport.js"></script>
   <script src="js/pc_menu.js"></script>
 
 </body>

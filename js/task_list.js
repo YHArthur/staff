@@ -1,7 +1,7 @@
-var table_name = '任务一览';
-var table = $('#table');
-function initTable() {
-    table.bootstrapTable({
+// 表格初始化
+function initTable(cur_id) {
+    $('#table').bootstrapTable({
+        url:'/staff/feature/task.php?m=data',
         height: getHeight(),
         columns: [
             {
@@ -172,35 +172,20 @@ function initTable() {
 
     // sometimes footer render error.
     setTimeout(function () {
-        table.bootstrapTable('resetView');
+        $('#table').bootstrapTable('resetView');
     }, 500);
     
     // 点击行事件
-    table.on('click-row.bs.table', function (e, row) {
+    $('#table').on('click-row.bs.table', function (e, row) {
     });
 
     // 窗口尺寸变化事件
     $(window).resize(function () {
-        table.bootstrapTable('resetView', {
+        $('#table').bootstrapTable('resetView', {
             height: getHeight()
         });
     });
 }
-
-
-$(function () {
-  // 添加任务按钮点击事件
-  $('#add_btn').click(function() {
-      layer.open({
-          type: 2,
-          title: '添加任务',
-          shadeClose: true,
-          shade: 0.8,
-          area: ['800px', '850px'],
-          content: 'dialog/task.php'
-      });
-  });
-});
 
 // 修改按钮
 function updBtnFormatter(value, row, index) {
@@ -355,9 +340,8 @@ function show_staff_neighbor(response) {
 }
 
 // 获取员工信息及相邻员工信息
-function get_staff_neighbor() {
+function get_staff_neighbor(cur_id) {
     var api_url = 'staff_neighbor.php';
-    var cur_id = $("#cur_id").val();
     if (!cur_id)
       return;
     // API调用
@@ -370,42 +354,24 @@ function get_staff_neighbor() {
 }
 
 $(function () {
+    var cur_id = $("#cur_id").val();
+
     // 获取员工信息及相邻员工信息
-    get_staff_neighbor();
+    get_staff_neighbor(cur_id);
 
-    var scripts = [
-            location.search.substring(1) || 'js/bootstrap-table.min.js',
-            'js/bootstrap-table-zh-CN.min.js',
-            'js/bootstrap-table-export.js',
-            'js/tableExport.js',
-            'js/bootstrap-table-editable.js',
-            'js/bootstrap-editable.js'
-        ],
-        eachSeries = function (arr, iterator, callback) {
-            callback = callback || function () {};
-            if (!arr.length) {
-                return callback();
-            }
-            var completed = 0;
-            var iterate = function () {
-                iterator(arr[completed], function (err) {
-                    if (err) {
-                        callback(err);
-                        callback = function () {};
-                    }
-                    else {
-                        completed += 1;
-                        if (completed >= arr.length) {
-                            callback(null);
-                        }
-                        else {
-                            iterate();
-                        }
-                    }
-                });
-            };
-            iterate();
-        };
+    // 表格初始化
+    initTable(cur_id);
+    
+    // 添加任务按钮点击事件
+    $('#add_btn').click(function() {
+        layer.open({
+            type: 2,
+            title: '添加任务',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['800px', '850px'],
+            content: 'dialog/task.php'
+        });
+    });
 
-    eachSeries(scripts, getScript, initTable);
 });
