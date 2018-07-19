@@ -1,13 +1,13 @@
 // 表格初始化
-function initTable(cur_id) {
+function initTable() {
     $('#table').bootstrapTable({
-        url:'/staff/feature/task.php?m=data',
         height: getHeight(),
         columns: [
             {
                 title: '公开等级',
                 field: 'public_level',
                 align: 'right',
+                visible: false,
                 sortable: true,
                 formatter: publicLevelFormatter,
                 valign: 'middle'
@@ -22,14 +22,14 @@ function initTable(cur_id) {
             {
                 title: '责任人',
                 field: 'respo_name',
-                align: 'left',
+                align: 'center',
                 sortable: true,
                 valign: 'middle'
             },
             {
                 title: '任务等级',
                 field: 'task_level',
-                align: 'right',
+                align: 'center',
                 sortable: true,
                 formatter: taskLevelFormatter,
                 valign: 'middle'
@@ -38,13 +38,14 @@ function initTable(cur_id) {
                 title: '任务价值',
                 field: 'task_value',
                 align: 'right',
+                visible: false,
                 sortable: true,
                 valign: 'middle'
             },
             {
                 title: '任务状态',
                 field: 'task_status',
-                align: 'right',
+                align: 'center',
                 sortable: true,
                 formatter: taskStatusFormatter,
                 valign: 'middle'
@@ -53,6 +54,7 @@ function initTable(cur_id) {
                 title: '任务进度',
                 field: 'task_perc',
                 align: 'right',
+                visible: false,
                 sortable: true,
                 valign: 'middle'
             },
@@ -67,7 +69,7 @@ function initTable(cur_id) {
             {
                 title: '监督人',
                 field: 'check_name',
-                align: 'left',
+                align: 'center',
                 sortable: true,
                 valign: 'middle'
             },
@@ -98,7 +100,7 @@ function initTable(cur_id) {
             {
                 title: '创建人',
                 field: 'owner_name',
-                align: 'left',
+                align: 'center',
                 visible: false,
                 sortable: true,
                 valign: 'middle'
@@ -172,8 +174,8 @@ function initTable(cur_id) {
 
     // sometimes footer render error.
     setTimeout(function () {
-        $('#table').bootstrapTable('resetView');
-    }, 500);
+        
+    }, 200);
     
     // 点击行事件
     $('#table').on('click-row.bs.table', function (e, row) {
@@ -329,39 +331,57 @@ function imageFormatter(value, row, index) {
 
 // 获取表格高度
 function getHeight() {
-    return $(window).height() - $('h1').outerHeight(true) - $('nav').outerHeight(true);
+    return $(window).height() - 134;
 }
 
 // 员工信息及相邻员工信息展示
-function show_staff_neighbor(response) {
+function showStaffNeighbor(response) {
+  var aft_btn = '<button class="btn btn-info btn-block btn-lg" type="button" onclick="changeStaff(\'' + response.aft_id + '\')">' + response.aft_cd + ' ' + response.aft_name + '</button>';
+  var bef_btn = '<button class="btn btn-info btn-block btn-lg" type="button" onclick="changeStaff(\'' + response.bef_id + '\')">' + response.bef_name + ' ' + response.bef_cd + '</button>';
   $("#cur_name").html(response.cur_name);
-  $("#aft_name").html(response.aft_name);
-  $("#bef_name").html(response.bef_name);
+  $("#aft_name").html(aft_btn);
+  $("#bef_name").html(bef_btn);
 }
 
 // 获取员工信息及相邻员工信息
-function get_staff_neighbor(cur_id) {
+function getStaffNeighbor(cur_id) {
     var api_url = 'staff_neighbor.php';
     if (!cur_id)
       return;
     // API调用
     CallApi(api_url, {"staff_id":cur_id}, function (response) {
         // 员工信息及相邻员工信息展示
-        show_staff_neighbor(response);
+        showStaffNeighbor(response);
     }, function (response) {
         CallApiError(response);
     });
 }
 
-$(function () {
+// 变更当前员工
+function changeStaff(staff_id) {
+    $("#cur_id").val(staff_id);
+    // 任务页面初始化
+    initTask();
+}
+
+// 刷新任务一览
+function refreshTable(cur_id) {
+    var opt = {url: "/staff/api/task_list.php?task_status=9&staff_id=" + cur_id};
+
+    $("#table").bootstrapTable('refresh', opt);
+    $('#table').bootstrapTable('resetView', {height: getHeight()});
+}
+
+// 任务页面初始化
+function initTask() {
     var cur_id = $("#cur_id").val();
-
     // 获取员工信息及相邻员工信息
-    get_staff_neighbor(cur_id);
+    getStaffNeighbor(cur_id);
+    // 刷新任务一览
+    refreshTable(cur_id);
+}
 
-    // 表格初始化
-    initTable(cur_id);
-    
+$(function () {
     // 添加任务按钮点击事件
     $('#add_btn').click(function() {
         layer.open({
@@ -374,4 +394,9 @@ $(function () {
         });
     });
 
+    // 表格初始化
+    initTable();
+
+    // 任务页面初始化
+    initTask();
 });

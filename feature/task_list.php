@@ -17,15 +17,17 @@ $cur_name = $_SESSION['staff_name'];
 $rtn_str  = <<<EOF
 
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-md-2"></div>
+      <div class="col-md-2">
        <h1 style="text-align: center;"><small class="text-muted" id="bef_name"></small></h1>
       </div>
       <div class="col-md-4">
-        <h1 style="text-align: center;"><span id="cur_name">{$cur_name}</span>的任务一览</h1>
+        <h1 style="text-align: center;"><span id="cur_name" class="text-primary">{$cur_name}</span> 的任务一览</h1>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-2">
         <h1 style="text-align: center;"><small class="text-muted" id="aft_name"></small></h1>
       </div>
+      <div class="col-md-2"></div>
     </div>
 
     <input type="hidden" id="cur_id" value="{$cur_id}">

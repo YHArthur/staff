@@ -10,6 +10,7 @@ header("Content-Type:application/json;charset=utf-8");
 GET参数
   staff_id      员工ID
   task_status   任务状态（0:其他,1:已完成,2:执行中,9:全部状态）默认2
+  search        检索关键字
   limit         （记录条数，可选）默认10 最大100，任务状态为9的情况下0，1，2三种状态的任务各取limit件
   offset        （记录偏移量，可选）默认0 与limit参数一起分页使用。
                 如设置 offset=20&limit=10 取第21-30条记录，任务状态为9的情况下无效
