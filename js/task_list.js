@@ -17,6 +17,7 @@ function initTable() {
                 field: 'task_name',
                 align: 'left',
                 sortable: true,
+                formatter: taskNameFormatter,
                 valign: 'middle'
             },
             {
@@ -162,12 +163,12 @@ function initTable() {
                 formatter: updBtnFormatter
             },
             {
-                field: 'operate',
-                title: '操作',
+                title: '行动',
+                field: 'act_btn',
                 align: 'center',
-                valign: 'middle'
-                // events: operateEvents,
-                // formatter: operateFormatter
+                valign: 'middle',
+                events: actBtnEvents,
+                formatter: actBtnFormatter
             }
         ]
     });
@@ -191,8 +192,48 @@ function initTable() {
 
 // 修改按钮
 function updBtnFormatter(value, row, index) {
-    return '<button class="updbtn btn-warning" type="button" aria-label="修改"><i class="glyphicon glyphicon-edit"></i></button>';
+    var my_id = $("#my_id").val();
+    if (my_id == row.owner_id)
+        return '<button class="updbtn btn-warning" type="button" aria-label="修改"><i class="glyphicon glyphicon-edit"></i></button>';
+    return '-';
 }
+
+// 修改按钮触发事件
+window.updBtnEvents = {
+    'click .updbtn': function (e, value, row) {
+      layer.open({
+          type: 2,
+          title: '修改任务',
+          fix: false,
+          maxmin: true,
+          shadeClose: true,
+          shade: 0.8,
+          area: ['800px', '850px'],
+          content: 'dialog/task.php?id=' + row.task_id
+      });
+    }
+};
+
+// 行动按钮
+function actBtnFormatter(value, row, index) {
+    return '<button class="actbtn btn-info" type="button" aria-label="行动"><i class="glyphicon glyphicon-list-alt"></i></button>';
+}
+
+// 行动按钮触发事件
+window.actBtnEvents = {
+    'click .actbtn': function (e, value, row) {
+      layer.open({
+          type: 2,
+          title: '【' + row.task_name + '】的行动列表',
+          fix: false,
+          maxmin: true,
+          shadeClose: true,
+          shade: 0.8,
+          area: ['800px', '850px'],
+          content: 'dialog/action_list.php?task_id=' + row.task_id
+      });
+    }
+};
 
 // 公开等级格式化
 function publicLevelFormatter(value, row, index) {
@@ -212,6 +253,13 @@ function publicLevelFormatter(value, row, index) {
         break;
     }
     return fmt;
+}
+
+// 任务名称格式化
+function taskNameFormatter(value, row, index) {
+    if(value) {
+        return '<a href="http://www.fnying.com/staff/wx/task.php?id=' + row.task_id + '" target="_blank">' + value + '</a>';
+    }
 }
 
 // 任务等级格式化
@@ -286,20 +334,6 @@ function limitTimeFormatter(value, row, index) {
     return fmt;
 }
 
-window.updBtnEvents = {
-    'click .updbtn': function (e, value, row) {
-      layer.open({
-          type: 2,
-          title: '修改任务',
-          fix: false,
-          maxmin: true,
-          shadeClose: true,
-          shade: 0.8,
-          area: ['800px', '850px'],
-          content: 'dialog/task.php?id=' + row.task_id
-      });
-    }
-};
 
 // 取得记录描述
 function getRowDescriptions(row) {
@@ -382,6 +416,7 @@ function initTask() {
 }
 
 $(function () {
+    /*
     // 添加任务按钮点击事件
     $('#add_btn').click(function() {
         layer.open({
@@ -393,6 +428,7 @@ $(function () {
             content: 'dialog/task.php'
         });
     });
+    */
 
     // 表格初始化
     initTable();

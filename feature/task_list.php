@@ -31,12 +31,15 @@ $rtn_str  = <<<EOF
     </div>
 
     <input type="hidden" id="cur_id" value="{$cur_id}">
+    <input type="hidden" id="my_id" value="{$cur_id}">
 
+    <!--
     <div id="toolbar">
         <button id="add_btn" class="btn btn-warning">
         <i class="glyphicon glyphicon-plus-sign"></i> 添加任务
       </button>
     </div>
+    -->
 
     <table id="table"
       data-locale="zh-CN"
