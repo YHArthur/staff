@@ -7,7 +7,7 @@ require_once '../db/staff_main.php';
 exit_guest();
 
 $tax_salary = 10000.00;                                  // 默认税前工资
-$base_salary = 4000.00;                                  // 最低基本工资
+$base_salary = 5000.00;                                  // 最低基本工资
 
 $from_date = date('Y-m-d');                              // 支付开始日
 $to_date = date('Y-03-31', strtotime("1 year"));         // 支付截止日
@@ -152,7 +152,7 @@ $pay_input = get_radio_input('pay_level', $pay_list, $pay_level);
                     <td class="r" id="per_jobless_fee"></td>
                   </tr>
                   <tr>
-                    <td>工伤保险 (0.23%)</td>
+                    <td>工伤保险 (0.16%)</td>
                     <td class="r" id="com_injury_fee"></td>
                     <td class="r">-</td>
                   </tr>
@@ -170,7 +170,7 @@ $pay_input = get_radio_input('pay_level', $pay_list, $pay_level);
                 </tbody>
                 <tfoot>
                   <tr>
-                    <th class="c" colspan="2" id="insur_sum">合计缴费  ¥  (55.73%) ¥</th>
+                    <th class="c" colspan="2" id="insur_sum">合计缴费  ¥  (55.66%) ¥</th>
                     <td class="r" id="com_all_fee"></th>
                     <td class="r" id="per_all_fee"></th>
                   </tr>
@@ -280,7 +280,7 @@ $pay_input = get_radio_input('pay_level', $pay_list, $pay_level);
     // 办公津贴比例
     var subsidy_rate = min_subsidy_rate;
     // 最低基本工资
-    var min_base_salary = 4000.00;
+    var min_base_salary = 5000.00;
     // 基本工资
     var base_salary = min_base_salary;
     // 缴费档次
@@ -323,12 +323,12 @@ $pay_input = get_radio_input('pay_level', $pay_list, $pay_level);
 
     var com_jobless_rate = 0.005;                      // 单位失业保险比例
     var per_jobless_rate = 0.005;                      // 个人失业保险比例
-    var com_injury_rate = 0.0023;                      // 单位工伤保险比例
+    var com_injury_rate = 0.0016;                      // 单位工伤保险比例
     var com_bear_rate = 0.01;                          // 单位生育保险比例
     var com_housing_fund_rate = 0.07;                  // 单位公积金比例
     var per_housing_fund_rate = 0.07;                  // 个人公积金比例
 
-    var com_all_rate = 0.3823;                         // 单位全体缴费比例
+    var com_all_rate = 0.3816;                         // 单位全体缴费比例
     var per_all_rate = 0.175;                          // 个人全体缴费比例
 
     // 税前月薪
@@ -373,7 +373,7 @@ $pay_input = get_radio_input('pay_level', $pay_list, $pay_level);
       var per_all_fee = base_salary * per_all_rate;
       $("#per_all_fee").html(per_all_fee.toFixed(2));
       var insur_sum = com_all_fee + per_all_fee;
-      $("#insur_sum").html('合计缴费  ¥  ' + insur_sum.toFixed(2) + '  (55.73%)');
+      $("#insur_sum").html('合计缴费  ¥  ' + insur_sum.toFixed(2) + '  (55.66%)');
     }
 
     // 计算税前总额
@@ -479,8 +479,8 @@ $pay_input = get_radio_input('pay_level', $pay_list, $pay_level);
     }
 
     // 基本工资
-    if (row['base_salary'] < 3500) {
-      parent.layer.msg('基本工资不能少于3500');
+    if (row['base_salary'] < 4275) {
+      parent.layer.msg('基本工资不能少于4275');
       return;
     }
 

@@ -117,7 +117,7 @@ $table->add_javascript =  <<<EOF
               shadeClose: true,
               shade: 0.8,
               area: ['800px', '450px'],
-              content: 'dialog/fin_cycle_cost_staff.php?id=' + row.cost_id
+              content: 'dialog/fin_cycle_cost.php?id=' + row.cost_id
           });
         }
     };

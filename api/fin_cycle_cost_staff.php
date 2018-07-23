@@ -56,7 +56,7 @@ if ($staff_name == '请选择员工') {
   list($staff_cd, $staff_name) = explode(" ", $staff_name);
 }
 
-$social_insurance_rate = 0.4173;         // 社会保险支付费率
+$social_insurance_rate = 0.4166;         // 社会保险支付费率
 $housing_fund_rate = 0.14;               // 公积金支付费率
 $per_all_rate = 0.175;                  // 个人支付五险一金缴费费率
 
