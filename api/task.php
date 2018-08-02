@@ -62,23 +62,25 @@ $task_status = intval($task_status);
 $staff_id = $_SESSION['staff_id'];
 $staff_name = $_SESSION['staff_name'];
 
-// 责任人处理
-if ($respo_name == '请选择员工') {
-  $respo_name = '';
-} else if ($respo_id == $staff_id) {
-  $respo_name = $staff_name;
-} else {
+// 责任人工号姓名处理
+$respo_cd = '000';
+if ($respo_name != '请选择员工') {
   list($respo_cd, $respo_name) = explode(" ", $respo_name);
-}
-
-// 监管人处理
-if ($check_name == '请选择员工') {
-  $check_name = '';
-} else if ($check_id == $staff_id) {
-  $check_name = $staff_name;
 } else {
-  list($check_cd, $check_name) = explode(" ", $check_name);
+  $respo_name = '';
 }
+if ($staff_id == $respo_id)
+  $respo_name = $staff_name;
+
+// 监管人工号姓名处理
+$check_cd = '000';
+if ($check_name != '请选择员工') {
+  list($check_cd, $check_name) = explode(" ", $check_name);
+} else {
+  $check_name = '';
+}
+if ($staff_id == $check_id)
+  $check_name = $staff_name;
 
 $data = array();
 $data['task_id'] = $task_id;                              // 任务ID

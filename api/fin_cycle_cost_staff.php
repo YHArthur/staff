@@ -47,14 +47,15 @@ $effic_salary = intval($effic_salary * 100);
 $my_id = $_SESSION['staff_id'];
 $my_name = $_SESSION['staff_name'];
 
-// 员工姓名处理
-if ($staff_name == '请选择员工') {
-  $staff_name = '';
-} else if ($my_id == $staff_id) {
-  $staff_name = $my_name;
-} else {
+// 员工工号姓名处理
+$staff_cd = '000';
+if ($staff_name != '请选择员工') {
   list($staff_cd, $staff_name) = explode(" ", $staff_name);
+} else {
+  $staff_name = '';
 }
+if ($my_id == $staff_id)
+  $staff_name = $my_name;
 
 $social_insurance_rate = 0.4166;         // 社会保险支付费率
 $housing_fund_rate = 0.14;               // 公积金支付费率

@@ -11,6 +11,7 @@ GET参数
   staff_id      当前员工ID
 
 返回
+  cur_id        当前员工ID
   cur_cd        当前员工工号
   cur_name      当前员工姓名
   aft_id        下一员工ID
@@ -83,6 +84,7 @@ if ($pos == -1) {
 $rtn_ary = array();
 $rtn_ary['errcode'] = '0';
 $rtn_ary['errmsg'] = '';
+$rtn_ary['cur_id'] = $cur_id;
 $rtn_ary['cur_cd'] = $cur_cd;
 $rtn_ary['cur_name'] = $cur_name;
 $rtn_ary['aft_id'] = $aft_id;

@@ -130,9 +130,9 @@ function get_radio_input($name, $list, $checked)
   $input = '';
   foreach ($list as $key=>$val) {
     if ($key == $checked) {
-      $input .= '<input type="radio" name="' . $name . '" value="' . $key . '" title="' . $val . '" checked>';
+      $input .= '<input type="radio" lay-filter="radio_' . $name . '" name="' . $name . '" value="' . $key . '" title="' . $val . '" checked>';
     } else {
-      $input .= '<input type="radio" name="' . $name . '" value="' . $key . '" title="' . $val . '">';
+      $input .= '<input type="radio" lay-filter="radio_' . $name . '" name="' . $name . '" value="' . $key . '" title="' . $val . '">';
     }
   }
   return $input;

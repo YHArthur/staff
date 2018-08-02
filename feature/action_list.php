@@ -11,6 +11,7 @@ if (!isset($_SESSION['staff_id'])) {
 }
 
 $cur_id = $_SESSION['staff_id'];
+$cur_name = $_SESSION['staff_name'];
 
 $rtn_str  = <<<EOF
 
@@ -20,7 +21,7 @@ $rtn_str  = <<<EOF
        <h1 style="text-align: center;"><small class="text-muted" id="bef_name"></small></h1>
       </div>
       <div class="col-md-4">
-        <h1 style="text-align: center;"><span id="cur_name" class="text-primary">我</span> 的任务一览</h1>
+        <h1 style="text-align: center;"><span id="cur_name" class="text-primary">{$cur_name}</span> 的行动一览</h1>
       </div>
       <div class="col-md-2">
         <h1 style="text-align: center;"><small class="text-muted" id="aft_name"></small></h1>
@@ -30,14 +31,6 @@ $rtn_str  = <<<EOF
 
     <input type="hidden" id="cur_id" value="{$cur_id}">
     <input type="hidden" id="my_id" value="{$cur_id}">
-
-    <!--
-    <div id="toolbar">
-        <button id="add_btn" class="btn btn-warning">
-        <i class="glyphicon glyphicon-plus-sign"></i> 添加任务
-      </button>
-    </div>
-    -->
 
     <table id="table"
       data-locale="zh-CN"
@@ -57,12 +50,11 @@ $rtn_str  = <<<EOF
       data-page-list="[10, 25, 50, 100, 200]"
       data-show-footer="false"
       data-side-pagination="server"
-      data-url="/staff/api/task_list.php?task_status=9&staff_id={$cur_id}"
       data-response-handler="responseHandler"
     </table>
 
     <script>
-      getScript('js/task_list.js');
+      getScript('js/action_list.js');
     </script>
 
 EOF;

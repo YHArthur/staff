@@ -22,7 +22,7 @@ $table->format_columns[] = array('field'=>'to_date', 'formatter'=>'dateTimeForma
 $table->show_columns = array("staff_cd", "staff_name", "cost_memo", "cost_amount", "from_date", "to_date", "month_gap", "term_day", "is_fix", "is_void", "cname");
 
 // 排序
-$table->orderby = "is_void, from_date DESC";
+$table->orderby = "is_void, from_date DESC, staff_cd DESC, cost_amount DESC";
 
 // 默认不可添加
 $table->add_able = false;

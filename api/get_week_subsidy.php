@@ -53,6 +53,8 @@ $join_date = substr($staff['join_date'], 0, 10);
 $rtn_rows = array();
 // 初始化补助计算日期数组
 $subsidy_day = array();
+// 初始化签出日期数组
+$sign_out_day = array();
 
 // 周一开始时间计算
 $week_monday_begin = strtotime('Sunday -6 day', strtotime(date('Y-m-d'))) - $week*7*24*60*60;
@@ -62,6 +64,7 @@ $current_day = $week_monday_begin;
 while ($current_day < $week_sunday_end) {
   $ymd = date('Y-m-d', $current_day);
   $subsidy_day[$ymd] = '';
+  $sign_out_day[$ymd] = '';
   $current_day += 60*60*24;
 }
 
@@ -80,6 +83,9 @@ foreach($sign_rows as $sign_row) {
     // 签出数据
     if ((substr($sign_type, -6, 6) == '签出') && $subsidy_day[$sign_date] != '')
       $subsidy_day[$sign_date] = substr($subsidy_day[$sign_date], 0, 19) . ',' . $ctime;
+    // 签出数据
+    if ((substr($sign_type, -6, 6) == '签出'))
+      $sign_out_day[$sign_date] = $ctime;
   }
 }
 
@@ -116,7 +122,7 @@ foreach($subsidy_day as $sign_date => $time_from_to) {
     $rtn_row['dinner_subsidy'] = $dinner_subsidy;
     $subsidy_sum += ($commute_subsidy + $lunch_subsidy + $dinner_subsidy);
   } else {
-    $rtn_row['time_end'] = '';
+    $rtn_row['time_end'] = substr($sign_out_day[$sign_date], 11, 8);
     $rtn_row['commute_subsidy'] = 0;
     $rtn_row['lunch_subsidy'] = 0;
     $rtn_row['dinner_subsidy'] = 0;

@@ -173,6 +173,15 @@ function initTable() {
         ]
     });
 
+    // sometimes footer render error.
+    setTimeout(function () {
+        
+    }, 200);
+    
+    // 点击行事件
+    $('#table').on('click-row.bs.table', function (e, row) {
+    });
+
     // 窗口尺寸变化事件
     $(window).resize(function () {
         $('#table').bootstrapTable('resetView', {
@@ -340,13 +349,6 @@ function detailFormatter(index, row) {
     return html.join('');
 }
 
-function responseHandler(res) {
-    $.each(res.rows, function (i, row) {
-        // row.state = $.inArray(row.id, selections) !== -1;
-    });
-    return res;
-}
-
 // 链接格式化
 function urlFormatter(value, row, index) {
     if(value) {
@@ -368,14 +370,9 @@ function getHeight() {
 
 // 员工信息及相邻员工信息展示
 function showStaffNeighbor(response) {
-  var my_id = $("#my_id").val();
   var aft_btn = '<button class="btn btn-info btn-block btn-lg" type="button" onclick="changeStaff(\'' + response.aft_id + '\')">' + response.aft_cd + ' ' + response.aft_name + '</button>';
   var bef_btn = '<button class="btn btn-info btn-block btn-lg" type="button" onclick="changeStaff(\'' + response.bef_id + '\')">' + response.bef_name + ' ' + response.bef_cd + '</button>';
-  if (my_id != response.cur_id) {
-    $("#cur_name").html(response.cur_name);
-  } else {
-    $("#cur_name").html('我');
-  }
+  $("#cur_name").html(response.cur_name);
   $("#aft_name").html(aft_btn);
   $("#bef_name").html(bef_btn);
 }

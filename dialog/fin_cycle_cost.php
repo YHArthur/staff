@@ -242,15 +242,15 @@ $void_input = get_radio_input('is_void', $void_list, $is_void);
     var form = $("#ct_form");
 
     form.find('input[name]').each(function () {
-        row[$(this).attr('name')] = $(this).val();
+      row[$(this).attr('name')] = $(this).val();
     });
 
     form.find('select[name]').each(function () {
-        row[$(this).attr('name')] = $(this).val();
+      row[$(this).attr('name')] = $(this).val();
     });
 
     form.find('textarea[name]').each(function () {
-        row[$(this).attr('name')] = $(this).val();
+      row[$(this).attr('name')] = $(this).val();
     });
 
     // 员工ID
@@ -273,36 +273,36 @@ $void_input = get_radio_input('is_void', $void_list, $is_void);
     row['is_void'] = $("input[name='is_void']:checked").val();
 
     $.ajax({
-        url: '/staff/api/staff_cost.php',
-        type: 'get',
-        data: row,
-        success:function(msg) {
-          // AJAX正常返回
-          if (msg.errcode == '0') {
-            parent.layer.alert(msg.errmsg, {
-              icon: 1,
-              title: '提示信息',
-              btn: ['OK']
-            });
-            var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
-            parent.table.bootstrapTable('refresh');
-            parent.layer.close(index);
-          } else {
-            parent.layer.msg(msg.errmsg, {
-              icon: 2,
-              title: '错误信息',
-              btn: ['好吧']
-            });
-          }
-        },
-        error:function(XMLHttpRequest, textStatus, errorThrown) {
-          // AJAX异常
-          parent.layer.msg(textStatus, {
-              icon: 2,
-              title: errorThrown,
-              btn: ['好吧']
+      url: '/staff/api/fin_cycle_cost.php',
+      type: 'get',
+      data: row,
+      success:function(msg) {
+        // AJAX正常返回
+        if (msg.errcode == '0') {
+          parent.layer.alert(msg.errmsg, {
+            icon: 1,
+            title: '提示信息',
+            btn: ['OK']
+          });
+          var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+          parent.table.bootstrapTable('refresh');
+          parent.layer.close(index);
+        } else {
+          parent.layer.msg(msg.errmsg, {
+            icon: 2,
+            title: '错误信息',
+            btn: ['好吧']
           });
         }
+      },
+      error:function(XMLHttpRequest, textStatus, errorThrown) {
+        // AJAX异常
+        parent.layer.msg(textStatus, {
+            icon: 2,
+            title: errorThrown,
+            btn: ['好吧']
+        });
+      }
     });
 
   });

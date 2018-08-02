@@ -10,7 +10,7 @@ exit_guest();
 if (!isset($_GET["staff_id"]))
   exit('staff_id is not exist');
 
-$staff_id = get_arg_str('GET', 'staff_id');                 // 员工ID
+$staff_id = get_arg_str('GET', 'staff_id');       // 员工ID
 
 // 取得注册后待申请的员工微信账号记录
 $row = get_staff_weixin_sign($staff_id);
