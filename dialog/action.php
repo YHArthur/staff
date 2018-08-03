@@ -25,11 +25,11 @@ if (!isset($_GET["id"])) {
   $action_title = '';                               // 行动标题
   $action_intro = '';                               // 行动预期结果
   $respo_id = $staff_id;                            // 责任人ID
-  $result_type = 'D';                               // 成果类型
+  $result_type = 'I';                               // 成果类型
+  $connect_type = 0;                                // 沟通类型
   $result_name = '';                                // 成果名称
   $is_location = 0;                                 // 是否限定地点
   $location_name = '';                              // 地点名称
-
 
 } else {
 
@@ -43,10 +43,11 @@ if (!isset($_GET["id"])) {
   $action_title = $action['action_title'];          // 行动标题
   $action_intro = $action['action_intro'];          // 行动预期结果
   $respo_id = $action['respo_id'];                  // 责任人ID
-  $result_type = $task['result_type'];              // 成果类型
-  $result_name = $task['result_name'];              // 成果名称
-  $is_location = $task['is_location'];              // 是否限定地点
-  $location_name = $task['location_name'];          // 地点名称
+  $result_type = $action['result_type'];            // 成果类型
+  $connect_type = $action['connect_type'];          // 沟通类型
+  $result_name = $action['result_name'];            // 成果名称
+  $is_location = $action['is_location'];            // 是否限定地点
+  $location_name = $action['location_name'];        // 地点名称
 
   // 将数据库存放的用户输入内容转换回再修改内容
   $action_intro = html_to_str($action_intro);
@@ -59,8 +60,12 @@ $staff_list['0'] = '请选择员工';
 $respo_option = get_select_option($staff_list, $respo_id);
 
 // 成果类型列表
-$type_list = array('D'=>'文档', 'C'=>'联络', 'W'=>'等待');
+$type_list = array('I'=>'内置', 'O'=>'外链', 'U'=>'上传');
 $type_input = get_radio_input('result_type', $type_list, $result_type);
+
+// 沟通类型列表
+$connect_list = array('0'=>'无', '1'=>'即时', '2'=>'网络', '3'=>'等待');
+$connect_input = get_radio_input('connect_type', $connect_list, $connect_type);
 
 // 是否限定地点列表
 $location_list = array('0'=>'不限定地点','1'=>'公司','2'=>'家','3'=>'其它指定场所');
@@ -105,9 +110,16 @@ $location_option = get_select_option($location_list, $is_location);
           </div>
 
           <div class="layui-form-item">
-              <label for="ct_result_name" class="layui-form-label" id="lbl_result_name">文档名称</label>
+              <label for="ct_result_name" class="layui-form-label" id="lbl_result_name">文档链接</label>
               <div class="layui-input-block">
                 <input type="text" class="layui-input" id="ct_result_name" name="result_name" required lay-verify="required" autocomplete="off"  value="<?php echo $result_name?>" placeholder="输入文档名称或文档访问URL">
+              </div>
+          </div>
+
+          <div class="layui-form-item">
+              <label for="ct_connect_type" class="layui-form-label">沟通类型</label>
+              <div class="layui-input-block">
+                <?php echo $connect_input?>
               </div>
           </div>
 
@@ -161,8 +173,8 @@ $location_option = get_select_option($location_list, $is_location);
   var layedit = new Object();
 
   $(function () {
-    // 默认成果类型为文档
-    resultChange('D');
+    // 默认成果类型为内部文档
+    resultChange('I');
     // 隐藏指定地点名称输入框
     $("#div_location_name").hide();
   });

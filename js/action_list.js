@@ -13,11 +13,50 @@ function initTable() {
                 valign: 'middle'
             },
             {
-                title: '任务',
+                title: '状态',
+                field: 'is_closed',
+                align: 'center',
+                sortable: true,
+                formatter: isClosedFormatter,
+                valign: 'middle'
+            },
+            {
+                title: '行动',
+                field: 'action_title',
+                align: 'left',
+                sortable: true,
+                valign: 'middle'
+            },
+            {
+                title: '所属任务',
                 field: 'task_name',
                 align: 'left',
                 sortable: true,
                 formatter: taskNameFormatter,
+                valign: 'middle'
+            },
+            {
+                title: '成果类型',
+                field: 'result_type',
+                align: 'center',
+                sortable: true,
+                formatter: resultTypeFormatter,
+                valign: 'middle'
+            },
+            {
+                title: '成果对象',
+                field: 'result_name',
+                align: 'left',
+                sortable: true,
+                formatter: resultNameFormatter,
+                valign: 'middle'
+            },
+            {
+                title: '设备限定',
+                field: 'device_name',
+                align: 'right',
+                visible: false,
+                sortable: true,
                 valign: 'middle'
             },
             {
@@ -28,49 +67,18 @@ function initTable() {
                 valign: 'middle'
             },
             {
-                title: '任务等级',
-                field: 'task_level',
+                title: '结束时间',
+                field: 'closed_time',
                 align: 'center',
                 sortable: true,
-                formatter: taskLevelFormatter,
+                formatter: closedTimeFormatter,
                 valign: 'middle'
             },
             {
-                title: '任务价值',
-                field: 'task_value',
+                title: '地点限定',
+                field: 'location_name',
                 align: 'right',
                 visible: false,
-                sortable: true,
-                valign: 'middle'
-            },
-            {
-                title: '任务状态',
-                field: 'task_status',
-                align: 'center',
-                sortable: true,
-                formatter: taskStatusFormatter,
-                valign: 'middle'
-            },
-            {
-                title: '任务进度',
-                field: 'task_perc',
-                align: 'right',
-                visible: false,
-                sortable: true,
-                valign: 'middle'
-            },
-            {
-                title: '任务期限',
-                field: 'limit_time',
-                align: 'right',
-                sortable: true,
-                formatter: limitTimeFormatter,
-                valign: 'middle'
-            },
-            {
-                title: '监督人',
-                field: 'check_name',
-                align: 'center',
                 sortable: true,
                 valign: 'middle'
             },
@@ -83,8 +91,8 @@ function initTable() {
                 valign: 'middle'
             },
             {
-                title: '任务内容',
-                field: 'task_intro',
+                title: '预期结果',
+                field: 'action_intro',
                 align: 'left',
                 visible: false,
                 sortable: true,
@@ -115,25 +123,9 @@ function initTable() {
                 valign: 'middle'
             },
             {
-                title: '监督人ID',
-                field: 'check_id',
+                title: '前置行动ID',
+                field: 'prvs_action_id',
                 align: 'center',
-                visible: false,
-                sortable: true,
-                valign: 'middle'
-            },
-            {
-                title: '上一任务ID',
-                field: 'prvs_task_id',
-                align: 'center',
-                visible: false,
-                sortable: true,
-                valign: 'middle'
-            },
-            {
-                title: '是否无效',
-                field: 'is_void',
-                align: 'right',
                 visible: false,
                 sortable: true,
                 valign: 'middle'
@@ -155,7 +147,7 @@ function initTable() {
                 valign: 'middle'
             },
             {
-                title: '修改任务',
+                title: '修改',
                 field: 'upd_btn',
                 align: 'center',
                 valign: 'middle',
@@ -163,23 +155,14 @@ function initTable() {
                 formatter: updBtnFormatter
             },
             {
-                title: '行动',
-                field: 'act_btn',
+                title: '删除',
+                field: 'deel_btn',
                 align: 'center',
                 valign: 'middle',
-                events: actBtnEvents,
-                formatter: actBtnFormatter
+                events: delBtnEvents,
+                formatter: delBtnFormatter
             }
         ]
-    });
-
-    // sometimes footer render error.
-    setTimeout(function () {
-        
-    }, 200);
-    
-    // 点击行事件
-    $('#table').on('click-row.bs.table', function (e, row) {
     });
 
     // 窗口尺寸变化事件
@@ -203,13 +186,48 @@ window.updBtnEvents = {
     'click .updbtn': function (e, value, row) {
       layer.open({
           type: 2,
-          title: '修改任务',
+          title: '修改行动',
           fix: false,
           maxmin: true,
           shadeClose: true,
           shade: 0.8,
           area: ['800px', '850px'],
-          content: 'dialog/task.php?id=' + row.task_id
+          content: 'dialog/action.php?id=' + row.action_id
+      });
+    }
+};
+
+// 操作
+function delBtnFormatter(value, row, index) {
+    return ' <button class="remove btn-danger" type="button" aria-label="删除"><i class="glyphicon glyphicon-remove"></i></button> ';
+}
+
+window.delBtnEvents = {
+    'click .remove': function (e, value, row) {
+      //询问框
+      layer.confirm('是否删除 ' + getRowDescriptions(row) + ' 的记录？', {
+          icon: 3,
+          title: table_name + '操作确认',
+          btn: ['确认','取消']
+      }, function(){
+          $.ajax({
+              url: '/staff/feature/staff_action.php?m=del',
+              type: 'post',
+              data: row,
+              success: function (msg) {
+                if (msg == '1') {
+                  layer.msg(getRowDescriptions(row) + ' 的记录已经被删除');
+                  table.bootstrapTable('refresh');
+                } else {
+                  show_NG_msg(table_name + '数据操作失败', msg);
+                }
+              },
+              error:function(XMLHttpRequest, textStatus, errorThrown) {
+                // AJAX异常
+                show_NG_msg(textStatus, errorThrown);
+              }
+          })
+      } , function(){
       });
     }
 };
@@ -224,7 +242,7 @@ window.actBtnEvents = {
     'click .actbtn': function (e, value, row) {
       layer.open({
           type: 2,
-          title: '【' + row.task_name + '】的行动列表',
+          title: '【' + row.action_title + '】的行动列表',
           fix: false,
           maxmin: true,
           shadeClose: true,
@@ -262,59 +280,61 @@ function taskNameFormatter(value, row, index) {
     }
 }
 
-// 任务等级格式化
-function taskLevelFormatter(value, row, index) {
+// 成果类型格式化
+function resultTypeFormatter(value, row, index) {
     var fmt = '?';
     switch (value) {
-      case '0':
-        fmt = '可选';
+      case 'I':
+        fmt = '内部';
         break;
-      case '1':
-        fmt = '一般';
+      case 'O':
+        fmt = '外部';
         break;
-      case '2':
-        fmt = '重要';
+      case 'U':
+        fmt = '上传';
         break;
-      case '3':
-        fmt = '非常重要';
         break;
     }
     return fmt;
 }
 
-// 任务状态格式化
-function taskStatusFormatter(value, row, index) {
+// 成果名称格式化
+function resultNameFormatter(value, row, index) {
+    if(value) {
+        return value;
+    }
+}
+
+// 是否完成格式化
+function isClosedFormatter(value, row, index) {
     var fmt = '?';
     switch (value) {
       case '0':
-        fmt = '废止';
+        fmt = '待办';
         break;
       case '1':
         fmt = '完成';
         break;
-      case '2':
-        fmt = '执行';
-        break;
-      case '3':
-        fmt = '等待';
-        break;
     }
     return fmt;
 }
 
-// 任务期限格式化
-function limitTimeFormatter(value, row, index) {
+// 结束时间格式化
+function closedTimeFormatter(value, row, index) {
 
-    var limit_time = new Date(value.replace(/-/g, "/"));
-    var month = limit_time.getMonth() + 1;
-    var day = limit_time.getDate();
+    if (!value)
+      return '';
+
+    var ct = new Date(value.replace(/-/g, "/"));
+    var month = ct.getMonth() + 1;
+    var day = ct.getDate();
     var fmt = month+'月'+day+'日';
-    if (row.task_status <= 1)
+    if (row.closed_time <= 1)
       return fmt;
 
     // 相差日期计算
     var current_time = new Date();
-    var diff_day = parseInt((limit_time.getTime() - current_time.getTime()) / (1000 * 3600 * 24));
+    var diff_day = parseInt((is_closed.getTime() - current_time.getTime()) / (1000 * 3600 * 24));
     if (diff_day == 0) {
       fmt += '【<span class="bg-warning">当天</span>】';
       return fmt;
@@ -334,10 +354,9 @@ function limitTimeFormatter(value, row, index) {
     return fmt;
 }
 
-
 // 取得记录描述
 function getRowDescriptions(row) {
-    return '任务ID=' + row.task_id;
+    return '行动ID=' + row.action_id;
 }
 
 // 更多明细字段显示
@@ -394,24 +413,24 @@ function getStaffNeighbor(cur_id) {
 // 变更当前员工
 function changeStaff(staff_id) {
     $("#cur_id").val(staff_id);
-    // 任务页面初始化
-    initTask();
+    // 行动页面初始化
+    initAction();
 }
 
 // 刷新任务一览
 function refreshTable(cur_id) {
-    var opt = {url: "/staff/api/task_list.php?task_status=9&staff_id=" + cur_id};
+    var opt = {url: "/staff/api/action_list.php?is_closed=9&staff_id=" + cur_id};
 
     $("#table").bootstrapTable('refresh', opt);
     $('#table').bootstrapTable('resetView', {height: getHeight()});
 }
 
-// 任务页面初始化
-function initTask() {
+// 行动页面初始化
+function initAction() {
     var cur_id = $("#cur_id").val();
     // 获取员工信息及相邻员工信息
     getStaffNeighbor(cur_id);
-    // 刷新任务一览
+    // 刷新行动一览
     refreshTable(cur_id);
 }
 
@@ -433,6 +452,6 @@ $(function () {
     // 表格初始化
     initTable();
 
-    // 任务页面初始化
-    initTask();
+    // 行动页面初始化
+    initAction();
 });

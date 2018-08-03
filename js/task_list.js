@@ -4,6 +4,14 @@ function initTable() {
         height: getHeight(),
         columns: [
             {
+                title: '添加行动',
+                field: 'add_btn',
+                align: 'center',
+                valign: 'middle',
+                events: addBtnEvents,
+                formatter: addBtnFormatter
+            },
+            {
                 title: '公开等级',
                 field: 'public_level',
                 align: 'right',
@@ -163,12 +171,12 @@ function initTable() {
                 formatter: updBtnFormatter
             },
             {
-                title: '行动',
+                title: '行动列表',
                 field: 'act_btn',
                 align: 'center',
                 valign: 'middle',
-                events: actBtnEvents,
-                formatter: actBtnFormatter
+                events: listBtnEvents,
+                formatter: listBtnFormatter
             }
         ]
     });
@@ -181,7 +189,31 @@ function initTable() {
     });
 }
 
-// 修改按钮
+// 添加行动按钮
+function addBtnFormatter(value, row, index) {
+    var my_id = $("#my_id").val();
+    if (my_id == row.owner_id && row.task_status == 2)
+        return '<button class="addbtn btn-warning" type="button" aria-label="添加"><i class="glyphicon glyphicon-plus"></i></button>';
+    return '-';
+}
+
+// 添加行动按钮触发事件
+window.addBtnEvents = {
+    'click .addbtn': function (e, value, row) {
+      layer.open({
+          type: 2,
+          title: '为【' + row.task_name + '】添加行动',
+          fix: false,
+          maxmin: true,
+          shadeClose: true,
+          shade: 0.8,
+          area: ['800px', '850px'],
+          content: 'dialog/action.php?task_id=' + row.task_id
+      });
+    }
+};
+
+// 修改任务按钮
 function updBtnFormatter(value, row, index) {
     var my_id = $("#my_id").val();
     if (my_id == row.owner_id)
@@ -189,7 +221,7 @@ function updBtnFormatter(value, row, index) {
     return '-';
 }
 
-// 修改按钮触发事件
+// 修改任务按钮触发事件
 window.updBtnEvents = {
     'click .updbtn': function (e, value, row) {
       layer.open({
@@ -206,12 +238,12 @@ window.updBtnEvents = {
 };
 
 // 行动按钮
-function actBtnFormatter(value, row, index) {
+function listBtnFormatter(value, row, index) {
     return '<button class="actbtn btn-info" type="button" aria-label="行动"><i class="glyphicon glyphicon-list-alt"></i></button>';
 }
 
 // 行动按钮触发事件
-window.actBtnEvents = {
+window.listBtnEvents = {
     'click .actbtn': function (e, value, row) {
       layer.open({
           type: 2,

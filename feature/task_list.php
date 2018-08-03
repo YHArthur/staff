@@ -31,13 +31,11 @@ $rtn_str  = <<<EOF
     <input type="hidden" id="cur_id" value="{$cur_id}">
     <input type="hidden" id="my_id" value="{$cur_id}">
 
-    <!--
     <div id="toolbar">
         <button id="add_btn" class="btn btn-warning">
         <i class="glyphicon glyphicon-plus-sign"></i> 添加任务
       </button>
     </div>
-    -->
 
     <table id="table"
       data-locale="zh-CN"
@@ -47,7 +45,7 @@ $rtn_str  = <<<EOF
       data-show-toggle="true"
       data-show-columns="true"
       data-show-export="true"
-      data-detail-view="true"
+      data-detail-view="false"
       data-detail-formatter="detailFormatter"
       data-minimum-count-columns="2"
       data-pagination="true"
