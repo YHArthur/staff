@@ -368,6 +368,13 @@ function detailFormatter(index, row) {
     return html.join('');
 }
 
+function responseHandler(res) {
+    $.each(res.rows, function (i, row) {
+        // row.state = $.inArray(row.id, selections) !== -1;
+    });
+    return res;
+}
+
 // 链接格式化
 function urlFormatter(value, row, index) {
     if(value) {
@@ -435,19 +442,17 @@ function initAction() {
 }
 
 $(function () {
-    /*
     // 添加任务按钮点击事件
     $('#add_btn').click(function() {
         layer.open({
             type: 2,
-            title: '添加任务',
+            title: '添加行动',
             shadeClose: true,
             shade: 0.8,
             area: ['800px', '850px'],
-            content: 'dialog/task.php'
+            content: 'dialog/action.php'
         });
     });
-    */
 
     // 表格初始化
     initTable();

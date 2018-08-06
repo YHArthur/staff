@@ -65,6 +65,42 @@ function get_staff_task_total($staff_id, $task_status = 2, $public_level = 1)
 }
 
 //======================================
+// 函数: 取得员工相关任务下拉列表
+// 参数: $staff_id      员工ID
+// 参数: $task_status   任务状态（0 其他 1 已完成 2 未完成 9 全部状态）
+// 参数: $public_level  公开等级（0 相关 1 组织 9 全部等级）
+// 参数: $limit         记录条数
+// 参数: $offset        记录偏移量
+// 返回: 记录列表
+//======================================
+function get_staff_task_list_select($staff_id)
+{
+  $db = new DB_SATFF();
+
+  $type_ary = array();
+  $type_ary[] = "check_id = '{$staff_id}'";
+  $type_ary[] = "respo_id = '{$staff_id}'";
+  $type_ary[] = "owner_id = '{$staff_id}'";
+  
+  $sql = "SELECT task_id, task_name FROM task";
+  $sql .= " WHERE is_void = 0";
+  $sql .= " AND (" . join(" OR ", $type_ary) . ")";
+  $sql .= " AND task_status = 2";  
+  $sql .= " ORDER BY task_level DESC, limit_time, utime DESC";
+  $db->query($sql);
+  $rows = $db->fetchAll();
+  $task_list = array();
+  $task_list[$staff_id] = '临时行动';
+  foreach ($rows as $row) {
+    $task_id = $row['task_id'];
+    $task_name = $row['task_name'];
+    $task_list[$task_id] = $task_name;
+  }
+
+  return $task_list;
+}
+
+//======================================
 // 函数: 取得员工相关任务列表
 // 参数: $staff_id      员工ID
 // 参数: $task_status   任务状态（0 其他 1 已完成 2 未完成 9 全部状态）

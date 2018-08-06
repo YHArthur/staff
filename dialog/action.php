@@ -12,16 +12,18 @@ $staff_name = $_SESSION['staff_name'];
 
 // 未设置行动ID(默认添加)
 if (!isset($_GET["id"])) {
-  // 必须设置任务ID
-  if (!isset($_GET["task_id"]))
-    exit('task id is not exist');
-    
-  $task_id = $_GET["task_id"];                      // 任务ID
-  // 取得指定任务ID的任务记录
-  $task = get_task($task_id);
-  if (!$task)
-    exit('task id is not exist');
-  
+  // 设置了任务ID
+  if (isset($_GET["task_id"])) {
+    $task_id = $_GET["task_id"];                      // 任务ID
+    // 取得指定任务ID的任务记录
+    $task = get_task($task_id);
+    if (!$task)
+      exit('task id is not exist');
+  } else {
+    // 取得员工相关任务下拉列表
+    $task_list = get_staff_task_list_select($staff_id);
+    $task_id_option = get_select_option($task_list, $staff_id);
+  }
   $action_title = '';                               // 行动标题
   $action_intro = '';                               // 行动预期结果
   $respo_id = $staff_id;                            // 责任人ID
@@ -92,8 +94,18 @@ $location_option = get_select_option($location_list, $is_location);
   <div class="container">
     <div class="modal-body">
       <form id="ct_form" class="layui-form">
-
+          <?php if (isset($_GET["task_id"])) {?>
           <input type="hidden" name="task_id" id="task_id" value="<?php echo $task_id?>">
+          <?php } else {?>
+          <div class="layui-form-item">
+              <label for="ct_task_id" class="layui-form-label">选择任务</label>
+              <div class="layui-input-block">
+                <select name="task_id" id="ct_task_id" lay-filter="select_task_id">
+                <?php echo $task_id_option?>
+                </select>
+              </div>
+          </div>
+          <?php }?>
 
           <div class="layui-form-item">
               <label for="ct_action_title" class="layui-form-label">行动标题</label>
@@ -112,7 +124,7 @@ $location_option = get_select_option($location_list, $is_location);
           <div class="layui-form-item">
               <label for="ct_result_name" class="layui-form-label" id="lbl_result_name">文档链接</label>
               <div class="layui-input-block">
-                <input type="text" class="layui-input" id="ct_result_name" name="result_name" required lay-verify="required" autocomplete="off"  value="<?php echo $result_name?>" placeholder="输入文档名称或文档访问URL">
+                <input type="text" class="layui-input" id="ct_result_name" name="result_name" required lay-verify="required" autocomplete="off"  value="<?php echo $result_name?>" placeholder="输入外链文档URL">
               </div>
           </div>
 
