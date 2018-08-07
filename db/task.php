@@ -184,4 +184,26 @@ function upd_task($data, $task_id)
     return false;
   return true;
 }
+
+//======================================
+// 函数: 任务删除(物理删除)
+// 参数: $task_id       任务ID
+// 返回: true           更新成功
+// 返回: false          更新失败
+//======================================
+function del_task($task_id)
+{
+  $db = new DB_SATFF();
+
+  $data = array();
+  $data['utime'] = time();
+  $data['is_void'] = 1;
+  $where = "task_id = '{$task_id}'";
+  $sql = $db->sqlUpdate("task", $data, $where);
+  $q_id = $db->query($sql);
+
+  if ($q_id == 0)
+    return false;
+  return true;
+}
 ?>

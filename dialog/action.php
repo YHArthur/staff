@@ -11,7 +11,7 @@ $staff_id = $_SESSION['staff_id'];
 $staff_name = $_SESSION['staff_name'];
 
 // 未设置行动ID(默认添加)
-if (!isset($_GET["id"])) {
+if (!isset($_GET["action_id"])) {
   // 设置了任务ID
   if (isset($_GET["task_id"])) {
     $task_id = $_GET["task_id"];                      // 任务ID
@@ -24,18 +24,20 @@ if (!isset($_GET["id"])) {
     $task_list = get_staff_task_list_select($staff_id);
     $task_id_option = get_select_option($task_list, $staff_id);
   }
+  $action_id = '';                                  // 行动ID
   $action_title = '';                               // 行动标题
   $action_intro = '';                               // 行动预期结果
   $respo_id = $staff_id;                            // 责任人ID
-  $result_type = 'I';                               // 成果类型
-  $connect_type = 0;                                // 沟通类型
+  $result_type = 'I';                               // 成果类型(默认内置)
   $result_name = '';                                // 成果名称
+  $connect_type = 0;                                // 沟通类型
+  $connect_name = '';                               // 联络对象
   $is_location = 0;                                 // 是否限定地点
   $location_name = '';                              // 地点名称
 
 } else {
 
-  $action_id = $_GET["id"];                         // 行动ID
+  $action_id = $_GET["action_id"];                  // 行动ID
   // 取得指定行动ID的行动记录
   $action = get_action($action_id);
   if (!$action)
@@ -46,8 +48,9 @@ if (!isset($_GET["id"])) {
   $action_intro = $action['action_intro'];          // 行动预期结果
   $respo_id = $action['respo_id'];                  // 责任人ID
   $result_type = $action['result_type'];            // 成果类型
-  $connect_type = $action['connect_type'];          // 沟通类型
   $result_name = $action['result_name'];            // 成果名称
+  $connect_type = $action['connect_type'];          // 沟通类型
+  $connect_name = $action['connect_name'];          // 联络对象
   $is_location = $action['is_location'];            // 是否限定地点
   $location_name = $action['location_name'];        // 地点名称
 
@@ -62,7 +65,7 @@ $staff_list['0'] = '请选择员工';
 $respo_option = get_select_option($staff_list, $respo_id);
 
 // 成果类型列表
-$type_list = array('I'=>'内置', 'O'=>'外链', 'U'=>'上传');
+$type_list = array('I'=>'内置', 'O'=>'外链');
 $type_input = get_radio_input('result_type', $type_list, $result_type);
 
 // 沟通类型列表
@@ -94,7 +97,8 @@ $location_option = get_select_option($location_list, $is_location);
   <div class="container">
     <div class="modal-body">
       <form id="ct_form" class="layui-form">
-          <?php if (isset($_GET["task_id"])) {?>
+          <input type="hidden" name="action_id" id="action_id" value="<?php echo $action_id?>">
+          <?php if (isset($_GET["action_id"]) || isset($_GET["task_id"])) {?>
           <input type="hidden" name="task_id" id="task_id" value="<?php echo $task_id?>">
           <?php } else {?>
           <div class="layui-form-item">
@@ -110,7 +114,7 @@ $location_option = get_select_option($location_list, $is_location);
           <div class="layui-form-item">
               <label for="ct_action_title" class="layui-form-label">行动标题</label>
               <div class="layui-input-block">
-                <input type="text" class="layui-input" id="ct_action_title" name="action_title" required lay-verify="required" autocomplete="off"  value="<?php echo $action_title?>" placeholder="行动标题（30字以内）">
+                <input type="text" class="layui-input" id="ct_action_title" name="action_title" required lay-verify="required" autocomplete="off"  value="<?php echo $action_title?>" placeholder="请输入行动标题（30字以内）">
               </div>
           </div>
 
@@ -121,17 +125,24 @@ $location_option = get_select_option($location_list, $is_location);
               </div>
           </div>
 
-          <div class="layui-form-item">
+          <div class="layui-form-item" id="div_result_name">
               <label for="ct_result_name" class="layui-form-label" id="lbl_result_name">文档链接</label>
               <div class="layui-input-block">
-                <input type="text" class="layui-input" id="ct_result_name" name="result_name" required lay-verify="required" autocomplete="off"  value="<?php echo $result_name?>" placeholder="输入外链文档URL">
+                <input type="text" class="layui-input" id="ct_result_name" name="result_name" required lay-verify="required" autocomplete="off"  value="<?php echo $result_name?>" placeholder="请输入文档外部访问URL地址">
               </div>
           </div>
 
           <div class="layui-form-item">
-              <label for="ct_connect_type" class="layui-form-label">沟通类型</label>
+              <label for="ct_connect_type" class="layui-form-label">联络沟通</label>
               <div class="layui-input-block">
                 <?php echo $connect_input?>
+              </div>
+          </div>
+
+          <div class="layui-form-item" id="div_connect_name">
+              <label for="ct_connect_name" class="layui-form-label" id="lbl_connect_name">联络对象</label>
+              <div class="layui-input-block">
+                <input type="text" class="layui-input" id="ct_connect_name" name="connect_name" required lay-verify="required" autocomplete="off"  value="<?php echo $connect_name?>" placeholder="请输入联络方的姓名或公司、组织名称">
               </div>
           </div>
 
@@ -144,7 +155,7 @@ $location_option = get_select_option($location_list, $is_location);
                 </select>
               </div>
             </div>
-            
+
             <div class="layui-inline" id="div_location_name">
               <label for="ct_is_location" class="layui-form-label">地点名称</label>
               <div class="layui-input-inline" style="width: 235px;">
@@ -185,10 +196,15 @@ $location_option = get_select_option($location_list, $is_location);
   var layedit = new Object();
 
   $(function () {
-    // 默认成果类型为内部文档
-    resultChange('I');
-    // 隐藏指定地点名称输入框
-    $("#div_location_name").hide();
+    // 成果类型初始化
+    var rt = $("input[name='result_type']:checked").val();
+    resultChange(rt);
+    // 沟通类型初始化
+    var ct = $("input[name='connect_type']:checked").val();
+    connectChange(ct);
+    // 限定地点初始化
+    var lc = $("select[name='is_location']").val();
+    locationChange(lc);
   });
 
   // 使用Layui
@@ -204,55 +220,73 @@ $location_option = get_select_option($location_list, $is_location);
       }
     });
     edit_index = layedit.build('ct_action_intro_edit');
-    
-    // 成果类型点击事件
+
+    // 成果类型变更事件
     form.on('radio(radio_result_type)', function(data) {
-      // 成果类型变更事件
       resultChange(data.value);
     });
-    
+
+    // 沟通类型变更事件
+    form.on('radio(radio_connect_type)', function(data) {
+       connectChange(data.value);
+    });
+
     // 限定地点变更事件
     form.on('select(select_is_location)', function(data) {
-      locationChange(data);
-    }); 
-
+      locationChange(data.value);
+    });
   });
 
-  // 成果类型变更事件
-  function resultChange(tp) {
-    // 成果类型
-    var result_name = '文档名称';
-    var result_placeholder = '输入文档名称或文档访问URL';
-    switch(tp)
-    {
-      // 联络
-      case 'C':
-        result_name = '联络对象';
-        result_placeholder = '请输入联络方的姓名或公司、组织名称';
-        break;
-      // 等待
-      case 'W':
-        result_name = '等待对象';
-        result_placeholder = '请输入需等待对方联络的姓名或公司、组织名称';
-        break;
-      // 文档
-      default:
-        break;
+  // 成果类型处理
+  function resultChange(rt) {
+    // 隐藏成果名称输入框
+    $("#div_result_name").hide();
+    // 成果类型为外链
+    if (rt == 'O') {
+      // 成果标签和成果提示文字
+      var result_name = '文档链接';
+      var result_placeholder = '请输入文档外部访问URL地址';
+      // 成果名称标签变更
+      $("#lbl_result_name").html(result_name);
+      // 成果名称输入内容变更
+      $("#ct_result_name").attr('placeholder', result_placeholder);
+      // 显示成果名称输入框
+      $("#div_result_name").show();
     }
-    // 标签变更
-    $("#lbl_result_name").html(result_name);
-    // 输入内容变更
-    $("#ct_result_name").attr('placeholder', result_placeholder);
   }
 
-  // 限定地点变更事件
-  function locationChange(data) {
-    if (data.value != "3") {
-      // 隐藏地点名称
-      $("#div_location_name").hide();
-    } else {
+  // 沟通类型处理
+  function connectChange(ct) {
+    // 隐藏联络对象输入框
+    $("#div_connect_name").hide();
+    // 沟通类型不是无
+    if (ct != 0) {
+      // 默认成果标签和成果提示文字
+      var result_name = '联络对象';
+      var result_placeholder = '请输入联络方的姓名或公司、组织名称';
+      // 等待
+      if (ct == 3) {
+          result_name = '等待对象';
+          result_placeholder = '请输入需等待对方联络的姓名或公司、组织名称';
+      }
+      // 联络对象标签变更
+      $("#lbl_connect_name").html(result_name);
+      // 联络对象输入内容变更
+      $("#ct_connect_name").attr('placeholder', result_placeholder);
+      // 显示联络对象输入框
+      $("#div_connect_name").show();
+    }
+  }
+
+  // 限定地点处理
+  function locationChange(lc) {
+    // 其它指定地点
+    if (lc == "3") {
       // 显示地点名称
       $("#div_location_name").show();
+    } else {
+      // 隐藏地点名称输入框
+      $("#div_location_name").hide();
     }
   }
 
@@ -264,17 +298,36 @@ $location_option = get_select_option($location_list, $is_location);
 
   // 确认按钮点击事件
   $("#btn_ok").click(function() {
+    // 必须输入行动标题
     var action_title = $("#ct_action_title").val().trim();
     if (action_title.length == 0) {
       parent.layer.msg('请输入行动标题');
       return;
     }
 
+    // 成果类型为外链时必须输入文档链接
+    var result_type = $("input[name='result_type']:checked").val();
+    var result_name = $("#ct_result_name").val().trim();
+    if (result_type == 'O' && result_name.length == 0) {
+      parent.layer.msg('请输入文档链接');
+      return;
+    }
+
+    // 联络沟通有时必须输入联络对象
+    var connect_type = $("input[name='connect_type']:checked").val();
+    var connect_name = $("#ct_connect_name").val().trim();
+    if (connect_type != '0' && connect_name.length == 0) {
+      parent.layer.msg('请输入联络对象');
+      return;
+    }
+
+    /*
     var action_intro = layedit.getContent(edit_index).trim();
     if (action_intro.length == 0) {
       parent.layer.msg('请输入预期结果');
       return;
     }
+    */
 
     var row = {};
     var form = $("#ct_form");
@@ -293,6 +346,8 @@ $location_option = get_select_option($location_list, $is_location);
 
     // 成果类型
     row['result_type'] = $("input[name='result_type']:checked").val();
+    // 沟通类型
+    row['connect_type'] = $("input[name='connect_type']:checked").val();
     // 任务内容
     row['action_intro'] = layedit.getContent(edit_index);
 

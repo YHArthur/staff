@@ -80,9 +80,9 @@ function get_action_pane($task_id, $respo_id, $active_class) {
   }
 
   if ($rtn_str == '')
-    return '没有行动数据';
+    $rtn_str = '没有行动数据';
 
-  return '<div class="tab-pane' . $active_class . '" id="' . $task_id . '"><ul class="nav">' . $rtn_str . '</ul></div>';
+  return '<div class="tab-pane' . $active_class . '" id="' . $respo_id . '"><ul class="nav">' . $rtn_str . '</ul></div>';
 }
 ?>
 

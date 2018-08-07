@@ -1,6 +1,9 @@
+var table_name = '任务一览';
+var table = $('#table');
+
 // 表格初始化
 function initTable() {
-    $('#table').bootstrapTable({
+    table.bootstrapTable({
         height: getHeight(),
         columns: [
             {
@@ -183,7 +186,7 @@ function initTable() {
 
     // 窗口尺寸变化事件
     $(window).resize(function () {
-        $('#table').bootstrapTable('resetView', {
+        table.bootstrapTable('resetView', {
             height: getHeight()
         });
     });
@@ -437,8 +440,8 @@ function changeStaff(staff_id) {
 function refreshTable(cur_id) {
     var opt = {url: "/staff/api/task_list.php?task_status=9&staff_id=" + cur_id};
 
-    $("#table").bootstrapTable('refresh', opt);
-    $('#table').bootstrapTable('resetView', {height: getHeight()});
+    table.bootstrapTable('refresh', opt);
+    table.bootstrapTable('resetView', {height: getHeight()});
 }
 
 // 任务页面初始化

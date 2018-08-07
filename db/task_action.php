@@ -183,4 +183,26 @@ function upd_action($data, $action_id)
     return false;
   return true;
 }
+
+//======================================
+// 函数: 行动删除(物理删除)
+// 参数: $action_id     行动ID
+// 返回: true           删除成功
+// 返回: false          删除失败
+//======================================
+function del_action($action_id)
+{
+  $db = new DB_SATFF();
+
+  $data = array();
+  $data['utime'] = time();
+  $data['is_void'] = 1;
+  $where = "action_id = '{$action_id}'";
+  $sql = $db->sqlUpdate("task_action", $data, $where);
+  $q_id = $db->query($sql);
+
+  if ($q_id == 0)
+    return false;
+  return true;
+}
 ?>

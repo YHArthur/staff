@@ -1,6 +1,9 @@
+var table_name = '行动一览';
+var table = $('#table');
+
 // 表格初始化
 function initTable() {
-    $('#table').bootstrapTable({
+    table.bootstrapTable({
         height: getHeight(),
         columns: [
             {
@@ -167,7 +170,7 @@ function initTable() {
 
     // 窗口尺寸变化事件
     $(window).resize(function () {
-        $('#table').bootstrapTable('resetView', {
+        table.bootstrapTable('resetView', {
             height: getHeight()
         });
     });
@@ -192,7 +195,7 @@ window.updBtnEvents = {
           shadeClose: true,
           shade: 0.8,
           area: ['800px', '850px'],
-          content: 'dialog/action.php?id=' + row.action_id
+          content: 'dialog/action.php?action_id=' + row.action_id
       });
     }
 };
@@ -211,15 +214,22 @@ window.delBtnEvents = {
           btn: ['确认','取消']
       }, function(){
           $.ajax({
-              url: '/staff/feature/staff_action.php?m=del',
-              type: 'post',
-              data: row,
+              url: '/staff/api/task_action_delete.php?obj=action&id=' + row.action_id,
+              type: 'get',
               success: function (msg) {
-                if (msg == '1') {
-                  layer.msg(getRowDescriptions(row) + ' 的记录已经被删除');
+                if (msg.errcode == '0') {
+                  layer.alert(msg.errmsg, {
+                    icon: 1,
+                    title: '提示信息',
+                    btn: ['OK']
+                  });
                   table.bootstrapTable('refresh');
                 } else {
-                  show_NG_msg(table_name + '数据操作失败', msg);
+                  layer.msg(msg.errmsg, {
+                    icon: 2,
+                    title: '错误信息',
+                    btn: ['好吧']
+                  });
                 }
               },
               error:function(XMLHttpRequest, textStatus, errorThrown) {
@@ -237,7 +247,7 @@ function actBtnFormatter(value, row, index) {
     return '<button class="actbtn btn-info" type="button" aria-label="行动"><i class="glyphicon glyphicon-list-alt"></i></button>';
 }
 
-// 行动按钮触发事件
+// 行动列表按钮触发事件
 window.actBtnEvents = {
     'click .actbtn': function (e, value, row) {
       layer.open({
@@ -356,7 +366,7 @@ function closedTimeFormatter(value, row, index) {
 
 // 取得记录描述
 function getRowDescriptions(row) {
-    return '行动ID=' + row.action_id;
+    return '【' + row.action_title + '】';
 }
 
 // 更多明细字段显示
@@ -428,8 +438,8 @@ function changeStaff(staff_id) {
 function refreshTable(cur_id) {
     var opt = {url: "/staff/api/action_list.php?is_closed=9&staff_id=" + cur_id};
 
-    $("#table").bootstrapTable('refresh', opt);
-    $('#table').bootstrapTable('resetView', {height: getHeight()});
+    table.bootstrapTable('refresh', opt);
+    table.bootstrapTable('resetView', {height: getHeight()});
 }
 
 // 行动页面初始化

@@ -30,7 +30,7 @@ POST参数
 exit_guest();
 
 // 参数检查
-$args = array('task_id', 'action_title', 'result_type', 'result_name');
+$args = array('task_id', 'action_title', 'result_type');
 chk_empty_args('POST', $args);
 
 // 提交参数整理
@@ -40,12 +40,15 @@ $action_title = get_arg_str('POST', 'action_title');        // 行动标题
 $action_intro = get_arg_str('POST', 'action_intro', 8192);  // 行动预期结果
 $result_type = get_arg_str('POST', 'result_type');          // 成果类型
 $result_name = get_arg_str('POST', 'result_name', 255);     // 成果名称
+$connect_type = get_arg_str('POST', 'connect_type');        // 沟通类型
+$connect_name = get_arg_str('POST', 'connect_name', 255);   // 联络对象
 $respo_id = get_arg_str('POST', 'respo_id');                // 责任人ID(TODO)
 $respo_name = get_arg_str('POST', 'respo_name');            // 责任人(TODO)
 $is_location = get_arg_str('POST', 'is_location');          // 是否限定地点
 $location_name = get_arg_str('POST', 'location_name');      // 地点名称
 
 // 提交信息整理
+$connect_type = intval($connect_type);
 $is_location = intval($is_location);
 // 地点名称处理
 switch ($is_location)
@@ -72,6 +75,8 @@ $data['respo_id'] = $my_id;                                 // 责任人ID
 $data['respo_name'] = $my_name;                             // 责任人
 $data['result_type'] = $result_type;                        // 成果类型
 $data['result_name'] = $result_name;                        // 成果名称
+$data['connect_type'] = $connect_type;                      // 沟通类型
+$data['connect_name'] = $connect_name;                      // 联络对象
 $data['is_location'] = $is_location;                        // 是否限定地点
 $data['location_name'] = $location_name;                    // 地点名称
 
@@ -82,17 +87,17 @@ if ($action_id == '') {
   $data['owner_id'] = $my_id;                               // 创建人ID
   $data['owner_name'] = $my_name;                           // 创建人
 
-  // 任务创建
+  // 行动创建
   $ret = ins_action($data);
   $msg = '【' . $action_title . '】行动已成功添加';
-  // 任务信息创建失败
+  // 行动信息创建失败
   if ($ret == '')
     exit_error('110', '行动信息创建失败');
 } else {
-  // 任务更新
+  // 行动更新
   $ret = upd_action($data, $action_id);
   $msg = '【' . $action_title . '】行动已成功更新';
-  // 任务信息更新失败
+  // 行动信息更新失败
   if (!$ret)
     exit_error('110', '行动信息更新失败');
 }
