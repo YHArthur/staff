@@ -11,70 +11,28 @@ $staff_id = $_SESSION['staff_id'];
 $staff_name = $_SESSION['staff_name'];
 
 // 未设置行动ID(默认添加)
-if (!isset($_GET["action_id"])) {
-  // 设置了任务ID
-  if (isset($_GET["task_id"])) {
-    $task_id = $_GET["task_id"];                      // 任务ID
-    // 取得指定任务ID的任务记录
-    $task = get_task($task_id);
-    if (!$task)
-      exit('task id is not exist');
-  } else {
-    // 取得员工相关任务下拉列表
-    $task_list = get_staff_task_list_select($staff_id);
-    $task_id_option = get_select_option($task_list, $staff_id);
-  }
-  $action_id = '';                                  // 行动ID
-  $action_title = '';                               // 行动标题
-  $action_intro = '';                               // 行动预期结果
-  $respo_id = $staff_id;                            // 责任人ID
-  $result_type = 'I';                               // 成果类型(默认内置)
-  $result_name = '';                                // 成果名称
-  $connect_type = 0;                                // 沟通类型
-  $connect_name = '';                               // 联络对象
-  $is_location = 0;                                 // 是否限定地点
-  $location_name = '';                              // 地点名称
+if (!isset($_GET["action_id"]))
+  exit('action id is not exist');
 
-} else {
+$action_id = $_GET["action_id"];                  // 行动ID
+// 取得指定行动ID的行动记录
+$action = get_action($action_id);
+if (!$action)
+  exit('action id does not exist');
 
-  $action_id = $_GET["action_id"];                  // 行动ID
-  // 取得指定行动ID的行动记录
-  $action = get_action($action_id);
-  if (!$action)
-    exit('action id does not exist');
+if ($staff_id != $action['respo_id'])
+  exit('no permit');
 
-  $task_id = $action['task_id'];                    // 任务ID
-  $action_title = $action['action_title'];          // 行动标题
-  $action_intro = $action['action_intro'];          // 行动预期结果
-  $respo_id = $action['respo_id'];                  // 责任人ID
-  $result_type = $action['result_type'];            // 成果类型
-  $result_name = $action['result_name'];            // 成果名称
-  $connect_type = $action['connect_type'];          // 沟通类型
-  $connect_name = $action['connect_name'];          // 联络对象
-  $is_location = $action['is_location'];            // 是否限定地点
-  $location_name = $action['location_name'];        // 地点名称
-
-  // 将数据库存放的用户输入内容转换回再修改内容
-  $action_intro = html_to_str($action_intro);
-}
-
-// 员工选项
-$staff_rows = get_staff_list();
-$staff_list = get_staff_list_select($staff_id, $staff_rows);
-$staff_list['0'] = '请选择员工';
-$respo_option = get_select_option($staff_list, $respo_id);
-
-// 成果类型列表
-$type_list = array('I'=>'内置', 'O'=>'外链');
-$type_input = get_radio_input('result_type', $type_list, $result_type);
-
-// 沟通类型列表
-$connect_list = array('0'=>'无', '1'=>'即时', '2'=>'网络', '3'=>'等待');
-$connect_input = get_radio_input('connect_type', $connect_list, $connect_type);
-
-// 是否限定地点列表
-$location_list = array('0'=>'不限定地点','1'=>'公司','2'=>'家','3'=>'其它指定场所');
-$location_option = get_select_option($location_list, $is_location);
+$task_id = $action['task_id'];                    // 任务ID
+$action_title = $action['action_title'];          // 行动标题
+$action_intro = $action['action_intro'];          // 行动预期结果
+$result_memo = $action['result_memo'];            // 结果描述
+$result_type = $action['result_type'];            // 成果类型
+$result_name = $action['result_name'];            // 成果名称
+$connect_type = $action['connect_type'];          // 沟通类型
+$connect_name = $action['connect_name'];          // 联络对象
+$is_location = $action['is_location'];            // 是否限定地点
+$location_name = $action['location_name'];        // 地点名称
 ?>
 
 <html lang="zh-CN">
@@ -85,7 +43,7 @@ $location_option = get_select_option($location_list, $is_location);
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>行动管理</title>
+  <title>行动进展</title>
 
   <link rel="stylesheet" href="../css/bootstrap.min.css">
   <link rel="stylesheet" href="../js/layui/css/layui.css">
@@ -96,46 +54,15 @@ $location_option = get_select_option($location_list, $is_location);
 
   <div class="container">
     <div class="modal-body">
+      <legend><?php echo $action_title?></legend>
+      <blockquote class="layui-elem-quote"><?php echo $action_intro?></blockquote>
+
       <form id="ct_form" class="layui-form">
           <input type="hidden" name="action_id" id="action_id" value="<?php echo $action_id?>">
-          <?php if (isset($_GET["action_id"]) || isset($_GET["task_id"])) {?>
-          <input type="hidden" name="task_id" id="task_id" value="<?php echo $task_id?>">
-          <?php } else {?>
-          <div class="layui-form-item">
-              <label for="ct_task_id" class="layui-form-label">选择任务</label>
-              <div class="layui-input-block">
-                <select name="task_id" id="ct_task_id" lay-filter="select_task_id">
-                <?php echo $task_id_option?>
-                </select>
-              </div>
-          </div>
-          <?php }?>
-
-          <div class="layui-form-item">
-              <label for="ct_action_title" class="layui-form-label">行动标题</label>
-              <div class="layui-input-block">
-                <input type="text" class="layui-input" id="ct_action_title" name="action_title" required lay-verify="required" autocomplete="off"  value="<?php echo $action_title?>" placeholder="请输入行动标题（30字以内）">
-              </div>
-          </div>
-
-          <div class="layui-form-item">
-              <label for="ct_result_type" class="layui-form-label">成果类型</label>
-              <div class="layui-input-block">
-                <?php echo $type_input?>
-              </div>
-          </div>
-
           <div class="layui-form-item" id="div_result_name">
               <label for="ct_result_name" class="layui-form-label" id="lbl_result_name">文档链接</label>
               <div class="layui-input-block">
                 <input type="text" class="layui-input" id="ct_result_name" name="result_name" required lay-verify="required" autocomplete="off"  value="<?php echo $result_name?>" placeholder="请输入文档外部访问URL地址">
-              </div>
-          </div>
-
-          <div class="layui-form-item">
-              <label for="ct_connect_type" class="layui-form-label">联络沟通</label>
-              <div class="layui-input-block">
-                <?php echo $connect_input?>
               </div>
           </div>
 
@@ -146,18 +73,9 @@ $location_option = get_select_option($location_list, $is_location);
               </div>
           </div>
 
-          <div class="layui-form-item">
-            <div class="layui-inline">
-              <label for="ct_is_location" class="layui-form-label">限定地点</label>
-              <div class="layui-input-inline" style="width: 190px;">
-                <select name="is_location" id="ct_is_location" lay-filter="select_is_location">
-                <?php echo $location_option?>
-                </select>
-              </div>
-            </div>
-
+          <div class="layui-form-item" id="div_location">
             <div class="layui-inline" id="div_location_name">
-              <label for="ct_is_location" class="layui-form-label">地点名称</label>
+              <label for="ct_is_location" class="layui-form-label">指定地点</label>
               <div class="layui-input-inline" style="width: 235px;">
                 <input type="text" class="layui-input" id="ct_location_name" name="location_name" autocomplete="off"  value="<?php echo $location_name?>" placeholder="地点名称">
               </div>
@@ -165,14 +83,17 @@ $location_option = get_select_option($location_list, $is_location);
           </div>
 
           <div class="layui-form-item">
-              <label for="ct_action_intro_edit" class="layui-form-label">预期结果</label>
+              <label for="ct_result_memo_edit" class="layui-form-label">进展状况</label>
               <div class="layui-input-block">
-                <textarea class="layui-textarea" id="ct_action_intro_edit" name="action_intro_edit" placeholder="预期结果"><?php echo $action_intro?></textarea>
+                <textarea class="layui-textarea" id="ct_result_memo_edit" name="result_memo_edit" placeholder="进展状况"></textarea>
               </div>
           </div>
 
           <div class="layui-form-item">
-            <div class="col-xs-8"></div>
+            <div class="col-xs-6"></div>
+            <div class="col-xs-2">
+              <input type="checkbox" class="layui-input"> 完成
+            </div>
             <div class="col-xs-2">
               <button type="button" id="btn_close" class="btn btn-default btn-block">关闭</button>
             </div>
@@ -219,7 +140,7 @@ $location_option = get_select_option($location_list, $is_location);
         ,type: '' //默认post
       }
     });
-    edit_index = layedit.build('ct_action_intro_edit');
+    edit_index = layedit.build('ct_result_memo_edit');
 
     // 成果类型变更事件
     form.on('radio(radio_result_type)', function(data) {
@@ -298,13 +219,6 @@ $location_option = get_select_option($location_list, $is_location);
 
   // 确认按钮点击事件
   $("#btn_ok").click(function() {
-    // 必须输入行动标题
-    var action_title = $("#ct_action_title").val().trim();
-    if (action_title.length == 0) {
-      parent.layer.msg('请输入行动标题');
-      return;
-    }
-
     // 成果类型为外链时必须输入文档链接
     var result_type = $("input[name='result_type']:checked").val();
     var result_name = $("#ct_result_name").val().trim();
@@ -322,8 +236,8 @@ $location_option = get_select_option($location_list, $is_location);
     }
 
     /*
-    var action_intro = layedit.getContent(edit_index).trim();
-    if (action_intro.length == 0) {
+    var result_memo = layedit.getContent(edit_index).trim();
+    if (result_memo.length == 0) {
       parent.layer.msg('请输入预期结果');
       return;
     }
@@ -348,8 +262,8 @@ $location_option = get_select_option($location_list, $is_location);
     row['result_type'] = $("input[name='result_type']:checked").val();
     // 沟通类型
     row['connect_type'] = $("input[name='connect_type']:checked").val();
-    // 行动预期结果
-    row['action_intro'] = layedit.getContent(edit_index);
+    // 结果描述
+    row['result_memo'] = layedit.getContent(edit_index);
 
     $.ajax({
         url: '/staff/api/action.php',

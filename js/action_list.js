@@ -21,6 +21,7 @@ function initTable() {
                 align: 'center',
                 sortable: true,
                 formatter: isClosedFormatter,
+                events: closeBtnEvents,
                 valign: 'middle'
             },
             {
@@ -250,16 +251,16 @@ function actBtnFormatter(value, row, index) {
 // 行动列表按钮触发事件
 window.actBtnEvents = {
     'click .actbtn': function (e, value, row) {
-      layer.open({
-          type: 2,
-          title: '【' + row.action_title + '】的行动列表',
-          fix: false,
-          maxmin: true,
-          shadeClose: true,
-          shade: 0.8,
-          area: ['800px', '850px'],
-          content: 'dialog/action_list.php?task_id=' + row.task_id
-      });
+        layer.open({
+            type: 2,
+            title: '【' + row.action_title + '】的行动列表',
+            fix: false,
+            maxmin: true,
+            shadeClose: true,
+            shade: 0.8,
+            area: ['800px', '850px'],
+            content: 'dialog/action_list.php?task_id=' + row.task_id
+        });
     }
 };
 
@@ -320,7 +321,7 @@ function isClosedFormatter(value, row, index) {
     var fmt = '?';
     switch (value) {
       case '0':
-        fmt = '待办';
+        fmt = '<button class="closebtn btn-primary" type="button" aria-label="进展"><i class="glyphicon glyphicon-ok"></i></button>';
         break;
       case '1':
         fmt = '完成';
@@ -328,6 +329,22 @@ function isClosedFormatter(value, row, index) {
     }
     return fmt;
 }
+
+// 完成按钮触发事件
+window.closeBtnEvents = {
+    'click .closebtn': function (e, value, row) {
+      layer.open({
+          type: 2,
+          title: '行动进展',
+          fix: false,
+          maxmin: true,
+          shadeClose: true,
+          shade: 0.8,
+          area: ['800px', '850px'],
+          content: 'dialog/action_close.php?action_id=' + row.action_id
+      });
+    }
+};
 
 // 结束时间格式化
 function closedTimeFormatter(value, row, index) {
