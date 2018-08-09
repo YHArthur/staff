@@ -341,7 +341,7 @@ window.closeBtnEvents = {
           shadeClose: true,
           shade: 0.8,
           area: ['800px', '850px'],
-          content: 'dialog/action_close.php?action_id=' + row.action_id
+          content: 'dialog/action_result.php?action_id=' + row.action_id
       });
     }
 };
@@ -358,6 +358,8 @@ function closedTimeFormatter(value, row, index) {
     var fmt = month+'月'+day+'日';
     if (row.closed_time <= 1)
       return fmt;
+    
+    return value;
 
     // 相差日期计算
     var current_time = new Date();

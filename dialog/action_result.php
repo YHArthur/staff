@@ -23,7 +23,6 @@ if (!$action)
 if ($staff_id != $action['respo_id'])
   exit('no permit');
 
-$task_id = $action['task_id'];                    // 任务ID
 $action_title = $action['action_title'];          // 行动标题
 $action_intro = $action['action_intro'];          // 行动预期结果
 $result_memo = $action['result_memo'];            // 结果描述
@@ -33,6 +32,12 @@ $connect_type = $action['connect_type'];          // 沟通类型
 $connect_name = $action['connect_name'];          // 联络对象
 $is_location = $action['is_location'];            // 是否限定地点
 $location_name = $action['location_name'];        // 地点名称
+
+// 有沟通对象
+if ($connect_type != '0') {
+  $connect_list = array('1'=>'即时', '2'=>'网络', '3'=>'等待');
+  $connect_input = get_radio_input('connect_type', $connect_list, $connect_type);
+}
 ?>
 
 <html lang="zh-CN">
@@ -43,7 +48,7 @@ $location_name = $action['location_name'];        // 地点名称
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>行动进展</title>
+  <title>行动结果更新</title>
 
   <link rel="stylesheet" href="../css/bootstrap.min.css">
   <link rel="stylesheet" href="../js/layui/css/layui.css">
@@ -56,43 +61,56 @@ $location_name = $action['location_name'];        // 地点名称
     <div class="modal-body">
       <legend><?php echo $action_title?></legend>
       <blockquote class="layui-elem-quote"><?php echo $action_intro?></blockquote>
+      <div>
+      <?php if ($is_location != '0') {?>
+          <label id="lbl_location_name">地点:</label>
+          <?php echo $location_name?>
+      <?php } ?>
 
+      <?php if ($result_type == 'O') {?>
+          <label id="lbl_result_name">外链:</label>
+          <a href="<?php echo $result_name?>" target="_blank"><?php echo $result_name?></a>
+      <?php } ?>
+      </div>
+      <hr>
       <form id="ct_form" class="layui-form">
           <input type="hidden" name="action_id" id="action_id" value="<?php echo $action_id?>">
-          <div class="layui-form-item" id="div_result_name">
-              <label for="ct_result_name" class="layui-form-label" id="lbl_result_name">文档链接</label>
-              <div class="layui-input-block">
-                <input type="text" class="layui-input" id="ct_result_name" name="result_name" required lay-verify="required" autocomplete="off"  value="<?php echo $result_name?>" placeholder="请输入文档外部访问URL地址">
-              </div>
-          </div>
-
+          <?php if ($connect_type != '0') {
+                  $result_lbl = '联络对象';
+                  $result_placeholder = '请输入联络方的姓名或公司、组织名称';
+                  if ($connect_type == '3') {
+                    $result_lbl = '等待对象';
+                    $result_placeholder = '请输入需等待对方联络的姓名或公司、组织名称';
+                  }
+          ?>
           <div class="layui-form-item" id="div_connect_name">
-              <label for="ct_connect_name" class="layui-form-label" id="lbl_connect_name">联络对象</label>
-              <div class="layui-input-block">
-                <input type="text" class="layui-input" id="ct_connect_name" name="connect_name" required lay-verify="required" autocomplete="off"  value="<?php echo $connect_name?>" placeholder="请输入联络方的姓名或公司、组织名称">
-              </div>
-          </div>
-
-          <div class="layui-form-item" id="div_location">
-            <div class="layui-inline" id="div_location_name">
-              <label for="ct_is_location" class="layui-form-label">指定地点</label>
+            <div class="layui-inline">
+              <label for="ct_connect_type" class="layui-form-label">联络沟通</label>
               <div class="layui-input-inline" style="width: 235px;">
-                <input type="text" class="layui-input" id="ct_location_name" name="location_name" autocomplete="off"  value="<?php echo $location_name?>" placeholder="地点名称">
+                <?php echo $connect_input?>
+              </div>
+            </div>
+
+            <div class="layui-inline">
+              <label for="ct_connect_name" class="layui-form-label" id="lbl_connect_name"><?php echo $result_lbl?></label>
+              <div class="layui-input-inline">
+                <input type="text" class="layui-input" id="ct_connect_name" name="connect_name" required lay-verify="required" autocomplete="off"  value="<?php echo $connect_name?>" placeholder="<?php echo $result_placeholder?>">
               </div>
             </div>
           </div>
+          <?php } ?>
 
           <div class="layui-form-item">
               <label for="ct_result_memo_edit" class="layui-form-label">进展状况</label>
               <div class="layui-input-block">
-                <textarea class="layui-textarea" id="ct_result_memo_edit" name="result_memo_edit" placeholder="进展状况"></textarea>
+                <textarea class="layui-textarea" id="ct_result_memo_edit" name="result_memo_edit" placeholder="进展状况"><?php echo $result_memo?></textarea>
               </div>
           </div>
 
           <div class="layui-form-item">
             <div class="col-xs-6"></div>
-            <div class="col-xs-2">
-              <input type="checkbox" class="layui-input"> 完成
+            <div class="col-xs-2" class="layui-input-block">
+              <input type="checkbox" id="is_closed" value="1" title="完成">
             </div>
             <div class="col-xs-2">
               <button type="button" id="btn_close" class="btn btn-default btn-block">关闭</button>
@@ -117,15 +135,9 @@ $location_name = $action['location_name'];        // 地点名称
   var layedit = new Object();
 
   $(function () {
-    // 成果类型初始化
-    var rt = $("input[name='result_type']:checked").val();
-    resultChange(rt);
     // 沟通类型初始化
     var ct = $("input[name='connect_type']:checked").val();
     connectChange(ct);
-    // 限定地点初始化
-    var lc = $("select[name='is_location']").val();
-    locationChange(lc);
   });
 
   // 使用Layui
@@ -142,44 +154,15 @@ $location_name = $action['location_name'];        // 地点名称
     });
     edit_index = layedit.build('ct_result_memo_edit');
 
-    // 成果类型变更事件
-    form.on('radio(radio_result_type)', function(data) {
-      resultChange(data.value);
-    });
 
     // 沟通类型变更事件
     form.on('radio(radio_connect_type)', function(data) {
        connectChange(data.value);
     });
-
-    // 限定地点变更事件
-    form.on('select(select_is_location)', function(data) {
-      locationChange(data.value);
-    });
   });
-
-  // 成果类型处理
-  function resultChange(rt) {
-    // 隐藏成果名称输入框
-    $("#div_result_name").hide();
-    // 成果类型为外链
-    if (rt == 'O') {
-      // 成果标签和成果提示文字
-      var result_name = '文档链接';
-      var result_placeholder = '请输入文档外部访问URL地址';
-      // 成果名称标签变更
-      $("#lbl_result_name").html(result_name);
-      // 成果名称输入内容变更
-      $("#ct_result_name").attr('placeholder', result_placeholder);
-      // 显示成果名称输入框
-      $("#div_result_name").show();
-    }
-  }
 
   // 沟通类型处理
   function connectChange(ct) {
-    // 隐藏联络对象输入框
-    $("#div_connect_name").hide();
     // 沟通类型不是无
     if (ct != 0) {
       // 默认成果标签和成果提示文字
@@ -194,20 +177,6 @@ $location_name = $action['location_name'];        // 地点名称
       $("#lbl_connect_name").html(result_name);
       // 联络对象输入内容变更
       $("#ct_connect_name").attr('placeholder', result_placeholder);
-      // 显示联络对象输入框
-      $("#div_connect_name").show();
-    }
-  }
-
-  // 限定地点处理
-  function locationChange(lc) {
-    // 其它指定地点
-    if (lc == "3") {
-      // 显示地点名称
-      $("#div_location_name").show();
-    } else {
-      // 隐藏地点名称输入框
-      $("#div_location_name").hide();
     }
   }
 
@@ -219,29 +188,11 @@ $location_name = $action['location_name'];        // 地点名称
 
   // 确认按钮点击事件
   $("#btn_ok").click(function() {
-    // 成果类型为外链时必须输入文档链接
-    var result_type = $("input[name='result_type']:checked").val();
-    var result_name = $("#ct_result_name").val().trim();
-    if (result_type == 'O' && result_name.length == 0) {
-      parent.layer.msg('请输入文档链接');
-      return;
-    }
-
-    // 联络沟通有时必须输入联络对象
-    var connect_type = $("input[name='connect_type']:checked").val();
-    var connect_name = $("#ct_connect_name").val().trim();
-    if (connect_type != '0' && connect_name.length == 0) {
-      parent.layer.msg('请输入联络对象');
-      return;
-    }
-
-    /*
     var result_memo = layedit.getContent(edit_index).trim();
     if (result_memo.length == 0) {
-      parent.layer.msg('请输入预期结果');
+      parent.layer.msg('请输入进展状况');
       return;
     }
-    */
 
     var row = {};
     var form = $("#ct_form");
@@ -258,15 +209,18 @@ $location_name = $action['location_name'];        // 地点名称
         row[$(this).attr('name')] = $(this).val();
     });
 
-    // 成果类型
-    row['result_type'] = $("input[name='result_type']:checked").val();
     // 沟通类型
     row['connect_type'] = $("input[name='connect_type']:checked").val();
     // 结果描述
     row['result_memo'] = layedit.getContent(edit_index);
-
+    // 是否完成
+    row['is_closed'] = 0;
+    var obj = $("#is_closed");
+    if (obj.is(':checked'))
+      row['is_closed'] = 1;
+    
     $.ajax({
-        url: '/staff/api/action.php',
+        url: '/staff/api/action_result.php',
         type: 'post',
         data: row,
         success:function(msg) {
