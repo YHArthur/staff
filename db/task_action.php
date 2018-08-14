@@ -115,11 +115,13 @@ function get_staff_action_total($staff_id, $search, $is_closed, $is_self)
 // 参数: $search        检索关键字
 // 参数: $is_closed     是否完成（0 未完成 1 已完成 9 全部）
 // 参数: $is_self       是否本人（0 非本人 1 本人）TODO
+// 参数: $sort          排序字段
+// 参数: $order         正序，倒序
 // 参数: $limit         记录条数（TODO）
 // 参数: $offset        记录偏移量（TODO）
 // 返回: 记录列表
 //======================================
-function get_staff_action_list($staff_id, $search, $is_closed, $is_self, $limit, $offset)
+function get_staff_action_list($staff_id, $search, $is_closed, $is_self, $sort, $order, $limit, $offset)
 {
   $db = new DB_SATFF();
 
@@ -134,7 +136,10 @@ function get_staff_action_list($staff_id, $search, $is_closed, $is_self, $limit,
   if ($is_closed != 9)
     $sql .= " AND A.is_closed = %{$is_closed}%";
   // 行动按是否完成（从小到大），更新时间（从晚到早）排序
-  $sql .= " ORDER BY A.is_closed, A.utime DESC";
+  $sql .= " ORDER BY ";
+  if (trim($sort) != '')
+    $sql .= " A.{$sort} {$order},";
+  $sql .= " A.is_closed, A.utime DESC";
   $sql .= " limit {$offset},{$limit}";
 
   $db->query($sql);

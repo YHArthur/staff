@@ -398,7 +398,7 @@ function imageFormatter(value, row, index) {
 
 // 获取表格高度
 function getHeight() {
-    return $(window).height() - 134;
+    return $(window).height() - 145;
 }
 
 // 员工信息及相邻员工信息展示

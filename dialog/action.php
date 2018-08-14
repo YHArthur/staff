@@ -14,15 +14,13 @@ $staff_name = $_SESSION['staff_name'];
 if (!isset($_GET["action_id"])) {
   // 设置了任务ID
   if (isset($_GET["task_id"])) {
-    $task_id = $_GET["task_id"];                      // 任务ID
+    $task_id = $_GET["task_id"];                    // 任务ID
     // 取得指定任务ID的任务记录
     $task = get_task($task_id);
     if (!$task)
       exit('task id is not exist');
   } else {
-    // 取得员工相关任务下拉列表
-    $task_list = get_staff_task_list_select($staff_id);
-    $task_id_option = get_select_option($task_list, $staff_id);
+   $task_id = $staff_id;                            // 临时任务ID
   }
   $action_id = '';                                  // 行动ID
   $action_title = '';                               // 行动标题
@@ -32,7 +30,7 @@ if (!isset($_GET["action_id"])) {
   $result_name = '';                                // 成果名称
   $connect_type = 0;                                // 沟通类型
   $connect_name = '';                               // 联络对象
-  $is_location = 0;                                 // 是否限定地点
+  $is_location = 1;                                 // 是否限定地点
   $location_name = '';                              // 地点名称
 
 } else {
@@ -57,6 +55,10 @@ if (!isset($_GET["action_id"])) {
   // 将数据库存放的用户输入内容转换回再修改内容
   $action_intro = html_to_str($action_intro);
 }
+
+// 任务选项
+$task_list = get_staff_task_list_select($staff_id);
+$task_id_option = get_select_option($task_list, $task_id);
 
 // 员工选项
 $staff_rows = get_staff_list();
@@ -98,9 +100,6 @@ $location_option = get_select_option($location_list, $is_location);
     <div class="modal-body">
       <form id="ct_form" class="layui-form">
           <input type="hidden" name="action_id" id="action_id" value="<?php echo $action_id?>">
-          <?php if (isset($_GET["action_id"]) || isset($_GET["task_id"])) {?>
-          <input type="hidden" name="task_id" id="task_id" value="<?php echo $task_id?>">
-          <?php } else {?>
           <div class="layui-form-item">
               <label for="ct_task_id" class="layui-form-label">选择任务</label>
               <div class="layui-input-block">
@@ -109,12 +108,11 @@ $location_option = get_select_option($location_list, $is_location);
                 </select>
               </div>
           </div>
-          <?php }?>
 
           <div class="layui-form-item">
               <label for="ct_action_title" class="layui-form-label">行动标题</label>
               <div class="layui-input-block">
-                <input type="text" class="layui-input" id="ct_action_title" name="action_title" required lay-verify="required" autocomplete="off"  value="<?php echo $action_title?>" placeholder="请输入行动标题（30字以内）">
+                <input type="text" class="layui-input" id="ct_action_title" name="action_title" required lay-verify="required" autocomplete="off"  autofocus="autofocus" value="<?php echo $action_title?>" placeholder="请输入行动标题（30字以内）">
               </div>
           </div>
 

@@ -7,6 +7,22 @@ function initTable() {
         height: getHeight(),
         columns: [
             {
+                title: '地点',
+                field: 'location_name',
+                align: 'center',
+                sortable: true,
+                formatter: locationNameFormatter,
+                valign: 'middle'
+            },
+            {
+                title: '联络',
+                field: 'connect_name',
+                align: 'center',
+                sortable: true,
+                formatter: connectNameFormatter,
+                valign: 'middle'
+            },
+            {
                 title: '公开等级',
                 field: 'public_level',
                 align: 'right',
@@ -16,7 +32,7 @@ function initTable() {
                 valign: 'middle'
             },
             {
-                title: '状态',
+                title: '进展',
                 field: 'is_closed',
                 align: 'center',
                 sortable: true,
@@ -25,7 +41,7 @@ function initTable() {
                 valign: 'middle'
             },
             {
-                title: '行动',
+                title: '行动概要',
                 field: 'action_title',
                 align: 'left',
                 sortable: true,
@@ -33,26 +49,19 @@ function initTable() {
             },
             {
                 title: '所属任务',
-                field: 'task_name',
+                field: 'task_id',
                 align: 'left',
                 sortable: true,
                 formatter: taskNameFormatter,
                 valign: 'middle'
             },
             {
-                title: '成果类型',
-                field: 'result_type',
+                title: '成果',
+                field: 'result_name',
                 align: 'center',
                 sortable: true,
-                formatter: resultTypeFormatter,
-                valign: 'middle'
-            },
-            {
-                title: '成果对象',
-                field: 'result_name',
-                align: 'left',
-                sortable: true,
                 formatter: resultNameFormatter,
+                events: progBtnEvents,
                 valign: 'middle'
             },
             {
@@ -67,6 +76,7 @@ function initTable() {
                 title: '责任人',
                 field: 'respo_name',
                 align: 'center',
+                visible: false,
                 sortable: true,
                 valign: 'middle'
             },
@@ -74,38 +84,15 @@ function initTable() {
                 title: '结束时间',
                 field: 'closed_time',
                 align: 'center',
+                visible: false,
                 sortable: true,
                 formatter: closedTimeFormatter,
-                valign: 'middle'
-            },
-            {
-                title: '地点限定',
-                field: 'location_name',
-                align: 'right',
-                visible: false,
-                sortable: true,
-                valign: 'middle'
-            },
-            {
-                title: '任务ID',
-                field: 'task_id',
-                align: 'center',
-                visible: false,
-                sortable: true,
                 valign: 'middle'
             },
             {
                 title: '预期结果',
                 field: 'action_intro',
                 align: 'left',
-                visible: false,
-                sortable: true,
-                valign: 'middle'
-            },
-            {
-                title: '创建人ID',
-                field: 'owner_id',
-                align: 'center',
                 visible: false,
                 sortable: true,
                 valign: 'middle'
@@ -119,15 +106,7 @@ function initTable() {
                 valign: 'middle'
             },
             {
-                title: '责任人ID',
-                field: 'respo_id',
-                align: 'center',
-                visible: false,
-                sortable: true,
-                valign: 'middle'
-            },
-            {
-                title: '前置行动ID',
+                title: '前置行动',
                 field: 'prvs_action_id',
                 align: 'center',
                 visible: false,
@@ -243,26 +222,21 @@ window.delBtnEvents = {
     }
 };
 
-// 行动按钮
-function actBtnFormatter(value, row, index) {
-    return '<button class="actbtn btn-info" type="button" aria-label="行动"><i class="glyphicon glyphicon-list-alt"></i></button>';
+
+
+// 地点格式化
+function locationNameFormatter(value, row, index) {
+    if (row.is_location == '1')
+      return value;
+    return '-';
 }
 
-// 行动列表按钮触发事件
-window.actBtnEvents = {
-    'click .actbtn': function (e, value, row) {
-        layer.open({
-            type: 2,
-            title: '【' + row.action_title + '】的行动列表',
-            fix: false,
-            maxmin: true,
-            shadeClose: true,
-            shade: 0.8,
-            area: ['800px', '850px'],
-            content: 'dialog/action_list.php?task_id=' + row.task_id
-        });
-    }
-};
+// 联络对象格式化
+function connectNameFormatter(value, row, index) {
+    if (row.connect_type != '0')
+      return value;
+    return '-';
+}
 
 // 公开等级格式化
 function publicLevelFormatter(value, row, index) {
@@ -286,35 +260,39 @@ function publicLevelFormatter(value, row, index) {
 
 // 任务名称格式化
 function taskNameFormatter(value, row, index) {
-    if(value) {
-        return '<a href="http://www.fnying.com/staff/wx/task.php?id=' + row.task_id + '" target="_blank">' + value + '</a>';
-    }
-}
-
-// 成果类型格式化
-function resultTypeFormatter(value, row, index) {
-    var fmt = '?';
-    switch (value) {
-      case 'I':
-        fmt = '内部';
-        break;
-      case 'O':
-        fmt = '外部';
-        break;
-      case 'U':
-        fmt = '上传';
-        break;
-        break;
-    }
-    return fmt;
+    if(row.task_name)
+        return '<a href="http://www.fnying.com/staff/wx/task.php?id=' + row.task_id + '" target="_blank">' + row.task_name + '</a>';
+    return '-';
 }
 
 // 成果名称格式化
 function resultNameFormatter(value, row, index) {
-    if(value) {
-        return value;
+    if(row.result_type == 'I') {
+      if (row.result_memo) {
+        return '<button class="progbtn btn-primary" type="button" aria-label="进展"><i class="glyphicon glyphicon-file"></i></button>';
+      } else {
+        return '-';
+      }
+    } else {
+        return '<a href="' + value + '" target="_blank"><i class="glyphicon glyphicon-link"></i></a>';
     }
 }
+
+// 内置成果进展按钮触发事件
+window.progBtnEvents = {
+    'click .progbtn': function (e, value, row) {
+        layer.open({
+            type: 2,
+            title: '【' + row.action_title + '】的行动进展',
+            fix: false,
+            maxmin: true,
+            shadeClose: true,
+            shade: 0.8,
+            area: ['800px', '850px'],
+            content: 'dialog/action_progress.php?action_id=' + row.action_id
+        });
+    }
+};
 
 // 是否完成格式化
 function isClosedFormatter(value, row, index) {
@@ -420,7 +398,7 @@ function imageFormatter(value, row, index) {
 
 // 获取表格高度
 function getHeight() {
-    return $(window).height() - 134;
+    return $(window).height() - 145;
 }
 
 // 员工信息及相邻员工信息展示
