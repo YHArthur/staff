@@ -58,12 +58,12 @@ function add_relation_ids($rlt_type, $mid, $sids)
   // 取得主ID关联的副ID列表
   $old_sids = get_relation_ids($rlt_type, $mid);
   // 计算需要添加的副ID
-  $new_sids = array_diff($old_sids, $sids);
+  $new_sids = array_diff($sids, $old_sids);
   if (count($new_sids) > 0) {
     $ctime = date('Y-m-d H:i:s');
     $add_sql = array();
     foreach ($new_sids AS $sid) {
-      $add_sql[] = "('{$rlt_type}', '{$mid}', '{$sid}', '{$ctime}'),";
+      $add_sql[] = "('{$rlt_type}', '{$mid}', '{$sid}', '{$ctime}')";
     }
     $sql = 'INSERT INTO id_relation(rlt_type, mid, sid, ctime) VALUES';
     $sql .= join(",", $add_sql);
@@ -73,7 +73,7 @@ function add_relation_ids($rlt_type, $mid, $sids)
   }
 
   // 计算需要恢复的副ID
-  $upd_sids = array_diff($new_sids, $sids);
+  $upd_sids = array_diff($sids, $new_sids);
   if (count($upd_sids) > 0) {
     foreach ($upd_sids AS $sid) {
       $upd_sql[] = "'{$sid}'";
