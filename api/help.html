@@ -174,10 +174,10 @@
           <pre>
             <b>GET参数</b>
               staff_id      员工ID
-              task_status   任务状态（0:其他,1:已完成,2:执行中,9:全部状态）默认2
-              limit         （记录条数，可选）默认10 最大100，任务状态为9的情况下0，1，2三种状态的任务各取limit件
+              is_closed     是否完成（0 未完成 1 已完成,9 全部状态）默认0
+              limit         （记录条数，可选）默认10 最大100
               offset        （记录偏移量，可选）默认0 与limit参数一起分页使用。
-                            如设置 offset=20&limit=10 取第21-30条记录，任务状态为9的情况下无效
+                            如设置 offset=20&limit=10 取第21-30条记录
 
             <b>返回</b>
               total     总记录件数
@@ -191,11 +191,15 @@
                 respo_name      责任人
                 check_id        监督人ID
                 check_name      监督人
+                is_self         是否个人任务（0 公开 1 个人）
                 task_level      任务等级（0 可选 1 一般 2 重要 3 非常重要）
                 task_value      任务价值
                 task_perc       任务进度
-                task_status     任务状态（0 其他 1 已完成 2 未完成）
+                is_closed       是否完成（0 未完成 1 已完成）
+                is_limit        是否有期限（0 无期限 1 有期限）
                 limit_time      任务期限
+                is_cycle        是否有周期（0 无周期 1 有周期）
+                cycle_time      周期时间（日，周，月，年）
                 utime           更新时间
                 ctime           创建时间
 
@@ -223,11 +227,15 @@
               respo_name      责任人
               check_id        监督人ID
               check_name      监督人
+              is_self         是否个人任务（0 公开 1 个人）
               task_level      任务等级（0 可选 1 一般 2 重要 3 非常重要）
               task_value      任务价值
               task_perc       任务进度
-              task_status     任务状态（0 其他 1 已完成 2 未完成）
+              is_closed       是否完成（0 未完成 1 已完成）
+              is_limit        是否有期限（0 无期限 1 有期限）
               limit_time      任务期限
+              is_cycle        是否有周期（0 无周期 1 有周期）
+              cycle_time      周期时间（日，周，月，年）
               utime           更新时间
               ctime           创建时间
               is_login        是否登录
@@ -251,7 +259,7 @@
               task_level      任务等级
               task_value      任务价值
               task_perc       任务进度
-              task_status     任务状态
+              is_closed       是否完成（0 未完成 1 已完成）
               limit_time      任务期限
 
             <b>返回</b>

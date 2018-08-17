@@ -4,9 +4,6 @@ require_once '../db/staff_main.php';
 require_once '../db/task.php';
 require_once '../db/task_action.php';
 
-// 禁止游客访问
-exit_guest();
-
 // 未设置行动ID(默认添加)
 if (!isset($_GET["action_id"]))
   exit('action id is not exist');

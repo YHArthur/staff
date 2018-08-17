@@ -23,7 +23,7 @@ GET参数
   task_level      任务等级（0 可选 1 一般 2 重要 3 非常重要）
   task_value      任务价值
   task_perc       任务进度
-  task_status     任务状态（0 其他 1 已完成 2 未完成）
+  is_closed       是否完成（0 未完成 1 已完成）
   limit_time      任务期限
   utime           更新时间
   ctime           创建时间
@@ -61,11 +61,11 @@ $respo_id = $task['respo_id'];            // 责任人ID
 $respo_name = $task['respo_name'];        // 责任人
 $check_id = $task['check_id'];            // 监管人ID
 $check_name = $task['check_name'];        // 监管人
-$public_level = $task['public_level'];    // 公开等级
+$is_self = $task['is_self'];              // 是否个人任务
 $task_level = $task['task_level'];        // 任务等级
 $task_value = $task['task_value'];        // 任务价值
 $task_perc = $task['task_perc'];          // 任务进度
-$task_status = $task['task_status'];      // 任务状态
+$is_closed = $task['is_closed'];          // 是否完成
 $limit_time = $task['limit_time'];        // 任务期限
 $utime = $task['utime'];                  // 更新时间
 $ctime = $task['ctime'];                  // 创建时间
@@ -110,11 +110,11 @@ $rtn_ary['respo_id'] = $respo_id;
 $rtn_ary['respo_name'] = $respo_name;
 $rtn_ary['check_id'] = $check_id;
 $rtn_ary['check_name'] = $check_name;
-$rtn_ary['public_level'] = $public_level;
+$rtn_ary['is_self'] = $is_self;
 $rtn_ary['task_level'] = $task_level;
 $rtn_ary['task_value'] = $task_value;
 $rtn_ary['task_perc'] = $task_perc;
-$rtn_ary['task_status'] = $task_status;
+$rtn_ary['is_closed'] = $is_closed;
 $rtn_ary['limit_time'] = $limit_time;
 $rtn_ary['utime'] = $utime;
 $rtn_ary['ctime'] = $ctime;

@@ -36,11 +36,11 @@ function chk_task_id_exist($task_id)
 //======================================
 // 函数: 取得员工相关任务总数
 // 参数: $staff_id      员工ID
-// 参数: $task_status   任务状态（0 其他 1 已完成 2 未完成 9 全部状态）
-// 参数: $public_level  公开等级（0 相关 1 组织 9 全部等级）
+// 参数: $is_closed     是否完成（0 未完成 1 已完成,9 全部状态）
+// 参数: $is_self       是否个人任务（0 公开 1 全部）
 // 返回: 记录总数
 //======================================
-function get_staff_task_total($staff_id, $task_status = 2, $public_level = 1)
+function get_staff_task_total($staff_id, $is_closed = 0, $is_self = 0)
 {
   $db = new DB_SATFF();
 
@@ -53,10 +53,10 @@ function get_staff_task_total($staff_id, $task_status = 2, $public_level = 1)
   $sql .= " WHERE is_void = 0";
   $sql .= " AND (" . join(" OR ", $type_ary) . ")";
   
-  if ($task_status != 9)
-    $sql .= " AND task_status = {$task_status}";
-  if ($public_level != 9)
-    $sql .= " AND public_level = {$public_level}";
+  if ($is_closed != 9)
+    $sql .= " AND is_closed = {$is_closed}";
+  if ($is_self != 1)
+    $sql .= " AND is_self = {$is_self}";
   
   $total = $db->getField($sql, 'id_total');
   if ($total)
@@ -67,10 +67,6 @@ function get_staff_task_total($staff_id, $task_status = 2, $public_level = 1)
 //======================================
 // 函数: 取得员工相关任务下拉列表
 // 参数: $staff_id      员工ID
-// 参数: $task_status   任务状态（0 其他 1 已完成 2 未完成 9 全部状态）
-// 参数: $public_level  公开等级（0 相关 1 组织 9 全部等级）
-// 参数: $limit         记录条数
-// 参数: $offset        记录偏移量
 // 返回: 记录列表
 //======================================
 function get_staff_task_list_select($staff_id)
@@ -85,7 +81,7 @@ function get_staff_task_list_select($staff_id)
   $sql = "SELECT task_id, task_name FROM task";
   $sql .= " WHERE is_void = 0";
   $sql .= " AND (" . join(" OR ", $type_ary) . ")";
-  $sql .= " AND task_status = 2";  
+  $sql .= " AND is_closed = 0";  
   $sql .= " ORDER BY task_level DESC, limit_time, utime DESC";
   $db->query($sql);
   $rows = $db->fetchAll();
@@ -103,13 +99,13 @@ function get_staff_task_list_select($staff_id)
 //======================================
 // 函数: 取得员工相关任务列表
 // 参数: $staff_id      员工ID
-// 参数: $task_status   任务状态（0 其他 1 已完成 2 未完成 9 全部状态）
-// 参数: $public_level  公开等级（0 相关 1 组织 9 全部等级）
+// 参数: $is_closed     是否完成（0 未完成 1 已完成,9 全部状态）
+// 参数: $is_self       是否个人任务（0 公开 1 全部）
 // 参数: $limit         记录条数
 // 参数: $offset        记录偏移量
 // 返回: 记录列表
 //======================================
-function get_staff_task_list($staff_id, $task_status = 2, $public_level = 1, $limit, $offset)
+function get_staff_task_list($staff_id, $is_closed = 0, $is_self = 0, $limit, $offset)
 {
   $db = new DB_SATFF();
 
@@ -121,14 +117,14 @@ function get_staff_task_list($staff_id, $task_status = 2, $public_level = 1, $li
   $sql = "SELECT * FROM task";
   $sql .= " WHERE is_void = 0";
   $sql .= " AND (" . join(" OR ", $type_ary) . ")";
-  if ($task_status != 9)
-    $sql .= " AND task_status = {$task_status}";  
-  if ($public_level != 9)
-    $sql .= " AND public_level = {$public_level}";
+  if ($is_closed != 9)
+    $sql .= " AND is_closed = {$is_closed}";  
+  if ($is_self != 1)
+    $sql .= " AND is_self = {$is_self}";
   // 排序
-  switch ($task_status) {
+  switch ($is_closed) {
     // 执行中任务按重要度（从大到小），任务期限（从早到晚），更新时间（从晚到早）排序
-    case 2:
+    case 0:
       $sql .= " ORDER BY task_level DESC, limit_time, utime DESC";
       break;
     // 任务按更新时间（从晚到早）排序

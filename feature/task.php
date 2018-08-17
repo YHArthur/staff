@@ -7,22 +7,22 @@ $table_name = 'task';
 $table = new DBTable('DB_WWW', $table_name);
 
 // 公开等级
-$table->format_columns[] = array('field'=>'public_level', 'formatter'=>'publicLevelFormatter');
+$table->format_columns[] = array('field'=>'is_self', 'formatter'=>'selfFormatter');
 
 // 任务等级
 $table->format_columns[] = array('field'=>'task_level', 'formatter'=>'taskLevelFormatter');
 
-// 任务状态
-$table->format_columns[] = array('field'=>'task_status', 'formatter'=>'taskStatusFormatter');
+// 完成状态
+$table->format_columns[] = array('field'=>'is_closed', 'formatter'=>'closedFormatter');
 
 // 任务期限
 $table->format_columns[] = array('field'=>'limit_time', 'formatter'=>'limitTimeFormatter');
 
 // 展示字段设置
-$table->show_columns = array("public_level", "task_name", "respo_name", "task_level", "task_value", "task_status", "task_perc", "limit_time", "check_name");
+$table->show_columns = array("is_self", "task_name", "respo_name", "task_level", "task_value", "is_closed", "task_perc", "limit_time", "check_name");
 
 // 排序
-$table->orderby = "task_status DESC, task_level DESC, limit_time";
+$table->orderby = "is_closed, task_level DESC, limit_time";
 
 // 默认不可添加
 $table->add_able = false;
@@ -61,21 +61,15 @@ $table->add_javascript =  <<<EOF
         return '<button class="updbtn btn-warning" type="button" aria-label="修改"><i class="glyphicon glyphicon-edit"></i></button>';
     }
 
-    // 公开等级格式化
-    function publicLevelFormatter(value, row, index) {
+    // 是否个人格式化
+    function selfFormatter(value, row, index) {
         var fmt = '?';
         switch (value) {
           case '0':
-            fmt = '相关';
+            fmt = '公开';
             break;
           case '1':
-            fmt = '组织';
-            break;
-          case '2':
-            fmt = '用户';
-            break;
-          case '3':
-            fmt = '全体';
+            fmt = '个人';
             break;
         }
         return fmt;
@@ -101,21 +95,15 @@ $table->add_javascript =  <<<EOF
         return fmt;
     }
 
-    // 任务状态格式化
-    function taskStatusFormatter(value, row, index) {
+    // 完成状态格式化
+    function closedFormatter(value, row, index) {
         var fmt = '?';
         switch (value) {
           case '0':
-            fmt = '废止';
+            fmt = '执行';
             break;
           case '1':
             fmt = '完成';
-            break;
-          case '2':
-            fmt = '执行';
-            break;
-          case '3':
-            fmt = '等待';
             break;
         }
         return fmt;
@@ -128,7 +116,7 @@ $table->add_javascript =  <<<EOF
         var month = limit_time.getMonth() + 1;
         var day = limit_time.getDate();
         var fmt = month+'月'+day+'日';
-        if (row.task_status <= 1)
+        if (row.is_closed >= 1)
           return fmt;
 
         // 相差日期计算

@@ -3,10 +3,8 @@ require_once '../inc/common.php';
 require_once '../db/task.php';
 require_once '../db/staff_main.php';
 
-
 header("cache-control:no-cache,must-revalidate");
 header("Content-type:text/html;charset=utf-8");
-
 
 if (!session_id())
   session_start();
@@ -43,13 +41,10 @@ if(!empty($_GET['task_value']))
 if(!empty($_GET['task_perc']))
   $data['task_perc'] = get_arg_str('GET', 'task_perc');
 
-if(!empty($_GET['task_status']))
-  $data['task_status'] =  get_arg_str('GET', 'task_status');
-
 if(!empty($_GET['limit_time']))
   $data['limit_time'] = get_arg_str('GET', 'limit_time');
-// print_r($data);
-// 更新员工信息
+
+// 更新任务信息
 if (count($data))
    $ret = upd_task($data, $task_id);
 

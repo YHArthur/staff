@@ -15,12 +15,12 @@ function initTable() {
                 formatter: addBtnFormatter
             },
             {
-                title: '公开等级',
-                field: 'public_level',
+                title: '个人',
+                field: 'is_self',
                 align: 'right',
                 visible: false,
                 sortable: true,
-                formatter: publicLevelFormatter,
+                formatter: selfFormatter,
                 valign: 'middle'
             },
             {
@@ -55,11 +55,11 @@ function initTable() {
                 valign: 'middle'
             },
             {
-                title: '任务状态',
-                field: 'task_status',
+                title: '完成状态',
+                field: 'is_closed',
                 align: 'center',
                 sortable: true,
-                formatter: taskStatusFormatter,
+                formatter: closedFormatter,
                 valign: 'middle'
             },
             {
@@ -195,7 +195,7 @@ function initTable() {
 // 添加行动按钮
 function addBtnFormatter(value, row, index) {
     var my_id = $("#my_id").val();
-    if (my_id == row.owner_id && row.task_status == 2)
+    if (my_id == row.owner_id && row.is_closed == '0')
         return '<button class="addbtn btn-warning" type="button" aria-label="添加"><i class="glyphicon glyphicon-plus"></i></button>';
     return '-';
 }
@@ -261,21 +261,15 @@ window.listBtnEvents = {
     }
 };
 
-// 公开等级格式化
-function publicLevelFormatter(value, row, index) {
+// 是否个人格式化
+function selfFormatter(value, row, index) {
     var fmt = '?';
     switch (value) {
       case '0':
-        fmt = '相关';
+        fmt = '-';
         break;
       case '1':
-        fmt = '组织';
-        break;
-      case '2':
-        fmt = '用户';
-        break;
-      case '3':
-        fmt = '全体';
+        fmt = '个人';
         break;
     }
     return fmt;
@@ -308,23 +302,17 @@ function taskLevelFormatter(value, row, index) {
     return fmt;
 }
 
-// 任务状态格式化
-function taskStatusFormatter(value, row, index) {
+// 完成状态格式化
+function closedFormatter(value, row, index) {
     var fmt = '?';
     switch (value) {
       case '0':
-        fmt = '废止';
+        fmt = '执行';
         break;
       case '1':
         fmt = '完成';
         break;
-      case '2':
-        fmt = '执行';
-        break;
-      case '3':
-        fmt = '等待';
-        break;
-    }
+	    }
     return fmt;
 }
 
@@ -335,7 +323,7 @@ function limitTimeFormatter(value, row, index) {
     var month = limit_time.getMonth() + 1;
     var day = limit_time.getDate();
     var fmt = month+'月'+day+'日';
-    if (row.task_status <= 1)
+    if (row.is_closed <= 1)
       return fmt;
 
     // 相差日期计算
@@ -438,7 +426,7 @@ function changeStaff(staff_id) {
 
 // 刷新任务一览
 function refreshTable(cur_id) {
-    var opt = {url: "/staff/api/task_list.php?task_status=9&staff_id=" + cur_id};
+    var opt = {url: "/staff/api/task_list.php?is_closed=9&staff_id=" + cur_id};
 
     table.bootstrapTable('refresh', opt);
     table.bootstrapTable('resetView', {height: getHeight()});
@@ -454,7 +442,7 @@ function initTask() {
 }
 
 $(function () {
-    /*
+
     // 添加任务按钮点击事件
     $('#add_btn').click(function() {
         layer.open({
@@ -466,7 +454,6 @@ $(function () {
             content: 'dialog/task.php'
         });
     });
-    */
 
     // 表格初始化
     initTable();

@@ -125,7 +125,7 @@ function get_staff_action_list($staff_id, $search, $is_closed, $is_self, $sort, 
 {
   $db = new DB_SATFF();
 
-  $sql = "SELECT A.*, T.task_name, T.public_level";
+  $sql = "SELECT A.*, T.task_name, T.is_self";
   $sql .= " FROM task_action AS A";
   $sql .= " LEFT JOIN task AS T";
   $sql .= " ON A.task_id = T.task_id";

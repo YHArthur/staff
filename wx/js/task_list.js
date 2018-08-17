@@ -5,7 +5,6 @@ $(function () {
   staff_id = GetQueryString('staff_id');
   // 获取员工任务一览
   get_staff_task(staff_id);
-  // get_staff_task('06956826-B7E1-2F8E-F897-C3C0124D939C');
   $('.weui-navbar__item').on('click', function () {
       $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
       $(jQuery(this).attr("href")).show().siblings('.weui-tab__content').hide();
@@ -23,17 +22,14 @@ function taskLevelFormatter(task_level) {
 // 任务状态格式化
 function taskStatusFormatter(row) {
   var fmt = '?';
-  switch (row.task_status) {
+  switch (row.is_closed) {
     case '0':
-      fmt = '其他';
-      break;
-    case '1':
-      fmt = '完成';
+      fmt = '执行';
       if (staff_id != row.respo_id)
         fmt = row.respo_name;
       break;
-    case '2':
-      fmt = '执行';
+    case '1':
+      fmt = '完成';
       if (staff_id != row.respo_id)
         fmt = row.respo_name;
       break;
@@ -47,7 +43,7 @@ function limitTimeFormatter(row) {
   var month = limit_time.getMonth() + 1;
   var day = limit_time.getDate();
   var fmt = month+'月'+day+'日';
-  if (row.task_status <= 1)
+  if (row.is_closed >= 1)
     return fmt;
 
   // 相差日期计算
@@ -102,29 +98,23 @@ function get_task_html(row){
 function show_staff_task(response) {
   var open_count = 0;
   var close_count = 0;
-  var other_count = 0;
   var html;
   
   $("#open").html('');
   $("#close").html('');
-  $("#other").html('');
   
   var rows = response.rows;
   if (rows.length > 0) {
     rows.forEach(function(row, index, array) {
       html = get_task_html(row);
-      if(row.task_status == '2' || row.task_status == '3') {
-        // 执行或等待的任务
+      if (row.is_closed == '0') {
+        // 未完成的任务
         $("#open_task").append(html);
         open_count++;
-      } else if(row.task_status == '1') {
+      } else if (row.is_closed == '1') {
         // 完成的任务
         $("#close_task").append(html);
         close_count++;
-      } else if(row.task_status == '0') {
-        // 废止的任务
-        $("#other_task").append(html);
-        other_count++;
       }
     });
   } else {
@@ -140,9 +130,6 @@ function show_staff_task(response) {
   } else if (close_count > 0) {
     $("#close_nav").addClass('weui-bar__item_on');
     $("#close_task").show();
-  } else if (other_count > 0) {
-    $("#other_nav").addClass('weui-bar__item_on');
-    $("#other_task").show();
   }
   
   // 导航栏隐藏
@@ -150,21 +137,16 @@ function show_staff_task(response) {
     $("#open_nav").hide();
   if (close_count == 0)
     $("#close_nav").hide();
-  if (other_count == 0)
-    $("#other_nav").hide();
 };
 
 // 获取员工任务一览
 function get_staff_task() {
   var api_url = 'task_list.php';
   // API调用
-  CallApi(api_url, {"staff_id":staff_id, "task_status":9}, function (response) {
+  CallApi(api_url, {"staff_id":staff_id, "is_closed":9}, function (response) {
     // 员工任务一览明细展示
     show_staff_task(response);
   }, function (response) {
     AlertDialog(response.errmsg);
   });
 }
-
-
-

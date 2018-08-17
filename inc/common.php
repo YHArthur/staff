@@ -306,6 +306,82 @@ function get_log_msg_str($rtn_data)
 }
 
 //======================================
+// 函数: get_time_interval($time)
+// 功能: 分析时间
+// 参数: $time          时间长度(秒)
+// 返回: 时间信息数组
+// 说明: 距离目标时间还有多久
+//======================================
+function get_time_interval($time)
+{
+  $y_name = 'year';
+  $m_name = 'month';
+  $w_name = 'week';
+  $d_name = 'day';
+  $h_name = 'hour';
+  $i_name = 'minute';
+  $s_name = 'second';
+
+  // 年
+  $time_unit = 365 * 24 * 60 * 60;
+  if ($time >= $time_unit) {
+    $rtn_array['nm'] = round($time / $time_unit);
+    $rtn_array['ut'] = $y_name;
+    return $rtn_array;
+  }
+
+  // 月
+  $time_unit = 30 * 24 * 60 * 60;
+  if ($time >= $time_unit) {
+    $rtn_array['nm'] = round($time / $time_unit);
+    $rtn_array['ut'] = $m_name;
+    return $rtn_array;
+  }
+
+  // 周
+  $time_unit = 7 * 24 * 60 * 60;
+  if ($time >= $time_unit) {
+    $rtn_array['nm'] = round($time / $time_unit);
+    $rtn_array['ut'] = $w_name;
+    return $rtn_array;
+  }
+
+  // 日
+  $time_unit = 24 * 60 * 60;
+  // 一周以内，72小时以上
+  if ($time >= 3 * $time_unit) {
+    $rtn_array['nm'] = round($time / $time_unit);
+    $rtn_array['ut'] = $d_name;
+    return $rtn_array;
+  }
+
+  // 时
+  $time_unit = 60 * 60;
+  // 72小时以下，3小时以上
+  if ($time >= 3 * $time_unit) {
+    $rtn_array['nm'] = round($time / $time_unit);
+    $rtn_array['ut'] = $h_name;
+    return $rtn_array;
+  }
+
+  // 分
+  $time_unit = 60;
+  // 3小时以下，3分钟以上
+  if ($time >= 3 * $time_unit) {
+    $rtn_array['nm'] = round($time / $time_unit);
+    $rtn_array['ut'] = $i_name;
+    return $rtn_array;
+  }
+
+  // 秒
+  // 180秒以内
+  $rtn_array['nm'] = $time;
+  $rtn_array['ut'] = $s_name;
+  return $rtn_array;
+
+}
+
+//======================================
 // 函数: 禁止游客访问
 // 参数: 无
 // 返回: 无

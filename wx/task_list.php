@@ -31,14 +31,10 @@ need_staff_login();
         <div href="#close_task" class="weui-navbar__item" id="close_nav">
             已完成
         </div>
-        <div href="#other_task" class="weui-navbar__item" id="other_nav">
-            其他
-        </div>
     </div>
     <div class="weui-tab__panel">
         <div id="open_task" class="weui-tab__content"></div>
         <div id="close_task" class="weui-tab__content"></div>
-        <div id="other_task" class="weui-tab__content"></div>
     </div>
   </div>
 

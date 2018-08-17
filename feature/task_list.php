@@ -55,7 +55,7 @@ $rtn_str  = <<<EOF
       data-page-list="[10, 25, 50, 100, 200]"
       data-show-footer="false"
       data-side-pagination="server"
-      data-url="/staff/api/task_list.php?task_status=9&staff_id={$cur_id}"
+      data-url="/staff/api/task_list.php?is_closed=9&staff_id={$cur_id}"
       data-response-handler="responseHandler"
     </table>
 

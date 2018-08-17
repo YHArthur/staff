@@ -19,18 +19,8 @@ $task = get_task($task_id);
 if (!$task)
   exit('task_id does not exist');
 
-$task_name = $task['task_name'];                          // 任务
-$task_intro = $task['task_intro'];                        // 任务内容
-$owner_id = $task['owner_id'];                            // 创建人ID
-$owner_name = $task['owner_name'];                        // 创建人
 $respo_id = $task['respo_id'];                            // 责任人ID
 $respo_name = $task['respo_name'];                        // 责任人
-$check_id = $task['check_id'];                            // 监督人ID
-$check_name = $task['check_name'];                        // 监督人
-$task_level = $task['task_level'];                        // 任务等级
-$task_status = $task['task_status'];                      // 任务状态
-$limit_time = $task['limit_time'];                        // 任务期限
-$is_void = $task['is_void'];                              // 是否无效
 
 // 取得任务所有行动责任人列表
 $action_members = get_action_respo_list_by_task($task_id);

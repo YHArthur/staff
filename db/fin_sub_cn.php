@@ -76,9 +76,6 @@ function ins_sub_cn($data)
 //======================================
 function upd_sub_cn($data, $sub_id)
 {
-  // 更新时间戳
-  $data['utime'] = time();
-
   $db = new DB_SATFF();
 
   $where = "sub_id = '{$sub_id}'";

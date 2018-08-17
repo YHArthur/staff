@@ -23,12 +23,12 @@ function initTable() {
                 valign: 'middle'
             },
             {
-                title: '公开等级',
-                field: 'public_level',
+                title: '个人',
+                field: 'is_self',
                 align: 'right',
                 visible: false,
                 sortable: true,
-                formatter: publicLevelFormatter,
+                formatter: selfFormatter,
                 valign: 'middle'
             },
             {
@@ -238,21 +238,15 @@ function connectNameFormatter(value, row, index) {
     return '-';
 }
 
-// 公开等级格式化
-function publicLevelFormatter(value, row, index) {
+// 是否个人格式化
+function selfFormatter(value, row, index) {
     var fmt = '?';
     switch (value) {
       case '0':
-        fmt = '相关';
+        fmt = '-';
         break;
       case '1':
-        fmt = '组织';
-        break;
-      case '2':
-        fmt = '用户';
-        break;
-      case '3':
-        fmt = '全体';
+        fmt = '个人';
         break;
     }
     return fmt;
