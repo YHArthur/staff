@@ -24,10 +24,11 @@ $connect_name = $action['connect_name'];          // 联络对象
 $is_location = $action['is_location'];            // 是否限定地点
 $location_name = $action['location_name'];        // 地点名称
 $is_closed = $action['is_closed'];                // 是否完成
+$closed_time = $action['closed_time'];            // 结束时间
 
 $result_title = '进展情况';
 if ($is_closed == 1)
-  $result_title = '完成情况';
+  $result_title = '完成情况 <small>' . $closed_time . '</small>';
 
 ?>
 

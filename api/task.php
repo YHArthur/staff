@@ -40,7 +40,7 @@ chk_empty_args('POST', $args);
 
 // 提交参数整理
 $task_id = get_arg_str('POST', 'task_id');                  // 任务ID
-$task_name = get_arg_str('POST', 'task_name');              // 任务
+$task_name = get_arg_str('POST', 'task_name', 100);         // 任务
 $task_intro = get_arg_str('POST', 'task_intro', 8192);      // 任务内容
 $respo_id = get_arg_str('POST', 'respo_id');                // 责任人ID
 $respo_name = get_arg_str('POST', 'respo_name');            // 责任人
@@ -62,7 +62,7 @@ $cycle_nm = intval($cycle_nm);
 $cycle_time_stamp = 0;
 
 if ($is_cycle == 1) {
-  switch ($errcode) {
+  switch ($cycle_unit) {
   case 'year':
       $cycle_time_stamp = $cycle_nm * 365 * 24 * 60 * 60;
       break;
@@ -104,6 +104,13 @@ if ($check_name != '请选择员工') {
 if ($my_id == $check_id)
   $check_name = $my_name;
 
+// 无期限任务截止时间设为半年后
+if ($is_limit == 0) {
+  $half_year_later = strtotime('+6 month', strtotime(date('Y-m-d')));
+  $limit_time = date('Y-m-d', $half_year_later) . ' 18:00:00';
+}
+
+// 个人任务监督检查设成自己
 if ($is_self == 1) {
   $check_id = $my_id;
   $check_name = $my_name;

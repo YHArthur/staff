@@ -67,6 +67,7 @@ function add_relation_ids($rlt_type, $mid, $sids)
     }
     $sql = 'INSERT INTO id_relation(rlt_type, mid, sid, ctime) VALUES';
     $sql .= join(",", $add_sql);
+    // var_dump($sql);
     $q_id = $db->query($sql);
     if ($q_id == 0)
       return false;
@@ -78,8 +79,9 @@ function add_relation_ids($rlt_type, $mid, $sids)
     foreach ($upd_sids AS $sid) {
       $upd_sql[] = "'{$sid}'";
     }
-    $sql = "UPDATE id_relation SET is_void = 0 WHERE rlt_type = '{$rlt_type}' AND mid = '{$mid}' AND sid = IN (";
+    $sql = "UPDATE id_relation SET is_void = 0 WHERE rlt_type = '{$rlt_type}' AND mid = '{$mid}' AND sid IN (";
     $sql .= join(",", $upd_sql) . ")";
+    // var_dump($sql);
     $q_id = $db->query($sql);
     if ($q_id == 0)
       return false;

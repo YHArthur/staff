@@ -318,6 +318,8 @@ function closedFormatter(value, row, index) {
 
 // 任务期限格式化
 function limitTimeFormatter(value, row, index) {
+    if (row.is_limit == 0)
+      return '长期';
 
     var limit_time = new Date(value.replace(/-/g, "/"));
     var month = limit_time.getMonth() + 1;
