@@ -95,14 +95,25 @@ function get_staff_action_total($staff_id, $search, $is_closed, $is_self)
 {
   $db = new DB_SATFF();
 
-  $sql = "SELECT COUNT(action_id) AS id_total FROM task_action ";
-  $sql .= " WHERE is_void = 0";
-  $sql .= " AND respo_id = '{$staff_id}'";
+  $sql = "SELECT COUNT(action_id) AS id_total";
+  $sql .= " FROM task_action AS A";
+  if ($is_self == 0) {
+    $sql .= " INNER JOIN task AS T";
+  } else {
+    $sql .= " LEFT JOIN task AS T";
+  }
+  $sql .= " ON A.task_id = T.task_id";
+  $sql .= " WHERE A.is_void = 0";
+  if ($is_self == 0)
+    $sql .= " AND T.is_void = 0";
+  $sql .= " AND A.respo_id = '{$staff_id}'";
   if (trim($search) != '')
-    $sql .= " AND action_title like '%{$search}%'";
+    $sql .= " AND A.action_title like '%{$search}%'";
   if ($is_closed != 9)
-    $sql .= " AND is_closed = %{$is_closed}%";
-
+    $sql .= " AND A.is_closed = %{$is_closed}%";
+  if ($is_self != 1)
+    $sql .= " AND T.is_self = 0";
+  
   $total = $db->getField($sql, 'id_total');
   if ($total)
     return $total;
@@ -127,14 +138,22 @@ function get_staff_action_list($staff_id, $search, $is_closed, $is_self, $sort, 
 
   $sql = "SELECT A.*, T.task_name, T.is_self";
   $sql .= " FROM task_action AS A";
-  $sql .= " LEFT JOIN task AS T";
+  if ($is_self == 0) {
+    $sql .= " INNER JOIN task AS T";
+  } else {
+    $sql .= " LEFT JOIN task AS T";
+  }
   $sql .= " ON A.task_id = T.task_id";
   $sql .= " WHERE A.is_void = 0";
+  if ($is_self == 0)
+    $sql .= " AND T.is_void = 0";
   $sql .= " AND A.respo_id = '{$staff_id}'";
   if (trim($search) != '')
     $sql .= " AND A.action_title like '%{$search}%'";
   if ($is_closed != 9)
     $sql .= " AND A.is_closed = %{$is_closed}%";
+  if ($is_self != 1)
+    $sql .= " AND T.is_self = 0";
   // 行动按是否完成（从小到大），更新时间（从晚到早）排序
   $sql .= " ORDER BY ";
   if (trim($sort) != '')

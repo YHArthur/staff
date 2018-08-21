@@ -11,7 +11,6 @@ if (!isset($_SESSION['staff_id'])) {
 }
 
 $cur_id = $_SESSION['staff_id'];
-$cur_name = $_SESSION['staff_name'];
 
 $rtn_str  = <<<EOF
 
@@ -21,7 +20,7 @@ $rtn_str  = <<<EOF
        <h1 style="text-align: center;"><small class="text-muted" id="bef_name"></small></h1>
       </div>
       <div class="col-md-4">
-        <h1 style="text-align: center;"><span id="cur_name" class="text-primary">{$cur_name}</span> 的行动一览</h1>
+        <h1 style="text-align: center;"><span id="cur_name" class="text-primary">我</span> 的行动一览</h1>
       </div>
       <div class="col-md-2">
         <h1 style="text-align: center;"><small class="text-muted" id="aft_name"></small></h1>

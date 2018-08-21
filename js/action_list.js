@@ -182,7 +182,10 @@ window.updBtnEvents = {
 
 // 操作
 function delBtnFormatter(value, row, index) {
-    return ' <button class="remove btn-danger" type="button" aria-label="删除"><i class="glyphicon glyphicon-remove"></i></button> ';
+    var my_id = $("#my_id").val();
+    if (my_id == row.owner_id)
+      return ' <button class="remove btn-danger" type="button" aria-label="删除"><i class="glyphicon glyphicon-remove"></i></button> ';
+    return '-';
 }
 
 window.delBtnEvents = {
@@ -221,8 +224,6 @@ window.delBtnEvents = {
       });
     }
 };
-
-
 
 // 地点格式化
 function locationNameFormatter(value, row, index) {
@@ -293,7 +294,12 @@ function isClosedFormatter(value, row, index) {
     var fmt = '?';
     switch (value) {
       case '0':
-        fmt = '<button class="closebtn btn-primary" type="button" aria-label="进展"><i class="glyphicon glyphicon-ok"></i></button>';
+        var my_id = $("#my_id").val();
+        if (my_id == row.owner_id) {
+          fmt = '<button class="closebtn btn-primary" type="button" aria-label="进展"><i class="glyphicon glyphicon-ok"></i></button>';
+        } else {
+          fmt = '待办';
+        }
         break;
       case '1':
         fmt = '完成';
@@ -397,9 +403,14 @@ function getHeight() {
 
 // 员工信息及相邻员工信息展示
 function showStaffNeighbor(response) {
+  var my_id = $("#my_id").val();
   var aft_btn = '<button class="btn btn-info btn-block btn-lg" type="button" onclick="changeStaff(\'' + response.aft_id + '\')">' + response.aft_cd + ' ' + response.aft_name + '</button>';
   var bef_btn = '<button class="btn btn-info btn-block btn-lg" type="button" onclick="changeStaff(\'' + response.bef_id + '\')">' + response.bef_name + ' ' + response.bef_cd + '</button>';
-  $("#cur_name").html(response.cur_name);
+  if (my_id != response.cur_id) {
+    $("#cur_name").html(response.cur_name);
+  } else {
+    $("#cur_name").html('我');
+  }
   $("#aft_name").html(aft_btn);
   $("#bef_name").html(bef_btn);
 }

@@ -194,8 +194,7 @@ function initTable() {
 
 // 添加行动按钮
 function addBtnFormatter(value, row, index) {
-    var my_id = $("#my_id").val();
-    if (my_id == row.owner_id && row.is_closed == '0')
+    if (row.is_closed == '0')
         return '<button class="addbtn btn-warning" type="button" aria-label="添加"><i class="glyphicon glyphicon-plus"></i></button>';
     return '-';
 }
@@ -350,7 +349,6 @@ function limitTimeFormatter(value, row, index) {
     return fmt;
 }
 
-
 // 取得记录描述
 function getRowDescriptions(row) {
     return '任务ID=' + row.task_id;
@@ -444,7 +442,6 @@ function initTask() {
 }
 
 $(function () {
-
     // 添加任务按钮点击事件
     $('#add_btn').click(function() {
         layer.open({

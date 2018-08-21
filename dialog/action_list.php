@@ -33,10 +33,10 @@ foreach ($action_members as $rec) {
   // 找到任务责任人的未完成行动条数
   if ($rec['staff_id'] == $respo_id) {
     $respo_member_has_action = true;
-    $member_tabs = '<li class="active"><a href="#' . $rec['staff_id'] . '" data-toggle="tab">' . $rec['staff_name'] . '<span class="badge">' . $rec['action_total'] . '</span></a></li>' . $member_tabs;
+    $member_tabs = '<li class="active"><a href="#' . $rec['staff_id'] . '" data-toggle="tab">' . $rec['staff_name'] . '&nbsp;&nbsp;<span class="badge">' . $rec['action_total'] . '</span></a></li>' . $member_tabs;
     $member_panes = get_action_pane($task_id, $respo_id, ' active') . $member_panes;
   } else {
-    $member_tabs .= '<li><a href="#' . $rec['staff_id'] . '" data-toggle="tab">' . $rec['staff_name'] . '<span class="badge">' . $rec['action_total'] . '</span></a></li>';
+    $member_tabs .= '<li><a href="#' . $rec['staff_id'] . '" data-toggle="tab">' . $rec['staff_name'] . '&nbsp;&nbsp;<span class="badge">' . $rec['action_total'] . '</span></a></li>';
     $member_panes .= get_action_pane($task_id, $rec['staff_id'], '');
   }
 }
@@ -58,12 +58,13 @@ function get_action_pane($task_id, $respo_id, $active_class) {
     // 未完成
     if ($rec['is_closed'] == 0) {
       $rtn_str .= "\n    " . '<li style="padding: 10px 15px;">';
-      $rtn_str .= "\n      " . '<button id="' . $rec['action_id'] . '" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> 完成</button>';
+      $rtn_str .= "\n      " . '<button id="' . $rec['action_id'] . '" class="btn btn-primary"><i class="glyphicon glyphicon-ok"></i></button>';
       $rtn_str .= "\n      " . $rec['action_title'];
       $rtn_str .= "\n    " . '</li>';
     } else {
       // 已完成
       $rtn_str .= "\n    " . '<li style="padding: 10px 15px;">';
+      $rtn_str .= "\n      " . '<button id="' . $rec['action_id'] . '" class="btn btn-success"><i class="glyphicon glyphicon-glass"></i></button>';
       $rtn_str .= "\n    " . $rec['action_title'];
       $rtn_str .= "\n    " . '</li>';
     }
@@ -131,7 +132,7 @@ function get_action_pane($task_id, $respo_id, $active_class) {
           title: '添加行动',
           shadeClose: true,
           shade: 0.8,
-          area: ['800px', '750px'],
+          area: ['800px', '850px'],
           content: 'dialog/action.php?task_id=' + task_id
       });
     });

@@ -105,6 +105,10 @@ function has_sub_pm($pm_id, $pm_list)
 {
   // 模块权限ID
   $sub_pm_id = substr($pm_id, 0, 3) . '0';
+  
+  // 我的工作台特别处理
+  if ($sub_pm_id == '1040')
+    return 1;
 
   // 有完全一致的权限
   if (in_array($sub_pm_id, $pm_list))
