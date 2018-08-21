@@ -45,6 +45,7 @@ function initTable() {
                 field: 'action_title',
                 align: 'left',
                 sortable: true,
+                formatter: actionTitleFormatter,
                 valign: 'middle'
             },
             {
@@ -251,6 +252,11 @@ function selfFormatter(value, row, index) {
         break;
     }
     return fmt;
+}
+
+// 行动标题格式化
+function actionTitleFormatter(value, row, index) {
+    return '<a href="http://www.fnying.com/staff/wx/action.php?id=' + row.action_id + '" target="_blank">' + row.action_title + '</a>';
 }
 
 // 任务名称格式化

@@ -8,7 +8,13 @@ function get_action($action_id)
 {
   $db = new DB_SATFF();
 
-  $sql = "SELECT * FROM task_action WHERE action_id = '{$action_id}'";
+  $sql = "SELECT A.*, T.task_name, T.is_self";
+  $sql .= " FROM task_action AS A ";
+  $sql .= " LEFT JOIN task AS T";
+  $sql .= " ON A.task_id = T.task_id";
+  $sql .= " WHERE A.action_id = '{$action_id}'";
+  $sql .= " AND A.is_void = 0";
+
   $db->query($sql);
   $row = $db->fetchRow();
   return $row;
