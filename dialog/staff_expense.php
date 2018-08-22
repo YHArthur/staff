@@ -107,14 +107,14 @@ $void_input = get_radio_input('is_void', $void_list, $is_void);
             <div class="layui-inline">
               <label for="ct_from_date" class="layui-form-label" style="width: 110px;">开始时间</label>
               <div class="layui-input-inline">
-                <input type="Datatime" class="layui-input" id="ct_from_date" name="from_date" value="<?php echo $from_date?>" placeholder="开始时间" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD hh:mm:ss'})">
+                <input type="Datatime" class="layui-input" id="ct_from_date" name="from_date" lay-filter="input_from_date" value="<?php echo $from_date?>" placeholder="开始时间" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD hh:mm:ss', choose:countMax})">
               </div>
             </div>
 
             <div class="layui-inline">
               <label for="ct_to_date" class="layui-form-label" style="width: 110px;">结束时间</label>
               <div class="layui-input-inline">
-                <input type="Datatime" class="layui-input" id="ct_to_date" name="to_date" value="<?php echo $to_date?>" placeholder="结束时间" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD hh:mm:ss'})">
+                <input type="Datatime" class="layui-input" id="ct_to_date" name="to_date" lay-filter="input_to_date" value="<?php echo $to_date?>" placeholder="结束时间" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD hh:mm:ss', choose:countMax})">
               </div>
             </div>
           </div>
@@ -123,7 +123,7 @@ $void_input = get_radio_input('is_void', $void_list, $is_void);
             <div class="layui-inline">
               <label for="ct_max_count" class="layui-form-label">变动次数</label>
               <div class="layui-input-inline" style="width: 190px;">
-                <input type="number" class="layui-input" name="max_count" id="ct_max_count" value="<?php echo $max_count?>" placeholder="最大变动次数">
+                <input type="number" class="layui-input" name="max_count" id="ct_max_count" value="<?php echo $max_count?>" placeholder="最大变动次数" disabled>
               </div>
             </div>
 
@@ -173,12 +173,73 @@ $void_input = get_radio_input('is_void', $void_list, $is_void);
     layer = layui.layer;
     form = layui.form();
     laydate = layui.laydate;
+
+    // 开始时间变更事件
+    form.on('input(input_from_date)', function(data) {
+      countMax();
+    });
+
+    // 结束时间变更事件
+    form.on('input(input_to_date)', function(data) {
+      countMax();
+    });
+
   });
 
   // 关闭按钮点击事件
   $("#btn_close").click(function() {
     var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
     parent.layer.close(index);
+  });
+
+  // 时间戳转日期
+  function timestampToTime(timestamp) {
+    var date = new Date(timestamp);
+    Y = date.getFullYear() + '-';
+    M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+    D = date.getDate() + ' ';
+    h = date.getHours() + ':';
+    m = date.getMinutes() + ':';
+    s = date.getSeconds();
+    return Y+M+D+h+m+s;
+  }
+
+  // 有效日期时间判断
+  function is_valid_datetime(datetime) {
+    // 字符串转时间戳
+    var t1 = new Date(datetime).getTime();
+    // 时间戳转日期后再转时间戳
+    var t2 = new Date(timestampToTime(t1)).getTime();
+    return (t1 == t2);
+  }
+
+  // 计算最大变动次数
+  function countMax() {
+    var from_date = $("#ct_from_date").val();
+    var to_date = $("#ct_to_date").val();
+    if (is_valid_datetime(from_date) && is_valid_datetime(to_date)) {
+      var f_time = new Date(from_date.replace(/-/g, "/"));
+      var t_time = new Date(to_date.replace(/-/g, "/"));
+      // 相差日期计算
+      var diff_day = parseInt((t_time.getTime() - f_time.getTime()) / (1000 * 3600 * 24 * 30));
+      if (diff_day >= 0) {
+        $("#ct_max_count").val(diff_day);
+      } else {
+        $("#ct_max_count").val(0);
+      }
+    }
+  }
+
+  // 开始时间变更事件
+  $("#ct_from_date").on('change',function(){
+      // 计算最大变动次数
+      countMax();
+  });
+
+  // 结束时间变更事件
+  $("#ct_to_date").on('input',function(){
+      // 计算最大变动次数
+      countMax();
   });
 
   // 确认按钮点击事件
