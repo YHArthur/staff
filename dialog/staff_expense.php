@@ -219,18 +219,6 @@ $void_input = get_radio_input('is_void', $void_list, $is_void);
     }
   }
 
-  // 开始时间变更事件
-  $("#ct_from_date").on('change',function(){
-      // 计算最大变动次数
-      countMax();
-  });
-
-  // 结束时间变更事件
-  $("#ct_to_date").on('input',function(){
-      // 计算最大变动次数
-      countMax();
-  });
-
   // 确认按钮点击事件
   $("#btn_ok").click(function() {
     var exp_memo = $("#ct_exp_memo").val().trim();
