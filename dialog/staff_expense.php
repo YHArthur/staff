@@ -107,14 +107,14 @@ $void_input = get_radio_input('is_void', $void_list, $is_void);
             <div class="layui-inline">
               <label for="ct_from_date" class="layui-form-label" style="width: 110px;">开始时间</label>
               <div class="layui-input-inline">
-                <input type="Datatime" class="layui-input" id="ct_from_date" name="from_date" lay-filter="input_from_date" value="<?php echo $from_date?>" placeholder="开始时间" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD hh:mm:ss', choose:countMax})">
+                <input type="Datatime" class="layui-input" id="ct_from_date" name="from_date" value="<?php echo $from_date?>" placeholder="开始时间" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD hh:mm:ss', choose:countMax})">
               </div>
             </div>
 
             <div class="layui-inline">
               <label for="ct_to_date" class="layui-form-label" style="width: 110px;">结束时间</label>
               <div class="layui-input-inline">
-                <input type="Datatime" class="layui-input" id="ct_to_date" name="to_date" lay-filter="input_to_date" value="<?php echo $to_date?>" placeholder="结束时间" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD hh:mm:ss', choose:countMax})">
+                <input type="Datatime" class="layui-input" id="ct_to_date" name="to_date" value="<?php echo $to_date?>" placeholder="结束时间" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD hh:mm:ss', choose:countMax})">
               </div>
             </div>
           </div>
@@ -173,17 +173,6 @@ $void_input = get_radio_input('is_void', $void_list, $is_void);
     layer = layui.layer;
     form = layui.form();
     laydate = layui.laydate;
-
-    // 开始时间变更事件
-    form.on('input(input_from_date)', function(data) {
-      countMax();
-    });
-
-    // 结束时间变更事件
-    form.on('input(input_to_date)', function(data) {
-      countMax();
-    });
-
   });
 
   // 关闭按钮点击事件
