@@ -55,11 +55,12 @@ function initTable() {
                 valign: 'middle'
             },
             {
-                title: '完成状态',
+                title: '进展',
                 field: 'is_closed',
                 align: 'center',
                 sortable: true,
-                formatter: closedFormatter,
+                formatter: isClosedFormatter,
+                events: closeBtnEvents,
                 valign: 'middle'
             },
             {
@@ -301,19 +302,40 @@ function taskLevelFormatter(value, row, index) {
     return fmt;
 }
 
-// 完成状态格式化
-function closedFormatter(value, row, index) {
+// 是否完成格式化
+function isClosedFormatter(value, row, index) {
     var fmt = '?';
     switch (value) {
       case '0':
-        fmt = '执行';
+        var my_id = $("#my_id").val();
+        if (my_id == row.owner_id || my_id == row.respo_id || my_id == row.check_id) {
+          fmt = '<button class="closebtn btn-primary" type="button" aria-label="进展"><i class="glyphicon glyphicon-ok"></i></button>';
+        } else {
+          fmt = '执行中';
+        }
         break;
       case '1':
         fmt = '完成';
         break;
-	    }
+    }
     return fmt;
 }
+
+// 完成按钮触发事件
+window.closeBtnEvents = {
+    'click .closebtn': function (e, value, row) {
+      layer.open({
+          type: 2,
+          title: '任务进展',
+          fix: false,
+          maxmin: true,
+          shadeClose: true,
+          shade: 0.8,
+          area: ['800px', '850px'],
+          content: 'dialog/task_result.php?task_id=' + row.task_id
+      });
+    }
+};
 
 // 任务期限格式化
 function limitTimeFormatter(value, row, index) {

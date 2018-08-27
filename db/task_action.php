@@ -94,7 +94,7 @@ function get_action_list_by_task_respo($task_id, $respo_id)
 // 参数: $staff_id      员工ID
 // 参数: $search        检索关键字
 // 参数: $is_closed     是否完成（0 未完成 1 已完成 9 全部）
-// 参数: $is_self       是否本人（0 非本人 1 本人）TODO
+// 参数: $is_self       是否本人（0 非本人 1 本人）
 // 返回: 记录总数
 //======================================
 function get_staff_action_total($staff_id, $search, $is_closed, $is_self)
@@ -131,7 +131,7 @@ function get_staff_action_total($staff_id, $search, $is_closed, $is_self)
 // 参数: $staff_id      员工ID
 // 参数: $search        检索关键字
 // 参数: $is_closed     是否完成（0 未完成 1 已完成 9 全部）
-// 参数: $is_self       是否本人（0 非本人 1 本人）TODO
+// 参数: $is_self       是否本人（0 非本人 1 本人）
 // 参数: $sort          排序字段
 // 参数: $order         正序，倒序
 // 参数: $limit         记录条数（TODO）

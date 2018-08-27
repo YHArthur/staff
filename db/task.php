@@ -36,11 +36,12 @@ function chk_task_id_exist($task_id)
 //======================================
 // 函数: 取得员工相关任务总数
 // 参数: $staff_id      员工ID
+// 参数: $search        检索关键字
 // 参数: $is_closed     是否完成（0 未完成 1 已完成,9 全部状态）
 // 参数: $is_self       是否个人任务（0 公开 1 全部）
 // 返回: 记录总数
 //======================================
-function get_staff_task_total($staff_id, $is_closed = 0, $is_self = 0)
+function get_staff_task_total($staff_id, $search, $is_closed = 0, $is_self = 0)
 {
   $db = new DB_SATFF();
 
@@ -52,7 +53,8 @@ function get_staff_task_total($staff_id, $is_closed = 0, $is_self = 0)
   $sql = "SELECT COUNT(task_id) AS id_total FROM task ";
   $sql .= " WHERE is_void = 0";
   $sql .= " AND (" . join(" OR ", $type_ary) . ")";
-  
+  if (trim($search) != '')
+    $sql .= " AND task_name like '%{$search}%'";
   if ($is_closed != 9)
     $sql .= " AND is_closed = {$is_closed}";
   if ($is_self != 1)
@@ -99,13 +101,16 @@ function get_staff_task_list_select($staff_id)
 //======================================
 // 函数: 取得员工相关任务列表
 // 参数: $staff_id      员工ID
+// 参数: $search        检索关键字
 // 参数: $is_closed     是否完成（0 未完成 1 已完成,9 全部状态）
 // 参数: $is_self       是否个人任务（0 公开 1 全部）
+// 参数: $sort          排序字段
+// 参数: $order         正序，倒序
 // 参数: $limit         记录条数
 // 参数: $offset        记录偏移量
 // 返回: 记录列表
 //======================================
-function get_staff_task_list($staff_id, $is_closed = 0, $is_self = 0, $limit, $offset)
+function get_staff_task_list($staff_id, $search, $is_closed = 0, $is_self = 0, $sort, $order, $limit, $offset)
 {
   $db = new DB_SATFF();
 
@@ -117,19 +122,24 @@ function get_staff_task_list($staff_id, $is_closed = 0, $is_self = 0, $limit, $o
   $sql = "SELECT * FROM task";
   $sql .= " WHERE is_void = 0";
   $sql .= " AND (" . join(" OR ", $type_ary) . ")";
+  if (trim($search) != '')
+    $sql .= " AND task_name like '%{$search}%'";
   if ($is_closed != 9)
     $sql .= " AND is_closed = {$is_closed}";  
   if ($is_self != 1)
     $sql .= " AND is_self = {$is_self}";
+  $sql .= " ORDER BY ";
+  if (trim($sort) != '')
+    $sql .= " {$sort} {$order},";  
   // 排序
   switch ($is_closed) {
     // 执行中任务按重要度（从大到小），任务期限（从早到晚），更新时间（从晚到早）排序
     case 0:
-      $sql .= " ORDER BY task_level DESC, limit_time, utime DESC";
+      $sql .= " task_level DESC, limit_time, utime DESC";
       break;
     // 任务按更新时间（从晚到早）排序
     default:
-      $sql .= " ORDER BY utime DESC";
+      $sql .= " utime DESC";
       break;
   }
   $sql .= " limit {$offset},{$limit}";

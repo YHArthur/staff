@@ -10,6 +10,8 @@ header("Content-Type:application/json;charset=utf-8");
 GET参数
   staff_id      员工ID
   is_closed     是否完成（0 未完成 1 已完成,9 全部状态）
+  sort          排序字段
+  order         正序，倒序
   search        检索关键字
   limit         （记录条数，可选）默认10 最大100，任务状态为9的情况下0，1，2三种状态的任务各取limit件
   offset        （记录偏移量，可选）默认0 与limit参数一起分页使用。
@@ -58,15 +60,19 @@ list($limit, $offset) = get_paging_arg('GET');
 $is_closed = get_arg_str('GET', 'is_closed');
 $is_closed = intval($is_closed);
 
+$sort = get_arg_str('GET', 'sort');         // 排序字段
+$order = get_arg_str('GET', 'order');       // 正序，倒序
+$search = get_arg_str('GET', 'search');     // 检索关键字
+
 // 是否个人任务
 $is_self = 0;
 if ($_SESSION['staff_id'] == $staff_id)
   $is_self = 1;
 
 // 取得员工相关任务总数
-$total = get_staff_task_total($staff_id, $is_closed, $is_self);
+$total = get_staff_task_total($staff_id, $search, $is_closed, $is_self);
 // 取得员工相关任务列表
-$rows = get_staff_task_list($staff_id, $is_closed, $is_self, $limit, $offset);
+$rows = get_staff_task_list($staff_id, $search, $is_closed, $is_self, $sort, $order, $limit, $offset);
 
 // 返回数据做成
 $rtn_ary = array();
