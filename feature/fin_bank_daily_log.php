@@ -6,8 +6,11 @@ php_begin();
 $table_name = 'fin_bank_daily_log';
 $table = new DBTable('DB_WWW', $table_name);
 
+// 完成状态
+$table->format_columns[] = array('field'=>'is_pay', 'formatter'=>'isPayFormatter');
+
 // 展示字段列表
-$table->show_columns = array("pay_account_name", "rcpt_account_name", "amount_cn", "abstract", "target", "bank_rec_date");
+$table->show_columns = array("is_pay", "pay_account_name", "rcpt_account_name", "amount_cn", "abstract", "target", "bank_rec_date");
 
 // 是否可添加记录
 $table->add_able = false;
@@ -37,6 +40,20 @@ $table->add_javascript =  <<<EOF
           });
       });
     });
+
+    // 收支区分格式化
+    function isPayFormatter(value, row, index) {
+        var fmt = '?';
+        switch (value) {
+          case '0':
+            fmt = '<span class="label label-success">收</span>';
+            break;
+          case '1':
+            fmt = '<span class="label label-danger">支</span>';
+            break;
+        }
+        return fmt;
+    }
 
 EOF;
 

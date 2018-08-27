@@ -16,6 +16,26 @@ function get_fin_bank_daily_log($elec_reply_no)
 }
 
 //======================================
+// 功能: 取得取得公司银行余额
+// 参数: 无
+// 返回: 银行余额
+// 说明:
+//======================================
+function get_fin_bank_rest_amount()
+{
+  $db = new DB_SATFF();
+  
+  // 计算收入总额
+  $sql = "SELECT SUM(amount) AS in_amount FROM fin_bank_daily_log WHERE is_pay = 0";
+  $in_amount = $db->getField($sql, 'in_amount');
+  // 计算支出总额
+  $sql = "SELECT SUM(amount) AS out_amount FROM fin_bank_daily_log WHERE is_pay = 1";
+  $out_amount = $db->getField($sql, 'out_amount');
+  // 计算余额
+  return $in_amount - $out_amount;
+}
+
+//======================================
 // 功能: 设定银行日记账的科目(待办)
 // 参数: $staff_id      员工ID
 // 参数: $sub_id        科目ID

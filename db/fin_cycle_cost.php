@@ -14,6 +14,26 @@ function get_fin_cycle_cost($cost_id)
 }
 
 //======================================
+// 函数: 取得公司每月支付金额
+// 参数: 无
+// 返回: 公司有效每月支付金额
+//======================================
+function get_fin_month_sum_amount()
+{
+  $time_now = date('Y-m-d H:i:s');
+  $db = new DB_SATFF();
+
+  $sql = "SELECT SUM(cost_amount / month_gap) AS sum_amount";
+  $sql .= " FROM fin_cycle_cost";
+  $sql .= " WHERE from_date <= '{$time_now}'";
+  $sql .= " AND to_date >= '{$time_now}'";
+  $sql .= " AND is_void = 0";
+  
+  $sum_amount = $db->getField($sql, 'sum_amount');
+  return $sum_amount;
+}
+
+//======================================
 // 函数: 周期支出费用创建
 // 参数: $data          信息数组
 // 返回: cost_id        创建成功的支出费用ID
