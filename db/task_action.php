@@ -142,7 +142,10 @@ function get_staff_action_list($staff_id, $search, $is_closed, $is_self, $sort, 
 {
   $db = new DB_SATFF();
 
-  $sql = "SELECT A.*, T.task_name, T.is_self";
+  $sql = "SELECT A.*,";
+  $sql .= " T.task_name,";
+  $sql .= " T.is_self,";
+  $sql .= " T.task_level";
   $sql .= " FROM task_action AS A";
   if ($is_self == 0) {
     $sql .= " INNER JOIN task AS T";

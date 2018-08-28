@@ -41,7 +41,7 @@ function chk_task_id_exist($task_id)
 // 参数: $is_self       是否个人任务（0 公开 1 全部）
 // 返回: 记录总数
 //======================================
-function get_staff_task_total($staff_id, $search, $is_closed = 0, $is_self = 0)
+function get_staff_task_total($staff_id, $search = '', $is_closed = 0, $is_self = 0)
 {
   $db = new DB_SATFF();
 
@@ -110,7 +110,7 @@ function get_staff_task_list_select($staff_id)
 // 参数: $offset        记录偏移量
 // 返回: 记录列表
 //======================================
-function get_staff_task_list($staff_id, $search, $is_closed = 0, $is_self = 0, $sort, $order, $limit, $offset)
+function get_staff_task_list($staff_id, $search = '', $is_closed = 0, $is_self = 0, $sort, $order, $limit, $offset)
 {
   $db = new DB_SATFF();
 

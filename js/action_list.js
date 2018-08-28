@@ -261,8 +261,12 @@ function actionTitleFormatter(value, row, index) {
 
 // 任务名称格式化
 function taskNameFormatter(value, row, index) {
-    if(row.task_name)
-        return '<a href="http://www.fnying.com/staff/wx/task.php?id=' + row.task_id + '" target="_blank">' + row.task_name + '</a>';
+    if(row.task_name) {
+        var task_star = '';
+        if (row.task_level > 2)
+          task_star = ' ★';
+        return '<a href="http://www.fnying.com/staff/wx/task.php?id=' + row.task_id + '" target="_blank">' + row.task_name + '</a>' + task_star;
+    }
     return '-';
 }
 

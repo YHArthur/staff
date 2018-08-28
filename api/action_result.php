@@ -30,6 +30,8 @@ chk_empty_args('POST', $args);
 
 // 提交参数整理
 $action_id = get_arg_str('POST', 'action_id');              // 行动ID
+$result_type = get_arg_str('POST', 'result_type');          // 成果类型（I/O）
+$result_name = get_arg_str('POST', 'result_name', 255);     // 成果名称
 $connect_type = get_arg_str('POST', 'connect_type');        // 沟通类型
 $connect_name = get_arg_str('POST', 'connect_name', 255);   // 联络对象
 $result_memo = get_arg_str('POST', 'result_memo', 8192);    // 结果描述
@@ -56,6 +58,8 @@ $action_title = $action['action_title'];                    // 行动标题
 $old_closed = intval($action['is_closed']);                 // 原来是否完成
 
 $data = array();
+$data['result_type'] = $result_type;                        // 成果类型（I/O）
+$data['result_name'] = $result_name;                        // 成果名称
 $data['connect_type'] = $connect_type;                      // 沟通类型
 $data['connect_name'] = $connect_name;                      // 联络对象
 $data['result_memo'] = $result_memo;                        // 结果描述

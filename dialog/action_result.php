@@ -33,6 +33,10 @@ $connect_name = $action['connect_name'];          // 联络对象
 $is_location = $action['is_location'];            // 是否限定地点
 $location_name = $action['location_name'];        // 地点名称
 
+// 成果类型列表
+$type_list = array('I'=>'内置', 'O'=>'外链');
+$type_input = get_radio_input('result_type', $type_list, $result_type);
+
 // 有沟通对象
 if ($connect_type != '0') {
   $connect_list = array('1'=>'即时', '2'=>'网络', '3'=>'等待');
@@ -67,14 +71,41 @@ if ($connect_type != '0') {
           <?php echo $location_name?>
       <?php } ?>
 
-      <?php if ($result_type == 'O') {?>
-          <label id="lbl_result_name">外链:</label>
-          <a href="<?php echo $result_name?>" target="_blank"><?php echo $result_name?></a>
-      <?php } ?>
       </div>
       <hr>
       <form id="ct_form" class="layui-form">
           <input type="hidden" name="action_id" id="action_id" value="<?php echo $action_id?>">
+
+          <div class="layui-form-item">
+            <div class="layui-inline">
+              <label for="ct_result_type" class="layui-form-label">成果类型</label>
+              <div class="layui-input-block">
+                <?php echo $type_input?>
+              </div>
+            </div>
+            
+            <div class="layui-inline" id="div_upload_file" style="width: 180px; display:hidden;">
+                <input type="file" name="file" lay-type="file" class="layui-upload-file">
+            </div>
+
+            <div class="layui-inline" id="div_upload_result" style="width: 120px; display:hidden;">
+              <div class="layui-progress layui-progress-big" lay-filter="fileup" lay-showPercent="true">
+                <div class="layui-progress-bar layui-bg-blue" lay-percent="0%"></div>
+              </div>
+            </div>
+            
+            <div class="layui-inline" style="width: 120px;">
+                <a id="lnk_upload_file" class="layui-btn layui-btn-small" style="display:hidden;" href="<?php echo $result_name?>" target="_blank"><i class="layui-icon">&#xe61e;</i></a>
+            </div>
+          </div>
+
+          <div class="layui-form-item" id="div_result_name" style="display:hidden;">
+              <label for="ct_result_name" class="layui-form-label" id="lbl_result_name">文档链接</label>
+              <div class="layui-input-block">
+                <input type="text" class="layui-input" id="ct_result_name" name="result_name" required lay-verify="required" autocomplete="off"  value="<?php echo $result_name?>" placeholder="请输入文档外部访问URL地址">
+              </div>
+          </div>
+
           <?php if ($connect_type != '0') {
                   $result_lbl = '联络对象';
                   $result_placeholder = '请输入联络方的姓名或公司、组织名称';
@@ -135,13 +166,16 @@ if ($connect_type != '0') {
   var layedit = new Object();
 
   $(function () {
+    // 成果类型初始化
+    var rt = $("input[name='result_type']:checked").val();
+    resultChange(rt);
     // 沟通类型初始化
     var ct = $("input[name='connect_type']:checked").val();
     connectChange(ct);
   });
 
   // 使用Layui
-  layui.use(['layer', 'form', 'layedit'], function(){
+  layui.use(['layer', 'form', 'layedit', 'upload', 'element'], function(){
     layer = layui.layer;
     form = layui.form();
     layedit = layui.layedit;
@@ -152,14 +186,70 @@ if ($connect_type != '0') {
         ,type: '' //默认post
       }
     });
+
+    var pr_element = layui.element();
+    layui.upload({
+      url: 'http://www.fnying.com/upload/upload_doc.php'
+      ,title: '本地文档上传'
+      ,ext: 'txt|pdf|html|css|doc|docx|xls|xlsx|ppt|pptx'
+      ,before: function(input) {
+        // 显示上传进度条
+        $("#div_upload_result").show();
+        pr_element.progress('fileup', '30%');
+      }
+      ,success: function(res) {
+        var file_url = res.data.src;
+        pr_element.progress('fileup', '100%');
+        $("#ct_result_name").val(file_url);
+        $("#lnk_upload_file").attr("href", file_url);
+        $("#lnk_upload_file").show();
+        $("#div_upload_result").hide();
+      }
+    });
     edit_index = layedit.build('ct_result_memo_edit');
 
+    // 成果类型变更事件
+    form.on('radio(radio_result_type)', function(data) {
+      resultChange(data.value);
+    });
 
     // 沟通类型变更事件
     form.on('radio(radio_connect_type)', function(data) {
        connectChange(data.value);
     });
   });
+
+  // 成果类型处理
+  function resultChange(rt) {
+    // 隐藏成果名称输入框
+    $("#div_result_name").hide();
+    // 隐藏上传文件框
+    $("#div_upload_file").hide();
+    $("#div_upload_result").hide();
+    $("#lnk_upload_file").hide();
+    
+    var result_name = '文档链接';
+    var result_placeholder = '请输入文档外部访问URL地址';
+
+    // 成果类型为外链
+    if (rt == 'O') {
+      // 成果标签和成果提示文字
+      // 成果名称标签变更
+      $("#lbl_result_name").html(result_name);
+      // 成果名称输入内容变更
+      $("#ct_result_name").attr('placeholder', result_placeholder);
+      // 显示成果名称输入框
+      $("#div_result_name").show();
+    } else {
+      result_name = $("#ct_result_name").val().trim();
+      // 显示本地文档上传
+      $("#div_upload_file").show();
+      if (result_name.length != 0) {
+        // 显示已上传的本地文档
+        $("#lnk_upload_file").show();
+      }
+    }
+  }
 
   // 沟通类型处理
   function connectChange(ct) {
@@ -188,9 +278,18 @@ if ($connect_type != '0') {
 
   // 确认按钮点击事件
   $("#btn_ok").click(function() {
+    // 必须输入进展情况
     var result_memo = layedit.getContent(edit_index).trim();
     if (result_memo.length == 0) {
       parent.layer.msg('请输入进展状况');
+      return;
+    }
+
+    // 成果类型为外链时必须输入文档链接
+    var result_type = $("input[name='result_type']:checked").val();
+    var result_name = $("#ct_result_name").val().trim();
+    if (result_type == 'O' && result_name.length == 0) {
+      parent.layer.msg('请输入文档链接');
       return;
     }
 
@@ -209,6 +308,8 @@ if ($connect_type != '0') {
         row[$(this).attr('name')] = $(this).val();
     });
 
+    // 成果类型
+    row['result_type'] = $("input[name='result_type']:checked").val();
     // 沟通类型
     row['connect_type'] = $("input[name='connect_type']:checked").val();
     // 结果描述
