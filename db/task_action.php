@@ -44,6 +44,48 @@ function get_action_respo_list_by_task($task_id)
 }
 
 //======================================
+// 函数: 取得任务相关行动总数
+// 参数: $task_id       所属任务ID
+// 返回: 记录总数
+//======================================
+function get_action_total_by_task_id($task_id)
+{
+  $db = new DB_SATFF();
+
+  $sql = "SELECT COUNT(action_id) AS id_total FROM task_action ";
+  $sql .= " WHERE is_void = 0";
+  $sql .= " AND task_id = '{$task_id}'";
+
+  $total = $db->getField($sql, 'id_total');
+  if ($total)
+    return $total;
+  return 0;
+}
+
+//======================================
+// 函数: 取得任务相关行动列表
+// 参数: $task_id       所属任务ID
+// 参数: $limit         记录条数（TODO）
+// 参数: $offset        记录偏移量（TODO）
+// 返回: 记录列表
+//======================================
+function get_action_list_by_task_id($task_id)
+{
+  $db = new DB_SATFF();
+
+  $sql = "SELECT * FROM task_action";
+  $sql .= " WHERE is_void = 0";
+  $sql .= " AND task_id = '{$task_id}'";
+  // 行动按是否完成（从小到大），更新时间（从晚到早）排序
+  $sql .= " ORDER BY is_closed, utime DESC";
+  // $sql .= " limit {$offset},{$limit}";
+
+  $db->query($sql);
+  $rows = $db->fetchAll();
+  return $rows;
+}
+
+//======================================
 // 函数: 取得任务行动责任人相关行动总数
 // 参数: $task_id       所属任务ID
 // 参数: $respo_id      责任人ID

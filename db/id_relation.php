@@ -54,7 +54,7 @@ function get_relation_ids_all($rlt_type, $mid)
 function add_relation_ids($rlt_type, $mid, $sids)
 {
   $db = new DB_SATFF();
-
+  $sids = array_unique($sids);
   // 取得主ID关联的副ID列表
   $old_sids = get_relation_ids($rlt_type, $mid);
   // 计算需要添加的副ID
@@ -102,7 +102,8 @@ function del_relation_ids($rlt_type, $mid, $sids)
   $db = new DB_SATFF();
 
   $void_time = date('Y-m-d H:i:s');
-  foreach ($sids AS $sid) {
+  $sids = array_unique($sids);
+  foreach (sids AS $sid) {
     $upd_sql[] = "'{$sid}'";
   }
   $sql = "UPDATE id_relation SET is_void = 1, void_time = '{$void_time}'";

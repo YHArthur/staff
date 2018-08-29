@@ -154,12 +154,16 @@ if ($task_id == '') {
     exit_error('110', '任务信息更新失败');
 }
 
-// 任务干系人列表
+// 任务关系人列表
 $sids = array($my_id, $respo_id, $check_id);
 // 增加ID关系
 $ret = add_relation_ids('task_action', $task_id, $sids);
 if ($ret == '')
-  exit_error('110', '任务干系人列表添加失败');
+  exit_error('110', '任务行动人列表添加失败');
+$ret = add_relation_ids('task_follow', $task_id, $sids);
+if ($ret == '')
+  exit_error('110', '任务关注人列表添加失败');
+
 
 // 输出结果
 exit_ok($msg);

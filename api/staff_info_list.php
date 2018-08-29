@@ -32,7 +32,7 @@ header("Content-Type:application/json;charset=utf-8");
     exp_balance       办公经费余额
     staff_task        当前任务
     join_date         加入时间
-    
+    work_period       出勤时间段
 
 说明
 */
@@ -69,6 +69,7 @@ foreach($rows as $row) {
   $staff_row['staff_mbti'] = $row['staff_mbti'];                              // 员工性格（MBTI）
   $staff_row['staff_memo'] = $row['staff_memo'];                              // 员工个人简介
   $staff_row['join_date'] = substr($row['join_date'], 0, 10);                 // 加入时间
+  $staff_row['work_period'] = $row['work_period'];                            // 出勤时间段
   
   $staff_row['staff_age'] = '保密';                                           // 员工年龄（默认保密）
   $staff_row['staff_star_sign'] = '金星';                                     // 星座（默认金星）

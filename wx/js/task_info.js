@@ -16,7 +16,7 @@ $(function () {
     get_task_info();
 });
 
-// 任务等级格式化
+// 任务等级
 function taskLevelFormatter(task_level) {
     var fmt = '';
     for(var i=0;i<task_level;i++)
@@ -24,14 +24,46 @@ function taskLevelFormatter(task_level) {
     return fmt;
 }
 
+// 地点格式化
+function locationNameFormatter(row) {
+    if (row.is_location == '1')
+      return row.location_name;
+    return '-';
+}
+
+// 联络对象格式化
+function connectNameFormatter(row) {
+    if (row.connect_type != '0')
+      return row.connect_name;
+    return '';
+}
+
+// 是否完成格式化
+function isClosedFormatter(row) {
+    var fmt = '?';
+    switch (row.is_closed) {
+      case '0':
+        fmt = '待办';
+        break;
+      case '1':
+        fmt = '完成';
+        break;
+    }
+    return fmt;
+}
+
 // 任务期限格式化
-function limitTimeFormatter(limit_time, task_status) {
-    var ltime = new Date(limit_time.replace(/-/g, "/"));
+function limitTimeFormatter(row) {
+    var ltime = new Date(row.limit_time.replace(/-/g, "/"));
     var month = ltime.getMonth() + 1;
     var day = ltime.getDate();
     var fmt = month+'月'+day+'日';
-    if (task_status <= 1)
+    // 已完成
+    if (row.is_closed == '1')
         return fmt;
+    // 长期
+    if (row.is_limit == '0')
+      return '长期';
 
     // 相差日期计算
     var current_time = new Date();
@@ -55,6 +87,32 @@ function limitTimeFormatter(limit_time, task_status) {
     return fmt;
 }
 
+// 获取行动明细的HTML
+function get_action_html(row){
+  var  html ='\
+  <div class="weui-panel">\
+      <div class="weui-panel__bd">\
+          <div class="weui-media-box weui-media-box_text">\
+              <h4 class="weui-media-box__title">' + row.action_title + '</h4>\
+              <div class="weui-media-box__desc">' + row.action_intro + '</div>\
+              <ul class="weui-media-box__info">\
+                  <li class="weui-media-box__info__meta">' + locationNameFormatter(row) + '</li>\
+                  <li class="weui-media-box__info__meta">' + connectNameFormatter(row) + '</li>\
+                  <li class="weui-media-box__info__meta weui-media-box__info__meta_extra">' + isClosedFormatter(row) + '</li>\
+              </ul>\
+          </div>\
+      </div>\
+      <div class="weui-panel__ft">\
+          <a href="action.php?id=' + row.action_id + '" class="weui-cell weui-cell_access weui-cell_link">\
+              <div class="weui-cell__bd">查看行动</div>\
+              <span class="weui-cell__ft"></span>\
+          </a>\
+      </div>\
+  </div>\
+  ';
+  return html;
+}
+
 // 任务明细展示
 function show_task_info(response) {
     // 任务名称
@@ -66,12 +124,23 @@ function show_task_info(response) {
     // 责任人
     $('#respo_name').html(response.respo_name);
     // 任务期限
-    $('#limit_time').html(limitTimeFormatter(response.limit_time, response.task_status));
+    $('#limit_time').html(limitTimeFormatter(response));
     // 监督人
     $('#check_name').html(response.check_name);
     // 创建时间
     $('#ctime').html(response.ctime);
     
+    // 行动列表
+    var rows = response.action_rows;
+    if (rows.length > 0) {
+      $("#action_title").html('行动列表');
+      $("#action_list").html('');
+      rows.forEach(function(row) {
+        html = get_action_html(row);
+        $("#action_list").append(html);
+      });
+    }
+
     // 微信分享处理
     window.shareData.title = response.task_name;
     window.shareData.desc = response.respo_name + ':' + response.task_desc;

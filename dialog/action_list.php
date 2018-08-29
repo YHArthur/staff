@@ -58,14 +58,14 @@ function get_action_pane($task_id, $respo_id, $active_class) {
     // 未完成
     if ($rec['is_closed'] == 0) {
       $rtn_str .= "\n    " . '<li style="padding: 10px 15px;">';
-      $rtn_str .= "\n      " . '<button id="' . $rec['action_id'] . '" class="btn btn-primary"><i class="glyphicon glyphicon-ok"></i></button>';
-      $rtn_str .= "\n      " . $rec['action_title'];
+      $rtn_str .= "\n      " . '<button id="' . $rec['action_id'] . '" class="btn btn-action btn-primary"><i class="glyphicon glyphicon-ok"></i></button>';
+      $rtn_str .= "\n        " . $rec['action_title'];
       $rtn_str .= "\n    " . '</li>';
     } else {
       // 已完成
       $rtn_str .= "\n    " . '<li style="padding: 10px 15px;">';
-      $rtn_str .= "\n      " . '<button id="' . $rec['action_id'] . '" class="btn btn-success"><i class="glyphicon glyphicon-glass"></i></button>';
-      $rtn_str .= "\n    " . $rec['action_title'];
+      $rtn_str .= "\n      " . '<button id="' . $rec['action_id'] . '" class="btn btn-action btn-success"><i class="glyphicon glyphicon-glass"></i></button>';
+      $rtn_str .= "\n        " . $rec['action_title'];
       $rtn_str .= "\n    " . '</li>';
     }
   }
@@ -136,7 +136,16 @@ function get_action_pane($task_id, $respo_id, $active_class) {
           content: 'dialog/action.php?task_id=' + task_id
       });
     });
+    
+    // 行动按钮点击事件
+    $(".btn-action").click(function() {
+      var action_id = $(this).attr("id");
+      var newWindow = window.open("_blank");
+      newWindow.location = "http://www.fnying.com/staff/wx/action.php?id="+action_id;
+    });
+
   });
+  
   </script>
 
 </body>

@@ -2,9 +2,12 @@
 var staff_id;
 
 $(function () {
+  $(".page__desc").html('空空如也... ...');
   staff_id = GetQueryString('staff_id');
-  // 获取员工任务一览
-  get_staff_task(staff_id);
+  // 获取员工执行中任务一览
+  get_staff_task(staff_id, 0);
+  // 获取员工已完成任务一览
+  get_staff_task(staff_id, 1);
   $('.weui-navbar__item').on('click', function () {
       $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
       $(jQuery(this).attr("href")).show().siblings('.weui-tab__content').hide();
@@ -43,8 +46,12 @@ function limitTimeFormatter(row) {
   var month = limit_time.getMonth() + 1;
   var day = limit_time.getDate();
   var fmt = month+'月'+day+'日';
-  if (row.is_closed >= 1)
-    return fmt;
+  // 已完成
+  if (row.is_closed == '1')
+      return fmt;
+  // 长期
+  if (row.is_limit == '0')
+    return '长期';
 
   // 相差日期计算
   var current_time = new Date();
@@ -95,57 +102,56 @@ function get_task_html(row){
 }
 
 // 员工任务一览明细展示
-function show_staff_task(response) {
-  var open_count = 0;
-  var close_count = 0;
+function show_staff_task(response, is_closed) {
+  var count = 0;
   var html;
+  var task_div;
   
-  $("#open").html('');
-  $("#close").html('');
+  if (is_closed == 0) {
+    $("#open").html('');
+    task_div = $("#open_task");
+  } else if (is_closed == 1) {
+    $("#close").html('');
+    task_div = $("#close_task");
+  }
   
   var rows = response.rows;
   if (rows.length > 0) {
+    $(".page__desc").html('');
     rows.forEach(function(row, index, array) {
       html = get_task_html(row);
-      if (row.is_closed == '0') {
-        // 未完成的任务
-        $("#open_task").append(html);
-        open_count++;
-      } else if (row.is_closed == '1') {
-        // 完成的任务
-        $("#close_task").append(html);
-        close_count++;
-      }
+      task_div.append(html);
+      count++;
     });
+    // 导航栏显示
+    if (is_closed == 0) {
+      $("#open_count").html(count);
+      $("#open_count").addClass('weui-badge');
+      $("#open_nav").addClass('weui-bar__item_on');
+      $("#open_task").show();
+    } else if (is_closed == 1) {
+      // if (!$("#open_nav").hasClass("weui-bar__item_on"))
+        // $("#close_nav").addClass('weui-bar__item_on');
+      $("#close_task").show();
+    }
   } else {
-    $(".page__desc").html('空空如也... ...')
+    // 导航栏隐藏
+    if (is_closed == 0) {
+      $("#open_nav").hide();
+    } else if (is_closed == 1) {
+      $("#close_nav").hide();
+    }
   }
-  
-  // 导航栏设置
-  if (open_count > 0) {
-    $("#open_count").html(open_count);
-    $("#open_count").addClass('weui-badge');
-    $("#open_nav").addClass('weui-bar__item_on');
-    $("#open_task").show();
-  } else if (close_count > 0) {
-    $("#close_nav").addClass('weui-bar__item_on');
-    $("#close_task").show();
-  }
-  
-  // 导航栏隐藏
-  if (open_count == 0)
-    $("#open_nav").hide();
-  if (close_count == 0)
-    $("#close_nav").hide();
+
 };
 
 // 获取员工任务一览
-function get_staff_task() {
+function get_staff_task(staff_id, is_closed) {
   var api_url = 'task_list.php';
   // API调用
-  CallApi(api_url, {"staff_id":staff_id, "is_closed":9}, function (response) {
+  CallApi(api_url, {"staff_id":staff_id, "is_closed":is_closed, "limit":100}, function (response) {
     // 员工任务一览明细展示
-    show_staff_task(response);
+    show_staff_task(response, is_closed);
   }, function (response) {
     AlertDialog(response.errmsg);
   });

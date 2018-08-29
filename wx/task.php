@@ -45,6 +45,9 @@ require_once '../db/staff_weixin.php';
     </div>
   </div>
 
+  <div class="weui-cells__title" id="action_title"></div>
+  <div class="weui-panel weui-panel_access" id="action_list"></div>
+  
   <script src="https://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
   <script src="js/common.js"></script>
   <script src="js/wx.js"></script>
