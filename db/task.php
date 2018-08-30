@@ -131,17 +131,7 @@ function get_staff_task_list($staff_id, $search = '', $is_closed = 0, $is_self =
   $sql .= " ORDER BY ";
   if (trim($sort) != '')
     $sql .= " {$sort} {$order},";  
-  // 排序
-  switch ($is_closed) {
-    // 执行中任务按重要度（从大到小），任务期限（从早到晚），更新时间（从晚到早）排序
-    case 0:
-      $sql .= " task_level DESC, limit_time, utime DESC";
-      break;
-    // 任务按更新时间（从晚到早）排序
-    default:
-      $sql .= " utime DESC";
-      break;
-  }
+  $sql .= " utime DESC";
   $sql .= " limit {$offset},{$limit}";
 
   $db->query($sql);

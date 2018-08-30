@@ -49,9 +49,7 @@ if ($rec) {
     <p class="page__desc"><?php echo $page_desc ?></p>
   </div>
 
-  <div class="weui-footer weui-footer_fixed-bottom">
-    <p class="weui-footer__text">©2018 风赢科技</p>
-  </div>
+  <div class="weui-msg__extra-area"><a href="../h5_menu.php">©2018 风赢科技</a></div>
 
 </body>
 </html>
