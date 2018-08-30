@@ -2,7 +2,7 @@
 require_once '../inc/common.php';
 require_once '../db/staff_main.php';
 require_once '../db/task.php';
-require_once '../db/task_action.php';
+require_once '../db/action.php';
 
 // 禁止游客访问
 exit_guest();

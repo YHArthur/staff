@@ -9,7 +9,7 @@ function get_action($action_id)
   $db = new DB_SATFF();
 
   $sql = "SELECT A.*, T.task_name, T.is_self";
-  $sql .= " FROM task_action AS A ";
+  $sql .= " FROM action AS A ";
   $sql .= " LEFT JOIN task AS T";
   $sql .= " ON A.task_id = T.task_id";
   $sql .= " WHERE A.action_id = '{$action_id}'";
@@ -32,7 +32,7 @@ function get_action_respo_list_by_task($task_id)
   $sql = "SELECT respo_id AS staff_id,";
   $sql .= " MIN(respo_name) AS staff_name,";
   $sql .= " COUNT(action_id) AS action_total";
-  $sql .= " FROM task_action";
+  $sql .= " FROM action";
   $sql .= " WHERE is_void = 0";
   $sql .= " AND task_id = '{$task_id}'";
   $sql .= " GROUP BY respo_id";
@@ -52,7 +52,7 @@ function get_action_total_by_task_id($task_id)
 {
   $db = new DB_SATFF();
 
-  $sql = "SELECT COUNT(action_id) AS id_total FROM task_action ";
+  $sql = "SELECT COUNT(action_id) AS id_total FROM action";
   $sql .= " WHERE is_void = 0";
   $sql .= " AND task_id = '{$task_id}'";
 
@@ -73,7 +73,7 @@ function get_action_list_by_task_id($task_id)
 {
   $db = new DB_SATFF();
 
-  $sql = "SELECT * FROM task_action";
+  $sql = "SELECT * FROM action";
   $sql .= " WHERE is_void = 0";
   $sql .= " AND task_id = '{$task_id}'";
   // 行动按是否完成（从小到大），更新时间（从晚到早）排序
@@ -95,7 +95,7 @@ function get_action_total_by_task_respo($task_id, $respo_id)
 {
   $db = new DB_SATFF();
 
-  $sql = "SELECT COUNT(action_id) AS id_total FROM task_action ";
+  $sql = "SELECT COUNT(action_id) AS id_total FROM action";
   $sql .= " WHERE is_void = 0";
   $sql .= " AND task_id = '{$task_id}'";
   $sql .= " AND respo_id = '{$respo_id}'";
@@ -118,7 +118,7 @@ function get_action_list_by_task_respo($task_id, $respo_id)
 {
   $db = new DB_SATFF();
 
-  $sql = "SELECT * FROM task_action";
+  $sql = "SELECT * FROM action";
   $sql .= " WHERE is_void = 0";
   $sql .= " AND task_id = '{$task_id}'";
   $sql .= " AND respo_id = '{$respo_id}'";
@@ -144,7 +144,7 @@ function get_staff_action_total($staff_id, $search, $is_closed, $is_self)
   $db = new DB_SATFF();
 
   $sql = "SELECT COUNT(action_id) AS id_total";
-  $sql .= " FROM task_action AS A";
+  $sql .= " FROM action AS A";
   if ($is_self == 0) {
     $sql .= " INNER JOIN task AS T";
   } else {
@@ -188,7 +188,7 @@ function get_staff_action_list($staff_id, $search, $is_closed, $is_self, $sort, 
   $sql .= " T.task_name,";
   $sql .= " T.is_self,";
   $sql .= " T.task_level";
-  $sql .= " FROM task_action AS A";
+  $sql .= " FROM action AS A";
   if ($is_self == 0) {
     $sql .= " INNER JOIN task AS T";
   } else {
@@ -230,7 +230,7 @@ function ins_action($data)
   $data['utime'] = time();
   $data['ctime'] = date('Y-m-d H:i:s');
 
-  $sql = $db->sqlInsert("task_action", $data);
+  $sql = $db->sqlInsert("action", $data);
   $q_id = $db->query($sql);
 
   if ($q_id == 0)
@@ -251,7 +251,7 @@ function upd_action($data, $action_id)
 
   $data['utime'] = time();
   $where = "action_id = '{$action_id}'";
-  $sql = $db->sqlUpdate("task_action", $data, $where);
+  $sql = $db->sqlUpdate("action", $data, $where);
   $q_id = $db->query($sql);
 
   if ($q_id == 0)
@@ -273,7 +273,7 @@ function del_action($action_id)
   $data['utime'] = time();
   $data['is_void'] = 1;
   $where = "action_id = '{$action_id}'";
-  $sql = $db->sqlUpdate("task_action", $data, $where);
+  $sql = $db->sqlUpdate("action", $data, $where);
   $q_id = $db->query($sql);
 
   if ($q_id == 0)

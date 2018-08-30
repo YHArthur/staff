@@ -2,7 +2,7 @@
 require_once '../inc/common.php';
 require_once '../db/staff_main.php';
 require_once '../db/task.php';
-require_once '../db/task_action.php';
+require_once '../db/action.php';
 
 // 未设置行动ID(默认添加)
 if (!isset($_GET["action_id"]))
