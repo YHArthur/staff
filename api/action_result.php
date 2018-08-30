@@ -1,5 +1,6 @@
 <?php
 require_once "../inc/common.php";
+require_once '../db/task.php';
 require_once '../db/task_action.php';
 
 header("Access-Control-Allow-Origin: *");
@@ -49,6 +50,7 @@ $action = get_action($action_id);
 if (!$action)
   exit_error('140', '行动ID不存在');
 
+$task_id =  $action['task_id'];                             // 任务ID
 $owner_id = $action['owner_id'];                            // 创建人ID
 $respo_id = $action['respo_id'];                            // 责任人ID
 if ($owner_id != $my_id && $respo_id != $my_id)
@@ -74,7 +76,10 @@ $msg = '【' . $action_title . '】行动已成功更新';
 // 行动信息更新失败
 if (!$ret)
   exit_error('110', '行动信息更新失败');
-
+// 任务更新时间更新
+$data = array();
+upd_task($data, $task_id);
+  
 // 输出结果
 exit_ok($msg);
 ?>

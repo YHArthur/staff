@@ -1,6 +1,7 @@
 <?php
 require_once "../inc/common.php";
 require_once '../db/task_action.php';
+require_once '../db/task.php';
 
 header("Access-Control-Allow-Origin: *");
 header("cache-control:no-cache,must-revalidate");
@@ -100,6 +101,9 @@ if ($action_id == '') {
   // 行动信息更新失败
   if (!$ret)
     exit_error('110', '行动信息更新失败');
+  // 任务更新时间更新
+  $data = array();
+  upd_task($data, $task_id);
 }
 
 // 输出结果
