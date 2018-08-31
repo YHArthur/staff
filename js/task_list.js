@@ -210,7 +210,7 @@ window.addBtnEvents = {
           maxmin: true,
           shadeClose: true,
           shade: 0.8,
-          area: ['800px', '850px'],
+          area: ['800px', '780px'],
           content: 'dialog/action.php?task_id=' + row.task_id
       });
     }
@@ -234,18 +234,18 @@ window.updBtnEvents = {
           maxmin: true,
           shadeClose: true,
           shade: 0.8,
-          area: ['800px', '850px'],
+          area: ['800px', '780px'],
           content: 'dialog/task.php?id=' + row.task_id
       });
     }
 };
 
-// 行动按钮
+// 行动列表按钮
 function listBtnFormatter(value, row, index) {
     return '<button class="actbtn btn-info" type="button" aria-label="行动"><i class="glyphicon glyphicon-list-alt"></i></button>';
 }
 
-// 行动按钮触发事件
+// 行动列表按钮触发事件
 window.listBtnEvents = {
     'click .actbtn': function (e, value, row) {
       layer.open({
@@ -255,7 +255,7 @@ window.listBtnEvents = {
           maxmin: true,
           shadeClose: true,
           shade: 0.8,
-          area: ['800px', '850px'],
+          area: ['800px', '780px'],
           content: 'dialog/action_list.php?task_id=' + row.task_id
       });
     }
@@ -331,7 +331,7 @@ window.closeBtnEvents = {
           maxmin: true,
           shadeClose: true,
           shade: 0.8,
-          area: ['800px', '850px'],
+          area: ['800px', '780px'],
           content: 'dialog/task_result.php?task_id=' + row.task_id
       });
     }
@@ -471,7 +471,7 @@ $(function () {
             title: '添加任务',
             shadeClose: true,
             shade: 0.8,
-            area: ['800px', '850px'],
+            area: ['800px', '780px'],
             content: 'dialog/task.php'
         });
     });

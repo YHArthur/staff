@@ -132,7 +132,7 @@ function get_action_pane($task_id, $respo_id, $active_class) {
           title: '添加行动',
           shadeClose: true,
           shade: 0.8,
-          area: ['800px', '850px'],
+          area: ['800px', '800px'],
           content: 'dialog/action.php?task_id=' + task_id
       });
     });

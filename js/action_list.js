@@ -175,7 +175,7 @@ window.updBtnEvents = {
           maxmin: true,
           shadeClose: true,
           shade: 0.8,
-          area: ['800px', '850px'],
+          area: ['800px', '780px'],
           content: 'dialog/action.php?action_id=' + row.action_id
       });
     }
@@ -228,9 +228,9 @@ window.delBtnEvents = {
 
 // 地点格式化
 function locationNameFormatter(value, row, index) {
-    if (row.is_location == '1')
-      return value;
-    return '-';
+    if (row.is_location == '0')
+      return '-';
+    return value;
 }
 
 // 联络对象格式化
@@ -293,7 +293,7 @@ window.progBtnEvents = {
             maxmin: true,
             shadeClose: true,
             shade: 0.8,
-            area: ['800px', '850px'],
+            area: ['800px', '780px'],
             content: 'dialog/action_progress.php?action_id=' + row.action_id
         });
     }
@@ -328,7 +328,7 @@ window.closeBtnEvents = {
           maxmin: true,
           shadeClose: true,
           shade: 0.8,
-          area: ['800px', '850px'],
+          area: ['800px', '780px'],
           content: 'dialog/action_result.php?action_id=' + row.action_id
       });
     }
@@ -471,7 +471,7 @@ $(function () {
             title: '添加行动',
             shadeClose: true,
             shade: 0.8,
-            area: ['800px', '850px'],
+            area: ['800px', '780px'],
             content: 'dialog/action.php'
         });
     });

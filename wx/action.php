@@ -18,9 +18,11 @@ require_once '../db/staff_weixin.php';
     <h1 class="page__title" id="action_title"></h1>
     <p class="page__desc" id="action_intro"></p>
   </div>
+  
+  <div class="page__bd page__bd_spacing" id="download_file"></div>
 
   <div class="weui-media-box weui-media-box_text">
-    <div class="weui-media-box__desc" id="result_memo">进展情况</div>
+    <div class="weui-article" id="result_memo">进展情况</div>
   </div>
 
   <div class="weui-cells weui-cells_form">

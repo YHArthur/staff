@@ -39,6 +39,12 @@ function show_action_info(response) {
     $('#ctime').html(response.ctime);
     // 完成时间
     $('#closed_time').html(response.closed_time);
+    // 下载文件
+    if (response.result_type == 'I' && response.result_name != '') {
+      var file_type = response.result_name.split('.').pop();
+      var html_str = '<a id="lnk_upload_file" href="' + response.result_name + '" target="_blank"><i class="weui-icon-download"></i>' + file_type + '附件下载</a>';
+      $('#download_file').html(html_str);
+    }
     
     // 微信分享处理
     window.shareData.title = response.action_title;

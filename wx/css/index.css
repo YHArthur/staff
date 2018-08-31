@@ -1,5 +1,6 @@
 body{background-color:#f8f8f8}
 .page__hd {padding:20px}
+.page__bd {padding: 5px 20px; text-align: left;}
 .glyphicon {font-size:22px}
 .avata {width:50px;height: 50px}
 .button_sp_area {padding:10px 20px;}

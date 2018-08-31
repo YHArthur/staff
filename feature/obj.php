@@ -16,7 +16,7 @@ $table->format_columns[] = array('field'=>'obj_status', 'formatter'=>'objStatusF
 $table->format_columns[] = array('field'=>'limit_time', 'formatter'=>'limitTimeFormatter');
 
 // 展示字段设置
-$table->show_columns = array("public_level", "obj_name", "owner_name", "obj_level", "obj_value", "obj_status", "obj_perc", "limit_time", "check_name");
+$table->show_columns = array("public_level", "obj_name", "obj_status", "limit_time", "owner_name");
 
 // 排序
 $table->orderby = "obj_status DESC, obj_level DESC, limit_time";

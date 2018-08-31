@@ -54,7 +54,7 @@ $table->add_javascript =  <<<EOF
               maxmin: true,
               shadeClose: true,
               shade: 0.8,
-              area: ['800px', '850px'],
+              area: ['800px', '800px'],
               content: 'dialog/staff_weixin_confim.php?staff_id=' + row.staff_id
           });
         }

@@ -19,7 +19,7 @@ $table->format_columns[] = array('field'=>'is_closed', 'formatter'=>'closedForma
 $table->format_columns[] = array('field'=>'limit_time', 'formatter'=>'limitTimeFormatter');
 
 // 展示字段设置
-$table->show_columns = array("is_self", "task_name", "respo_name", "task_level", "task_value", "is_closed", "task_perc", "limit_time", "check_name");
+$table->show_columns = array("is_self", "task_name", "respo_name", "task_level", "is_closed", "limit_time", "check_name");
 
 // 排序
 $table->orderby = "is_closed, task_level DESC, limit_time";
@@ -50,7 +50,7 @@ $table->add_javascript =  <<<EOF
               title: '添加任务',
               shadeClose: true,
               shade: 0.8,
-              area: ['800px', '850px'],
+              area: ['800px', '780px'],
               content: 'dialog/task.php'
           });
       });
@@ -150,7 +150,7 @@ $table->add_javascript =  <<<EOF
               maxmin: true,
               shadeClose: true,
               shade: 0.8,
-              area: ['800px', '850px'],
+              area: ['800px', '780px'],
               content: 'dialog/task.php?id=' + row.task_id
           });
         }

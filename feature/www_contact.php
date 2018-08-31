@@ -7,7 +7,7 @@ $table_name = 'www_contact';
 $table = new DBTable('DB_WWW', $table_name);
 
 // 展示字段列表
-$table->show_columns = array("user_name", "uuid", "user_email", "user_suggestion", "user_ip", "is_void", "utime", "ctime");
+$table->show_columns = array("user_name", "user_email", "user_suggestion", "is_void", "ctime");
 
 
 // 根据参数分析表格处理

@@ -19,7 +19,7 @@ $table->format_columns[] = array('field'=>'from_date', 'formatter'=>'dateTimeFor
 $table->format_columns[] = array('field'=>'to_date', 'formatter'=>'dateTimeFormatter');
 
 // 展示字段设置
-$table->show_columns = array("staff_cd", "staff_name", "cost_memo", "cost_amount", "from_date", "to_date", "month_gap", "term_day", "is_fix", "is_void", "cname");
+$table->show_columns = array("staff_cd", "staff_name", "cost_memo", "cost_amount", "from_date", "to_date", "month_gap", "is_void");
 
 // 排序
 $table->orderby = "is_void, from_date DESC, staff_cd DESC, cost_amount DESC";
@@ -66,7 +66,7 @@ $table->add_javascript =  <<<EOF
               title: '添加入职员工',
               shadeClose: true,
               shade: 0.8,
-              area: ['800px', '850px'],
+              area: ['800px', '800px'],
               content: 'dialog/fin_cycle_cost_staff.php'
           });
       });
