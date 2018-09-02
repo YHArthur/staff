@@ -15,12 +15,13 @@ require_once '../db/staff_weixin.php';
 <body>
 
   <div class="page__hd">
-    <h1 class="page__title" id="task_name"></h1>
-    <p class="page__desc" id="task_star"></p>
+    <h2 class="page__title" id="task_name"></h2>
+    <p class="page__desc"><span id="task_star"></span><small id="ctime" class="weui-article"></small></p>
+    <p class="page__desc" id="task_intro">任务介绍</p>
   </div>
 
   <div class="weui-media-box weui-media-box_text">
-    <div class="weui-media-box__desc" id="task_intro">任务介绍</div>
+    <div class="weui-article" id="result_memo">进展情况</div>
   </div>
 
   <div class="weui-cells weui-cells_form">
@@ -35,14 +36,20 @@ require_once '../db/staff_weixin.php';
     </div>
 
     <div class="weui-cell">
+      <div class="weui-cell__hd"><label class="weui-label">状态：</label></div>
+      <div class="weui-cell__bd" id="is_close"></div>
+    </div>
+
+    <div class="weui-cell" id="div_close_time">
+      <div class="weui-cell__hd"><label class="weui-label">完成：</label></div>
+      <div class="weui-cell__bd" id="closed_time"></div>
+    </div>
+
+    <div class="weui-cell">
       <div class="weui-cell__hd"><label class="weui-label">监督：</label></div>
       <div class="weui-cell__bd" id="check_name"></div>
     </div>
 
-    <div class="weui-cell">
-      <div class="weui-cell__hd"><label class="weui-label">创建：</label></div>
-      <div class="weui-cell__bd" id="ctime"></div>
-    </div>
   </div>
 
   <div class="weui-cells__title" id="action_title"></div>

@@ -63,7 +63,11 @@ if ($connect_type != '0') {
 
   <div class="container">
     <div class="modal-body">
-      <legend><?php echo $action_title?></legend>
+      <legend class="text-center">
+        <button class="layui-btn layui-btn-small pull-left"><i class="layui-icon">&#xe603;</i></button>
+        <?php echo $action_title?>
+        <button class="layui-btn layui-btn-small pull-right"><i class="layui-icon">&#xe602;</i></button>
+      </legend>
       <blockquote class="layui-elem-quote"><?php echo $action_intro?></blockquote>
       <div>
       <?php if ($is_location != '0') {?>
@@ -139,7 +143,10 @@ if ($connect_type != '0') {
           </div>
 
           <div class="layui-form-item">
-            <div class="col-xs-6"></div>
+            <div class="col-xs-2"></div>
+            <div class="col-xs-1"></button></div>
+            <div class="col-xs-1"></div>
+            <div class="col-xs-2"></div>
             <div class="col-xs-2" class="layui-input-block">
               <input type="checkbox" id="is_closed" value="1" title="完成">
             </div>

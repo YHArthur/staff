@@ -11,8 +11,17 @@ function initTable() {
                 field: 'add_btn',
                 align: 'center',
                 valign: 'middle',
+                visible: false,
                 events: addBtnEvents,
                 formatter: addBtnFormatter
+            },
+            {
+                title: '行动列表',
+                field: 'act_btn',
+                align: 'center',
+                valign: 'middle',
+                events: listBtnEvents,
+                formatter: listBtnFormatter
             },
             {
                 title: '个人',
@@ -42,6 +51,7 @@ function initTable() {
                 title: '任务等级',
                 field: 'task_level',
                 align: 'center',
+                visible: false,
                 sortable: true,
                 formatter: taskLevelFormatter,
                 valign: 'middle'
@@ -53,6 +63,14 @@ function initTable() {
                 visible: false,
                 sortable: true,
                 valign: 'middle'
+            },
+            {
+                title: '预期',
+                field: 'upd_btn',
+                align: 'center',
+                valign: 'middle',
+                events: updBtnEvents,
+                formatter: updBtnFormatter
             },
             {
                 title: '进展',
@@ -165,22 +183,6 @@ function initTable() {
                 visible: false,
                 sortable: true,
                 valign: 'middle'
-            },
-            {
-                title: '修改任务',
-                field: 'upd_btn',
-                align: 'center',
-                valign: 'middle',
-                events: updBtnEvents,
-                formatter: updBtnFormatter
-            },
-            {
-                title: '行动列表',
-                field: 'act_btn',
-                align: 'center',
-                valign: 'middle',
-                events: listBtnEvents,
-                formatter: listBtnFormatter
             }
         ]
     });
@@ -277,9 +279,13 @@ function selfFormatter(value, row, index) {
 
 // 任务名称格式化
 function taskNameFormatter(value, row, index) {
-    if(value) {
-        return '<a href="http://www.fnying.com/staff/wx/task.php?id=' + row.task_id + '" target="_blank">' + value + '</a>';
+    if(row.task_name) {
+        var task_star = '';
+        if (row.task_level > 2)
+          task_star = ' ★';
+        return '<a href="http://www.fnying.com/staff/wx/task.php?id=' + row.task_id + '" target="_blank">' + row.task_name + '</a>' + task_star;
     }
+    return '-';
 }
 
 // 任务等级格式化

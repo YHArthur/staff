@@ -19,6 +19,7 @@ POST参数
   check_name      监管人
   is_self         是否个人任务
   task_level      任务等级
+  is_closed       是否完成
   is_limit        是否有期限
   limit_time      任务期限
   is_cycle        是否有周期
@@ -53,6 +54,7 @@ $limit_time = get_arg_str('POST', 'limit_time');            // 任务期限
 $is_cycle = get_arg_str('POST', 'is_cycle');                // 是否有周期
 $cycle_nm = get_arg_str('POST', 'cycle_nm');                // 周期时间
 $cycle_unit = get_arg_str('POST', 'cycle_unit');            // 周期单位
+$is_closed = get_arg_str('POST', 'is_closed');              // 是否完成
 
 // 提交信息整理
 $task_level = intval($task_level);
@@ -126,6 +128,7 @@ $data['check_id'] = $check_id;                            // 监管人ID
 $data['check_name'] = $check_name;                        // 监管人
 $data['is_self'] = $is_self;                              // 是否个人任务
 $data['task_level'] = $task_level;                        // 任务等级
+$data['is_closed'] = $is_closed;                          // 是否完成
 $data['is_limit'] = $is_limit;                            // 是否有期限
 $data['limit_time'] = $limit_time;                        // 任务期限
 $data['is_cycle'] = $is_cycle;                            // 是否有周期

@@ -15,29 +15,12 @@ function initTable() {
                 valign: 'middle'
             },
             {
-                title: '联络',
-                field: 'connect_name',
-                align: 'center',
-                sortable: true,
-                formatter: connectNameFormatter,
-                valign: 'middle'
-            },
-            {
                 title: '个人',
                 field: 'is_self',
                 align: 'right',
                 visible: false,
                 sortable: true,
                 formatter: selfFormatter,
-                valign: 'middle'
-            },
-            {
-                title: '进展',
-                field: 'is_closed',
-                align: 'center',
-                sortable: true,
-                formatter: isClosedFormatter,
-                events: closeBtnEvents,
                 valign: 'middle'
             },
             {
@@ -49,11 +32,20 @@ function initTable() {
                 valign: 'middle'
             },
             {
-                title: '所属任务',
-                field: 'task_id',
-                align: 'left',
+                title: '预期',
+                field: 'upd_btn',
+                align: 'center',
+                valign: 'middle',
+                events: updBtnEvents,
+                formatter: updBtnFormatter
+            },
+            {
+                title: '进展',
+                field: 'is_closed',
+                align: 'center',
                 sortable: true,
-                formatter: taskNameFormatter,
+                formatter: isClosedFormatter,
+                events: closeBtnEvents,
                 valign: 'middle'
             },
             {
@@ -63,6 +55,14 @@ function initTable() {
                 sortable: true,
                 formatter: resultNameFormatter,
                 events: progBtnEvents,
+                valign: 'middle'
+            },
+            {
+                title: '所属任务',
+                field: 'task_id',
+                align: 'left',
+                sortable: true,
+                formatter: taskNameFormatter,
                 valign: 'middle'
             },
             {
@@ -99,6 +99,14 @@ function initTable() {
                 valign: 'middle'
             },
             {
+                title: '联络',
+                field: 'connect_name',
+                align: 'center',
+                sortable: true,
+                formatter: connectNameFormatter,
+                valign: 'middle'
+            },
+            {
                 title: '创建人',
                 field: 'owner_name',
                 align: 'center',
@@ -129,14 +137,6 @@ function initTable() {
                 visible: false,
                 sortable: true,
                 valign: 'middle'
-            },
-            {
-                title: '修改',
-                field: 'upd_btn',
-                align: 'center',
-                valign: 'middle',
-                events: updBtnEvents,
-                formatter: updBtnFormatter
             },
             {
                 title: '删除',
@@ -170,7 +170,7 @@ window.updBtnEvents = {
     'click .updbtn': function (e, value, row) {
       layer.open({
           type: 2,
-          title: '修改行动',
+          title: getRowDescriptions(row) + '的预期结果',
           fix: false,
           maxmin: true,
           shadeClose: true,
@@ -274,7 +274,7 @@ function taskNameFormatter(value, row, index) {
 function resultNameFormatter(value, row, index) {
     if(row.result_type == 'I') {
       if (row.result_memo) {
-        return '<button class="progbtn btn-primary" type="button" aria-label="进展"><i class="glyphicon glyphicon-file"></i></button>';
+        return '<button class="progbtn btn-success" type="button" aria-label="进展"><i class="glyphicon glyphicon-file"></i></button>';
       } else {
         return '-';
       }
@@ -288,7 +288,7 @@ window.progBtnEvents = {
     'click .progbtn': function (e, value, row) {
         layer.open({
             type: 2,
-            title: '【' + row.action_title + '】的行动进展',
+            title: getRowDescriptions(row) + '的成果展示',
             fix: false,
             maxmin: true,
             shadeClose: true,
@@ -323,7 +323,7 @@ window.closeBtnEvents = {
     'click .closebtn': function (e, value, row) {
       layer.open({
           type: 2,
-          title: '行动进展',
+          title: getRowDescriptions(row) + '的行动进展',
           fix: false,
           maxmin: true,
           shadeClose: true,
@@ -468,7 +468,7 @@ $(function () {
     $('#add_btn').click(function() {
         layer.open({
             type: 2,
-            title: '添加行动',
+            title: '创建新的行动',
             shadeClose: true,
             shade: 0.8,
             area: ['800px', '780px'],

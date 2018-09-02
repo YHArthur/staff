@@ -6,8 +6,7 @@ require_once '../db/staff_main.php';
 // 禁止游客访问
 exit_guest();
 
-$staff_id = $_SESSION['staff_id'];
-$staff_name = $_SESSION['staff_name'];
+$my_id = $_SESSION['staff_id'];
 
 // 未设置任务ID(默认添加)
 if (!isset($_GET["id"])) {
@@ -15,8 +14,9 @@ if (!isset($_GET["id"])) {
   $task_id = '';                                  // 任务ID
   $task_name = '';                                // 任务
   $task_intro = '';                               // 任务描述
-  $respo_id = $staff_id;                          // 责任人ID
-  $check_id = $staff_id;                          // 监管人ID
+  $owner_id = $my_id;                             // 创建人ID
+  $respo_id = $my_id;                             // 责任人ID
+  $check_id = $my_id;                             // 监管人ID
 
   $is_limit = 1;                                  // 是否有期限
   $is_cycle = 0;                                  // 是否有周期
@@ -47,6 +47,7 @@ if (!isset($_GET["id"])) {
   $task_id = $task['task_id'];                    // 任务ID
   $task_name = $task['task_name'];                // 任务
   $task_intro = $task['task_intro'];              // 任务描述
+  $owner_id = $task['owner_id'];                  // 创建人ID
   $respo_id = $task['respo_id'];                  // 责任人ID
   $check_id = $task['check_id'];                  // 监管人ID
 
@@ -71,7 +72,7 @@ $cycle_ut = $cycle_array['ut'];
 
 // 员工选项
 $staff_rows = get_staff_list();
-$staff_list = get_staff_list_select($staff_id, $staff_rows);
+$staff_list = get_staff_list_select($my_id, $staff_rows);
 $staff_list['0'] = '请选择员工';
 $respo_option = get_select_option($staff_list, $respo_id);
 $check_option = get_select_option($staff_list, $check_id);
@@ -95,10 +96,6 @@ $level_option = get_select_option($level_list, $task_level);
 // 周期单位选项列表
 $cycle_unit_list = array('year'=>'年','month'=>'月','week'=>'周','day'=>'日');
 $cycle_unit_option = get_select_option($cycle_unit_list, $cycle_ut);
-
-// 完成状态列表
-$status_list = array('0'=>'执行','1'=>'完成','2'=>'废止');
-$status_option = get_select_option($status_list, $is_closed);
 ?>
 
 <html lang="zh-CN">
@@ -167,7 +164,7 @@ $status_option = get_select_option($status_list, $is_closed);
                 <?php echo $cycle_input?>
               </div>
             </div>
-            
+
             <div class="layui-inline div_cycle_time" style="margin-right:0px;">
               <label for="ct_cycle_time" class="layui-form-label" style="width: 110px;">周期时间</label>
               <div class="layui-input-inline" style="width:75px; margin-right: 0px;">
@@ -203,22 +200,6 @@ $status_option = get_select_option($status_list, $is_closed);
               </div>
             </div>
           </div>
-          
-          <!--
-          <div class="layui-form-item">
-            <div class="layui-inline">
-            </div>
-
-            <div class="layui-inline">
-              <label for="ct_is_closed" class="layui-form-label">完成状态</label>
-              <div class="layui-input-inline" style="width: 100px;">
-                <select name="is_closed" id="ct_is_closed">
-                <?php echo $status_option?>
-                </select>
-              </div>
-            </div>
-          </div>
-          -->
 
           <!--
           <div class="layui-form-item">
@@ -253,7 +234,12 @@ $status_option = get_select_option($status_list, $is_closed);
           </div>
 
           <div class="layui-form-item">
-            <div class="col-xs-8"></div>
+            <div class="col-xs-6"></div>
+            <div class="col-xs-2" class="layui-input-block">
+            <?php if ($is_closed == '1' && ($my_id == $owner_id || $my_id == $check_id)) { ?>
+              <input type="checkbox" id="is_closed" value="1" title="完成" checked="checked">
+            <?php }?>
+            </div>
             <div class="col-xs-2">
               <button type="button" id="btn_close" class="btn btn-default btn-block">关闭</button>
             </div>
@@ -304,7 +290,7 @@ $status_option = get_select_option($status_list, $is_closed);
       }
     });
     edit_index = layedit.build('ct_task_intro_edit');
-    
+
     // 期限有无变更事件
     form.on('radio(radio_is_limit)', function(data) {
       limitChange(data.value);
@@ -356,7 +342,7 @@ $status_option = get_select_option($status_list, $is_closed);
       $("#div_check").hide();
     }
   }
-  
+
   // 时间戳转日期
   function timestampToTime(timestamp) {
     var date = new Date(timestamp);
@@ -427,7 +413,12 @@ $status_option = get_select_option($status_list, $is_closed);
     row['is_self'] = $("input[name='is_self']:checked").val();
     // 任务描述
     row['task_intro'] = layedit.getContent(edit_index);
-    
+    // 是否完成
+    row['is_closed'] = 0;
+    var obj = $("#is_closed");
+    if (obj && obj.is(':checked'))
+      row['is_closed'] = 1;
+
     // 截止期限
     if (row['is_limit'] == '1' && is_valid_datetime(row['limit_time']) == 0) {
       parent.layer.msg('请输入正确的截止期限');

@@ -112,7 +112,7 @@ $location_option = get_select_option($location_list, $is_location);
           <div class="layui-form-item">
               <label for="ct_action_title" class="layui-form-label">行动标题</label>
               <div class="layui-input-block">
-                <input type="text" class="layui-input" id="ct_action_title" name="action_title" required lay-verify="required" autocomplete="off"  autofocus="autofocus" value="<?php echo $action_title?>" placeholder="请输入行动标题（30字以内）">
+                <input type="text" class="layui-input" id="ct_action_title" name="action_title" required lay-verify="required" autocomplete="off"  autofocus="autofocus" value="<?php echo $action_title?>"  maxlength="30" placeholder="请输入行动标题（16个汉字以内）">
               </div>
           </div>
 

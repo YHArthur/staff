@@ -155,6 +155,7 @@ $rtn_ary['is_self'] = $is_self;
 $rtn_ary['task_level'] = $task_level;
 $rtn_ary['task_value'] = $task_value;
 $rtn_ary['task_perc'] = $task_perc;
+$rtn_ary['result_memo'] = $result_memo;
 $rtn_ary['is_closed'] = $is_closed;
 $rtn_ary['closed_time'] = $closed_time;
 $rtn_ary['is_limit'] = $is_limit;

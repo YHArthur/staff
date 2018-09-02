@@ -33,7 +33,7 @@ $rtn_str  = <<<EOF
 
     <div id="toolbar">
         <button id="add_btn" class="btn btn-warning">
-        <i class="glyphicon glyphicon-plus-sign"></i> 添加行动
+        <i class="glyphicon glyphicon-plus-sign"></i> 新的行动
       </button>
     </div>
 

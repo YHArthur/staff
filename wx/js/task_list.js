@@ -2,7 +2,7 @@
 var staff_id;
 
 $(function () {
-  $(".page__desc").html('空空如也... ...');
+  $(".page__desc").html('正在加载任务列表... ...');
   staff_id = GetQueryString('staff_id');
   // 获取员工执行中任务一览
   get_staff_task(staff_id, 0);

@@ -55,14 +55,21 @@ if ($is_closed == 1)
       <blockquote class="layui-elem-quote"><?php echo $action_intro?></blockquote>
       <div>
       <?php if ($is_location != '0') {?>
-          <label id="lbl_location_name">地点:</label>
+          <label id="lbl_location_name">地点：</label>
           <?php echo $location_name?>
       <?php } ?>
-
+          &nbsp;&nbsp;
       <?php if ($result_type == 'O') {?>
-          <label id="lbl_result_name">外链:</label>
+          <label id="lbl_result_name">外链：</label>
           <a href="<?php echo $result_name?>" target="_blank"><?php echo $result_name?></a>
-      <?php } ?>
+      <?php } else {
+              if (trim($result_name) != '') {
+                $file_type = explode('.', $result_name);
+      ?>
+          <label id="lbl_result_download">附件：</label>
+          <a id="lnk_download_file" class="layui-btn layui-btn-small" href="<?php echo $result_name?>" target="_blank"><i class="layui-icon">&#xe61e;</i><?php echo end($file_type)?>文档下载</a>
+      <?php   }
+            }?>
       </div>
       <?php if ($connect_type != '0') {
               if ($connect_type == '1') {

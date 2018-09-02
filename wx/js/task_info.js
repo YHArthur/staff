@@ -113,6 +113,13 @@ function get_action_html(row){
   return html;
 }
 
+// 完成状态格式化
+function closeFormatter(is_closed) {
+    if (is_closed == 1)
+        return '已完成';
+    return '执行中';
+}
+
 // 任务明细展示
 function show_task_info(response) {
     // 任务名称
@@ -121,6 +128,8 @@ function show_task_info(response) {
     $('#task_star').html(taskLevelFormatter(response.task_level));
     // 任务内容
     $('#task_intro').html(response.task_intro);
+    // 进展情况
+    $('#result_memo').html(response.result_memo);
     // 责任人
     $('#respo_name').html(response.respo_name);
     // 任务期限
@@ -129,6 +138,14 @@ function show_task_info(response) {
     $('#check_name').html(response.check_name);
     // 创建时间
     $('#ctime').html(response.ctime);
+    // 完成状态
+    $('#is_close').html(closeFormatter(response.is_closed));
+    if (response.is_closed == 1) {
+      // 完成时间
+      $('#closed_time').html(response.closed_time);
+    } else {
+      $('#div_close_time').hide();
+    }
     
     // 行动列表
     var rows = response.action_rows;

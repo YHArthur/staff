@@ -66,6 +66,7 @@ function get_action_pane($task_id, $respo_id, $active_class) {
       $rtn_str .= "\n    " . '<li style="padding: 10px 15px;">';
       $rtn_str .= "\n      " . '<button id="' . $rec['action_id'] . '" class="btn btn-action btn-success"><i class="glyphicon glyphicon-glass"></i></button>';
       $rtn_str .= "\n        " . $rec['action_title'];
+      $rtn_str .= "\n      " . '<small class="text-muted">' . $rec['closed_time'] . '</small>';
       $rtn_str .= "\n    " . '</li>';
     }
   }
