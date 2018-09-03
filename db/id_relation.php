@@ -103,11 +103,11 @@ function del_relation_ids($rlt_type, $mid, $sids)
 
   $void_time = date('Y-m-d H:i:s');
   $sids = array_unique($sids);
-  foreach (sids AS $sid) {
+  foreach ($sids AS $sid) {
     $upd_sql[] = "'{$sid}'";
   }
   $sql = "UPDATE id_relation SET is_void = 1, void_time = '{$void_time}'";
-  $sql .= " WHERE rlt_type = '{$rlt_type}' AND mid = '{$mid}' AND sid = IN (";
+  $sql .= " WHERE rlt_type = '{$rlt_type}' AND mid = '{$mid}' AND sid IN (";
   $sql .= join(",", $upd_sql) . ")";
   $q_id = $db->query($sql);
   if ($q_id == 0)

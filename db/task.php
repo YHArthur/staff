@@ -75,16 +75,17 @@ function get_staff_task_list_select($staff_id)
 {
   $db = new DB_SATFF();
 
-  $type_ary = array();
-  $type_ary[] = "check_id = '{$staff_id}'";
-  $type_ary[] = "respo_id = '{$staff_id}'";
-  $type_ary[] = "owner_id = '{$staff_id}'";
-  
-  $sql = "SELECT task_id, task_name FROM task";
-  $sql .= " WHERE is_void = 0";
-  $sql .= " AND (" . join(" OR ", $type_ary) . ")";
-  $sql .= " AND is_closed = 0";  
-  $sql .= " ORDER BY task_level DESC, limit_time, utime DESC";
+  $sql = "SELECT T.task_id, T.task_name";
+  $sql .= " FROM task AS T";
+  $sql .= " INNER JOIN id_relation AS R";
+  $sql .= " ON T.task_id = R.mid";
+  $sql .= " WHERE R.sid = '{$staff_id}'";
+  $sql .= " AND R.rlt_type = 'task_action'";
+  $sql .= " AND R.is_void = 0";
+  $sql .= " AND T.is_closed = 0";
+  $sql .= " AND T.is_void = 0";
+  $sql .= " ORDER BY T.utime DESC";
+
   $db->query($sql);
   $rows = $db->fetchAll();
   $task_list = array();
