@@ -91,7 +91,7 @@ $pay_input = get_radio_input('pay_level', $pay_list, $pay_level);
             </div>
 
             <div class="layui-inline">
-              <label for="ct_office_subsidy" class="layui-form-label">办公津贴</label>
+              <label for="ct_office_subsidy" class="layui-form-label">办公经费</label>
               <div class="input-group" style="width: 190px;">
                 <div class="input-group-addon">¥</div>
                 <input type="number" class="layui-input" id="ct_office_subsidy" name="office_subsidy" required lay-verify="required" autocomplete="off" value="0.00" placeholder="0.00">
@@ -275,9 +275,9 @@ $pay_input = get_radio_input('pay_level', $pay_list, $pay_level);
     var pay_level = $("input[name='pay_level']:checked").val();
     // 税前月薪
     var tax_salary = $("#ct_tax_salary").val() * 1.00;
-    // 最低办公津贴比例
+    // 最低办公经费比例
     var min_subsidy_rate = 0.05;
-    // 办公津贴比例
+    // 办公经费比例
     var subsidy_rate = min_subsidy_rate;
     // 最低基本工资
     var min_base_salary = 5000.00;
@@ -302,7 +302,7 @@ $pay_input = get_radio_input('pay_level', $pay_list, $pay_level);
         base_salary = min_base_salary;
         break;
     }
-    // 计算办公津贴
+    // 计算办公经费
     var office_subsidy = tax_salary * subsidy_rate;
     $("#ct_office_subsidy").val(office_subsidy.toFixed(2));
     // 基本工资变更
@@ -335,7 +335,7 @@ $pay_input = get_radio_input('pay_level', $pay_list, $pay_level);
     var tax_salary = $("#ct_tax_salary").val() * 1;
     // 基本工资
     var base_salary = $("#ct_base_salary").val() * 1;
-    // 办公津贴
+    // 办公经费
     var office_subsidy = $("#ct_office_subsidy").val() * 1;
     // 绩效工资
     var effic_salary = $("#ct_effic_salary").val() * 1;
@@ -425,7 +425,7 @@ $pay_input = get_radio_input('pay_level', $pay_list, $pay_level);
   });
 
 
-  // 办公津贴变更事件
+  // 办公经费变更事件
   $("#ct_office_subsidy").on('input',function(){
     // 重新计算所有项目
     recal();

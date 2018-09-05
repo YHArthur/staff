@@ -13,7 +13,7 @@ GET参数
   staff_name      员工姓名
   from_date       开始时间
   to_date         结束时间
-  office_subsidy  办公津贴
+  office_subsidy  办公经费
   base_salary     基本工资
   effic_salary    绩效工资
 
@@ -35,7 +35,7 @@ $staff_id = get_arg_str('GET', 'staff_id');               // 员工ID
 $staff_name = get_arg_str('GET', 'staff_name');           // 员工姓名
 $from_date = get_arg_str('GET', 'from_date');             // 开始时间
 $to_date = get_arg_str('GET', 'to_date');                 // 结束时间
-$office_subsidy = get_arg_str('GET', 'office_subsidy');   // 办公津贴
+$office_subsidy = get_arg_str('GET', 'office_subsidy');   // 办公经费
 $base_salary = get_arg_str('GET', 'base_salary');         // 基本工资
 $effic_salary = get_arg_str('GET', 'effic_salary');       // 绩效工资
 
@@ -136,7 +136,7 @@ if ($tax_sum > 0) {
   $ret = ins_fin_cycle_cost($data);
   // 经费信息创建失败
   if ($ret == '')
-    exit_error('110', '办公津贴的周期支出费用信息创建失败');
+    exit_error('110', '办公经费的周期支出费用信息创建失败');
 }
 
 // 绩效工资数据设定
@@ -184,23 +184,23 @@ if ($housing_fund_sum > 0) {
   $ret = ins_fin_cycle_cost($data);
   // 经费信息创建失败
   if ($ret == '')
-    exit_error('110', '办公津贴的周期支出费用信息创建失败');
+    exit_error('110', '办公经费的周期支出费用信息创建失败');
 }
 
-// 办公津贴数据设定
+// 办公经费数据设定
 if ($office_subsidy > 0) {
   $data['cost_id'] = get_guid();                            // 经费ID
   $data['cost_amount'] = $office_subsidy;                   // 支出金额
   // 应付职工薪酬-辞退福利
   $data['sub_id'] = '2211';                                 // 会计科目ID
-  $data['cost_memo'] = '办公津贴';                          // 支出摘要
+  $data['cost_memo'] = '办公经费';                          // 支出摘要
   $data['term_day'] = 0;                                    // 支付日（不定日）
 
   // 周期支出费用创建
   $ret = ins_fin_cycle_cost($data);
   // 经费信息创建失败
   if ($ret == '')
-    exit_error('110', '办公津贴的周期支出费用信息创建失败');
+    exit_error('110', '办公经费的周期支出费用信息创建失败');
 }
 
 // 输出结果
