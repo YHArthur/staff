@@ -158,7 +158,7 @@ function get_staff_action_total($staff_id, $search, $is_closed, $is_self)
   if (trim($search) != '')
     $sql .= " AND A.action_title like '%{$search}%'";
   if ($is_closed != 9)
-    $sql .= " AND A.is_closed = %{$is_closed}%";
+    $sql .= " AND A.is_closed = {$is_closed}";
   if ($is_self != 1)
     $sql .= " AND T.is_self = 0";
   
@@ -202,7 +202,7 @@ function get_staff_action_list($staff_id, $search, $is_closed, $is_self, $sort, 
   if (trim($search) != '')
     $sql .= " AND A.action_title like '%{$search}%'";
   if ($is_closed != 9)
-    $sql .= " AND A.is_closed = %{$is_closed}%";
+    $sql .= " AND A.is_closed = {$is_closed}";
   if ($is_self != 1)
     $sql .= " AND T.is_self = 0";
   // 行动按是否完成（从小到大），更新时间（从晚到早）排序

@@ -4,6 +4,9 @@ require_once 'db/staff_weixin.php';
 require_once 'db/staff_permit.php';
 
 need_staff_login();
+
+$my_id = $_SESSION['staff_id'];
+$my_name = $_SESSION['staff_name'];
 ?>
 
 <!DOCTYPE html>
@@ -19,7 +22,7 @@ need_staff_login();
 <body>
 
   <div class="page__hd">
-      <h1 class="page__title"><?php echo $_SESSION['staff_name']?></h1>
+      <h1 class="page__title"><?php echo $my_name?></h1>
       <p class="page__desc"><a href="pc_menu.php">风赢科技员工管理平台</a></p>
   </div>
   <div class="weui-grids">
@@ -41,18 +44,27 @@ need_staff_login();
           </div>
           <p class="weui-grid__label">个人情报</p>
       </a>
-      <a href="wx/task_list.php?staff_id=<?php echo $_SESSION['staff_id'];?>" class="weui-grid">
+
+      <a href="wx/action_list.php?staff_id=<?php echo $my_id;?>" class="weui-grid">
           <div class="weui-grid__icon">
               <i class="glyphicon glyphicon-list-alt"></i>
           </div>
+          <p class="weui-grid__label">我的行动</p>
+      </a>
+
+      <a href="wx/task_list.php?staff_id=<?php echo $my_id;?>" class="weui-grid">
+          <div class="weui-grid__icon">
+              <i class="glyphicon glyphicon-flag"></i>
+          </div>
           <p class="weui-grid__label">任务一览</p>
-      </a>      
+      </a>
       <a href="javascript:;" class="weui-grid">
           <div class="weui-grid__icon">
               <i class="glyphicon glyphicon-plus"></i>
           </div>
           <p class="weui-grid__label">更多...</p>
       </a>
+
   </div>
 
 
@@ -62,7 +74,7 @@ need_staff_login();
   <script src="wx/js/common.js"></script>
   <script src="wx/js/wx.js"></script>
   <script src="js/h5_menu.js"></script>
-  
+
 </body>
 </html>
 
