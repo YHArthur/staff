@@ -42,6 +42,7 @@ foreach($rows as $row) {
       $data['exp_id'] = $exp_id;
       $data['exp_amount'] = $exp_amount;
       $data['exp_balance'] = $exp_amount;
+      $data['exp_count'] = 1;
       $data['exp_stamp'] = $pending_stamp;
       $data['exp_memo'] = $exp_memo;
       
@@ -53,6 +54,8 @@ foreach($rows as $row) {
         $data['prvs_hash'] = $last_log['hash_id'];
         // 变动后余额
         $data['exp_balance'] = $last_log['exp_balance'] + $exp_amount;
+        // 变动总次数
+        $data['exp_count'] = $last_log['exp_count'] + 1;
       }
       // 创建员工办公经费变动记录
       $ret = ins_staff_expense_log($data);

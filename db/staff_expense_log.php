@@ -29,7 +29,7 @@ function get_staff_last_expense_log($staff_id)
 
   $sql = "SELECT * FROM staff_expense_log";
   $sql .= " WHERE staff_id = '{$staff_id}'";
-  $sql .= " ORDER BY exp_stamp DESC";
+  $sql .= " ORDER BY exp_stamp DESC, exp_count DESC";
   $sql .= " limit 1";  
   $db->query($sql);
   $row = $db->fetchRow();

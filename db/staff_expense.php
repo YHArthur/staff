@@ -25,7 +25,7 @@ function get_pending_staff_expense()
 
   $sql = "SELECT * FROM staff_expense";
   $sql .= " WHERE is_void = 0 AND now_count < max_count";
-  $sql .= " ORDER BY from_date";
+  $sql .= " ORDER BY from_date, exp_amount DESC";
 
   $db->query($sql);
   $rows = $db->fetchAll();

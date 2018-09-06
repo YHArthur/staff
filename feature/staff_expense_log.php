@@ -16,9 +16,9 @@ $table->format_columns[] = array('field'=>'exp_amount', 'formatter'=>'currencyFo
 $table->format_columns[] = array('field'=>'exp_balance', 'formatter'=>'currencyFormatter');
 
 // 展示字段列表
-$table->show_columns = array("staff_name", "exp_stamp", "exp_memo", "exp_amount", "exp_balance");
+$table->show_columns = array("staff_name", "exp_count", "exp_stamp", "exp_memo", "exp_amount", "exp_balance");
 // 排序
-$table->orderby = "exp_stamp DESC";
+$table->orderby = "exp_stamp DESC, exp_count DESC";
 
 // 默认不可添加
 $table->add_able = false;
