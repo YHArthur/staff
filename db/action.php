@@ -274,7 +274,12 @@ function get_staff_action_list($staff_id, $search, $is_closed, $is_self, $sort, 
   $sql .= " ORDER BY ";
   if (trim($sort) != '')
     $sql .= " A.{$sort} {$order},";
-  $sql .= " A.is_closed, A.utime DESC";
+  $sql .= " A.is_closed,";
+  if ($is_closed != 1) {
+    $sql .= " A.utime DESC";
+  } else {
+    $sql .= " A.closed_time DESC";
+  }
   $sql .= " limit {$offset},{$limit}";
 
   $db->query($sql);

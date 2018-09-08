@@ -55,7 +55,10 @@ function isClosedFormatter(row) {
         fmt = '待办';
         break;
       case '1':
-        fmt = '完成';
+        var closed_time = new Date(row.closed_time.replace(/-/g, "/"));
+        var month = closed_time.getMonth() + 1;
+        var day = closed_time.getDate();
+        fmt = month+'月'+day+'日 完成';
         break;
     }
     return fmt;
