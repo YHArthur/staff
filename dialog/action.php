@@ -7,8 +7,8 @@ require_once '../db/action.php';
 // 禁止游客访问
 exit_guest();
 
-$staff_id = $_SESSION['staff_id'];
-$staff_name = $_SESSION['staff_name'];
+$my_id = $_SESSION['staff_id'];
+$my_name = $_SESSION['staff_name'];
 
 // 未设置行动ID(默认添加)
 if (!isset($_GET["action_id"])) {
@@ -20,18 +20,20 @@ if (!isset($_GET["action_id"])) {
     if (!$task)
       exit('task id is not exist');
   } else {
-   $task_id = $staff_id;                            // 临时任务ID
+   $task_id = $my_id;                                // 临时任务ID
   }
   $action_id = '';                                  // 行动ID
   $action_title = '';                               // 行动标题
   $action_intro = '';                               // 行动预期结果
-  $respo_id = $staff_id;                            // 责任人ID
+  $owner_id = $my_id;                               // 创建人ID
+  $respo_id = $my_id;                               // 责任人ID
   $result_type = 'I';                               // 成果类型(默认内置)
   $result_name = '';                                // 成果名称
   $connect_type = 0;                                // 沟通类型
   $connect_name = '';                               // 联络对象
   $is_location = 1;                                 // 是否限定地点
   $location_name = '';                              // 地点名称
+  $is_closed = 0;                                   // 是否完成
 
 } else {
 
@@ -44,6 +46,7 @@ if (!isset($_GET["action_id"])) {
   $task_id = $action['task_id'];                    // 任务ID
   $action_title = $action['action_title'];          // 行动标题
   $action_intro = $action['action_intro'];          // 行动预期结果
+  $owner_id = $action['owner_id'];                  // 创建人ID
   $respo_id = $action['respo_id'];                  // 责任人ID
   $result_type = $action['result_type'];            // 成果类型
   $result_name = $action['result_name'];            // 成果名称
@@ -51,18 +54,18 @@ if (!isset($_GET["action_id"])) {
   $connect_name = $action['connect_name'];          // 联络对象
   $is_location = $action['is_location'];            // 是否限定地点
   $location_name = $action['location_name'];        // 地点名称
-
+  $is_closed = $action['is_closed'];                // 是否完成
   // 将数据库存放的用户输入内容转换回再修改内容
   $action_intro = html_to_str($action_intro);
 }
 
 // 任务选项
-$task_list = get_staff_task_list_select($staff_id);
+$task_list = get_staff_task_list_select($my_id);
 $task_id_option = get_select_option($task_list, $task_id);
 
 // 员工选项
 $staff_rows = get_staff_list();
-$staff_list = get_staff_list_select($staff_id, $staff_rows);
+$staff_list = get_staff_list_select($my_id, $staff_rows);
 $staff_list['0'] = '请选择员工';
 $respo_option = get_select_option($staff_list, $respo_id);
 
@@ -170,7 +173,12 @@ $location_option = get_select_option($location_list, $is_location);
           </div>
 
           <div class="layui-form-item">
-            <div class="col-xs-8"></div>
+            <div class="col-xs-6"></div>
+            <div class="col-xs-2" class="layui-input-block">
+            <?php if ($is_closed == '1' && ($my_id == $owner_id || $my_id == $respo_id)) { ?>
+              <input type="checkbox" id="is_closed" value="1" title="完成" checked="checked">
+            <?php }?>
+            </div>
             <div class="col-xs-2">
               <button type="button" id="btn_close" class="btn btn-default btn-block">关闭</button>
             </div>
@@ -348,6 +356,11 @@ $location_option = get_select_option($location_list, $is_location);
     row['connect_type'] = $("input[name='connect_type']:checked").val();
     // 行动预期结果
     row['action_intro'] = layedit.getContent(edit_index);
+    // 是否完成
+    row['is_closed'] = 0;
+    var obj = $("#is_closed");
+    if (obj && obj.is(':checked'))
+      row['is_closed'] = 1;
 
     $.ajax({
         url: '/staff/api/action.php',

@@ -163,7 +163,7 @@ function get_action_list() {
         day = 1;
     // API调用
     CallApi(api_url, {"day":getDate(day), "limit":100}, function (response) {
-        // 员工本周补贴明细展示
+        // 完成行动明细展示
         show_action_list(response);
     }, function (response) {
         AlertDialog(response.errmsg);

@@ -47,6 +47,7 @@ $respo_id = get_arg_str('POST', 'respo_id');                // 责任人ID(TODO)
 $respo_name = get_arg_str('POST', 'respo_name');            // 责任人(TODO)
 $is_location = get_arg_str('POST', 'is_location');          // 是否限定地点
 $location_name = get_arg_str('POST', 'location_name');      // 地点名称
+$is_closed = get_arg_str('POST', 'is_closed');              // 是否完成
 
 // 提交信息整理
 $connect_type = intval($connect_type);
@@ -80,6 +81,7 @@ $data['connect_type'] = $connect_type;                      // 沟通类型
 $data['connect_name'] = $connect_name;                      // 联络对象
 $data['is_location'] = $is_location;                        // 是否限定地点
 $data['location_name'] = $location_name;                    // 地点名称
+$data['is_closed'] = $is_closed;                            // 是否完成
 
 // 任务ID为空，表示创建任务
 if ($action_id == '') {
