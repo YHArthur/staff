@@ -6,7 +6,7 @@ require_once '../db/staff_weixin.php';
 <!DOCTYPE html>
 <html>
 <head>
-  <title>风赢行动</title>
+  <title>风赢行动展示</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
   <link rel="stylesheet" href="css/weui.css">
@@ -20,6 +20,7 @@ require_once '../db/staff_weixin.php';
   </div>
   
   <div class="page__bd page__bd_spacing" id="download_file"></div>
+  <div class="page__bd page__bd_spacing" id="link_url"></div>
 
   <div class="weui-media-box weui-media-box_text">
     <div class="weui-article" id="result_memo">进展情况</div>

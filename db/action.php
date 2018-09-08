@@ -107,6 +107,71 @@ function get_action_total_by_task_respo($task_id, $respo_id)
 }
 
 //======================================
+// 函数: 取得一段时间内可公开的已完成行动总数
+// 参数: $staff_id      员工ID（可以省略）
+// 参数: $from_time     开始时间戳
+// 参数: $to_time       结束时间戳
+// 返回: 记录总数
+//======================================
+function get_open_closed_action_total($staff_id, $from_time, $to_time)
+{
+  $db = new DB_SATFF();
+
+  $sql = "SELECT COUNT(action_id) AS id_total";
+  $sql .= " FROM action AS A";
+  $sql .= " INNER JOIN task AS T";
+  $sql .= " ON A.task_id = T.task_id";
+  $sql .= " WHERE A.is_void = 0";
+  $sql .= " AND T.is_void = 0";
+  $sql .= " AND A.is_closed = 1";
+  if ($staff_id != '')
+    $sql .= " AND A.staff_id = '{$staff_id}'";
+  $sql .= " AND A.closed_time >= '{$from_time}'";
+  $sql .= " AND A.closed_time <= '{$to_time}'";
+
+  $total = $db->getField($sql, 'id_total');
+  if ($total)
+    return $total;
+  return 0;
+}
+
+//======================================
+// 函数: 取得一段时间内可公开的已完成行动列表
+// 参数: $staff_id      员工ID
+// 参数: $from_time     开始时间戳
+// 参数: $to_time       结束时间戳
+// 参数: $limit         记录条数（TODO）
+// 参数: $offset        记录偏移量（TODO）
+// 返回: 记录列表
+//======================================
+function get_open_closed_action_list($staff_id, $from_time, $to_time, $limit, $offset)
+{
+  $db = new DB_SATFF();
+
+  $sql = "SELECT A.*,";
+  $sql .= " T.task_name,";
+  $sql .= " T.task_level";
+  $sql .= " FROM action AS A";
+  $sql .= " INNER JOIN task AS T";
+  $sql .= " ON A.task_id = T.task_id";
+  $sql .= " WHERE A.is_void = 0";
+  $sql .= " AND T.is_void = 0";
+  if ($staff_id != '')
+    $sql .= " AND A.respo_id = '{$staff_id}'";
+  $sql .= " AND A.closed_time >= '{$from_time}'";
+  $sql .= " AND A.closed_time <= '{$to_time}'";
+  $sql .= " AND A.is_closed = 1";
+  $sql .= " AND T.is_self = 0";
+  $sql .= " ORDER BY ";
+  $sql .= " A.closed_time DESC";
+  $sql .= " limit {$offset},{$limit}";
+
+  $db->query($sql);
+  $rows = $db->fetchAll();
+  return $rows;
+}
+
+//======================================
 // 函数: 取得任务行动责任人相关行动列表
 // 参数: $task_id       所属任务ID
 // 参数: $respo_id      责任人ID

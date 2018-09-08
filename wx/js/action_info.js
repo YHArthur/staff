@@ -42,13 +42,19 @@ function show_action_info(response) {
     // 下载文件
     if (response.result_type == 'I' && response.result_name != '') {
       var file_type = response.result_name.split('.').pop();
-      var html_str = '<a id="lnk_upload_file" href="' + response.result_name + '" target="_blank"><i class="weui-icon-download"></i>' + file_type + '附件下载</a>';
+      var html_str = '<a href="' + response.result_name + '" target="_blank"><i class="weui-icon-download"></i>' + file_type + '附件下载</a>';
       $('#download_file').html(html_str);
+    }
+
+    if (response.result_type == 'O' && response.result_name != '') {
+      var link_url = response.result_name;
+      var html_str = '<a href="' + response.result_name + '" target="_blank">成果链接地址</a>';
+      $('#link_url').html(html_str);
     }
     
     // 微信分享处理
     window.shareData.title = response.action_title;
-    window.shareData.desc = response.respo_name + ':' + response.action_desc;
+    window.shareData.desc = response.action_desc;
     if (/MicroMessenger/i.test(navigator.userAgent)) {
         $.getScript("https://res.wx.qq.com/open/js/jweixin-1.2.0.js", function () {
             // 微信配置启动
