@@ -63,6 +63,22 @@ function show_action_info(response) {
                 wx.onMenuShareTimeline(shareData);
                 wx.onMenuShareAppMessage(shareData);
             });
+
+            //绑定图片点击事件
+            $('img').click(function(event) {
+                    var thisimg = $(this).attr('src').replace('_thumb','');
+                    var imglist = $('img');
+                    var srcs= new Array();
+                    for (var i =0; i < imglist.length; i++) {
+                        srcs.push(imglist.eq(i).attr('src').replace('_thumb',''));
+                    }
+                    wx.ready(function(){
+                        wx.previewImage({
+                            current: thisimg, // 当前显示图片的http链接
+                            urls: srcs // 需要预览的图片http链接列表
+                        });
+                    });
+            }); 
         });
     }
 }
