@@ -198,7 +198,7 @@ window.delBtnEvents = {
           btn: ['确认','取消']
       }, function(){
           $.ajax({
-              url: '/staff/api/task_action_delete.php?obj=action&id=' + row.action_id,
+              url: '/staff/api/action_delete.php?obj=action&id=' + row.action_id,
               type: 'get',
               success: function (msg) {
                 if (msg.errcode == '0') {
@@ -305,10 +305,15 @@ function isClosedFormatter(value, row, index) {
     switch (value) {
       case '0':
         var my_id = $("#my_id").val();
-        if (my_id == row.owner_id) {
+        var cur_id = $("#cur_id").val();
+        if (my_id == row.respo_id) {
           fmt = '<button class="closebtn btn-primary" type="button" aria-label="进展"><i class="glyphicon glyphicon-ok"></i></button>';
         } else {
-          fmt = '待办';
+          if (cur_id == row.respo_id) {
+            fmt = '待办';
+          } else {
+            fmt = row.respo_name;
+          }
         }
         break;
       case '1':

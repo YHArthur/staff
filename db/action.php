@@ -219,7 +219,8 @@ function get_staff_action_total($staff_id, $search, $is_closed, $is_self)
   $sql .= " WHERE A.is_void = 0";
   if ($is_self == 0)
     $sql .= " AND T.is_void = 0";
-  $sql .= " AND A.respo_id = '{$staff_id}'";
+  $sql .= " AND (A.owner_id = '{$staff_id}'";
+  $sql .= " OR A.respo_id = '{$staff_id}')";
   if (trim($search) != '')
     $sql .= " AND A.action_title like '%{$search}%'";
   if ($is_closed != 9)
@@ -263,7 +264,8 @@ function get_staff_action_list($staff_id, $search, $is_closed, $is_self, $sort, 
   $sql .= " WHERE A.is_void = 0";
   if ($is_self == 0)
     $sql .= " AND T.is_void = 0";
-  $sql .= " AND A.respo_id = '{$staff_id}'";
+  $sql .= " AND (A.owner_id = '{$staff_id}'";
+  $sql .= " OR A.respo_id = '{$staff_id}')";
   if (trim($search) != '')
     $sql .= " AND A.action_title like '%{$search}%'";
   if ($is_closed != 9)

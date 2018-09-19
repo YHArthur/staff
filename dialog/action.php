@@ -103,6 +103,7 @@ $location_option = get_select_option($location_list, $is_location);
     <div class="modal-body">
       <form id="ct_form" class="layui-form">
           <input type="hidden" name="action_id" id="action_id" value="<?php echo $action_id?>">
+
           <div class="layui-form-item">
               <label for="ct_task_id" class="layui-form-label">选择任务</label>
               <div class="layui-input-block">
@@ -113,23 +114,18 @@ $location_option = get_select_option($location_list, $is_location);
           </div>
 
           <div class="layui-form-item">
-              <label for="ct_action_title" class="layui-form-label">行动标题</label>
+              <label for="ct_respo_id" class="layui-form-label">责任担当</label>
               <div class="layui-input-block">
-                <input type="text" class="layui-input" id="ct_action_title" name="action_title" required lay-verify="required" autocomplete="off"  autofocus="autofocus" value="<?php echo $action_title?>"  maxlength="30" placeholder="请输入行动标题（16个汉字以内）">
+                <select name="respo_id" id="ct_respo_id" lay-filter="select_respo_id">
+                <?php echo $respo_option?>
+                </select>
               </div>
           </div>
 
           <div class="layui-form-item">
-              <label for="ct_result_type" class="layui-form-label">成果类型</label>
+              <label for="ct_action_title" class="layui-form-label">行动标题</label>
               <div class="layui-input-block">
-                <?php echo $type_input?>
-              </div>
-          </div>
-
-          <div class="layui-form-item" id="div_result_name">
-              <label for="ct_result_name" class="layui-form-label" id="lbl_result_name">文档链接</label>
-              <div class="layui-input-block">
-                <input type="text" class="layui-input" id="ct_result_name" name="result_name" required lay-verify="required" autocomplete="off"  value="<?php echo $result_name?>" placeholder="请输入文档外部访问URL地址">
+                <input type="text" class="layui-input" id="ct_action_title" name="action_title" required lay-verify="required" autocomplete="off"  autofocus="autofocus" value="<?php echo $action_title?>"  maxlength="30" placeholder="请输入行动标题（16个汉字以内）">
               </div>
           </div>
 
@@ -202,15 +198,10 @@ $location_option = get_select_option($location_list, $is_location);
   var layedit = new Object();
 
   $(function () {
-    // 成果类型初始化
-    var rt = $("input[name='result_type']:checked").val();
-    resultChange(rt);
     // 沟通类型初始化
-    var ct = $("input[name='connect_type']:checked").val();
-    connectChange(ct);
+    connectChange($("input[name='connect_type']:checked").val());
     // 限定地点初始化
-    var lc = $("select[name='is_location']").val();
-    locationChange(lc);
+    locationChange($("select[name='is_location']").val());
   });
 
   // 使用Layui
@@ -227,11 +218,6 @@ $location_option = get_select_option($location_list, $is_location);
     });
     edit_index = layedit.build('ct_action_intro_edit');
 
-    // 成果类型变更事件
-    form.on('radio(radio_result_type)', function(data) {
-      resultChange(data.value);
-    });
-
     // 沟通类型变更事件
     form.on('radio(radio_connect_type)', function(data) {
        connectChange(data.value);
@@ -242,24 +228,6 @@ $location_option = get_select_option($location_list, $is_location);
       locationChange(data.value);
     });
   });
-
-  // 成果类型处理
-  function resultChange(rt) {
-    // 隐藏成果名称输入框
-    $("#div_result_name").hide();
-    // 成果类型为外链
-    if (rt == 'O') {
-      // 成果标签和成果提示文字
-      var result_name = '文档链接';
-      var result_placeholder = '请输入文档外部访问URL地址';
-      // 成果名称标签变更
-      $("#lbl_result_name").html(result_name);
-      // 成果名称输入内容变更
-      $("#ct_result_name").attr('placeholder', result_placeholder);
-      // 显示成果名称输入框
-      $("#div_result_name").show();
-    }
-  }
 
   // 沟通类型处理
   function connectChange(ct) {
@@ -311,14 +279,6 @@ $location_option = get_select_option($location_list, $is_location);
       return;
     }
 
-    // 成果类型为外链时必须输入文档链接
-    var result_type = $("input[name='result_type']:checked").val();
-    var result_name = $("#ct_result_name").val().trim();
-    if (result_type == 'O' && result_name.length == 0) {
-      parent.layer.msg('请输入文档链接');
-      return;
-    }
-
     // 联络沟通有时必须输入联络对象
     var connect_type = $("input[name='connect_type']:checked").val();
     var connect_name = $("#ct_connect_name").val().trim();
@@ -350,8 +310,8 @@ $location_option = get_select_option($location_list, $is_location);
         row[$(this).attr('name')] = $(this).val();
     });
 
-    // 成果类型
-    row['result_type'] = $("input[name='result_type']:checked").val();
+    // 责任担当
+    row['respo_name'] = $("#ct_respo_id option:selected").text();
     // 沟通类型
     row['connect_type'] = $("input[name='connect_type']:checked").val();
     // 行动预期结果

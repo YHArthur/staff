@@ -8,14 +8,12 @@ header("cache-control:no-cache,must-revalidate");
 header("Content-Type:application/json;charset=utf-8");
 
 /*
-========================== 行动设定 ==========================
+========================== 行动预期设定 ==========================
 POST参数
   action_id       行动ID
   task_id         任务ID
   action_title    行动标题
   action_intro    行动预期结果
-  result_type     成果类型
-  result_name     成果名称
   respo_id        责任人ID(TODO)
   respo_name      责任人(TODO)
   is_location     是否限定地点
@@ -31,7 +29,7 @@ POST参数
 exit_guest();
 
 // 参数检查
-$args = array('task_id', 'action_title', 'result_type');
+$args = array('task_id', 'action_title');
 chk_empty_args('POST', $args);
 
 // 提交参数整理
@@ -39,12 +37,10 @@ $action_id = get_arg_str('POST', 'action_id');              // 行动ID
 $task_id = get_arg_str('POST', 'task_id');                  // 任务ID
 $action_title = get_arg_str('POST', 'action_title');        // 行动标题
 $action_intro = get_arg_str('POST', 'action_intro', 8192);  // 行动预期结果
-$result_type = get_arg_str('POST', 'result_type');          // 成果类型
-$result_name = get_arg_str('POST', 'result_name', 255);     // 成果名称
 $connect_type = get_arg_str('POST', 'connect_type');        // 沟通类型
 $connect_name = get_arg_str('POST', 'connect_name', 255);   // 联络对象
-$respo_id = get_arg_str('POST', 'respo_id');                // 责任人ID(TODO)
-$respo_name = get_arg_str('POST', 'respo_name');            // 责任人(TODO)
+$respo_id = get_arg_str('POST', 'respo_id');                // 责任人ID
+$respo_name = get_arg_str('POST', 'respo_name');            // 责任人
 $is_location = get_arg_str('POST', 'is_location');          // 是否限定地点
 $location_name = get_arg_str('POST', 'location_name');      // 地点名称
 $is_closed = get_arg_str('POST', 'is_closed');              // 是否完成
@@ -69,14 +65,22 @@ case 2:
 $my_id = $_SESSION['staff_id'];
 $my_name = $_SESSION['staff_name'];
 
+// 责任人工号姓名处理
+$respo_cd = '000';
+if ($respo_name != '请选择员工') {
+  list($respo_cd, $respo_name) = explode(" ", $respo_name);
+} else {
+  $respo_name = '';
+}
+if ($my_id == $respo_id)
+  $respo_name = $my_name;
+
 $data = array();
 $data['task_id'] = $task_id;                                // 任务ID
 $data['action_title'] = $action_title;                      // 任务
 $data['action_intro'] = $action_intro;                      // 行动预期结果
-$data['respo_id'] = $my_id;                                 // 责任人ID
-$data['respo_name'] = $my_name;                             // 责任人
-$data['result_type'] = $result_type;                        // 成果类型
-$data['result_name'] = $result_name;                        // 成果名称
+$data['respo_id'] = $respo_id;                              // 责任人ID
+$data['respo_name'] = $respo_name;                          // 责任人
 $data['connect_type'] = $connect_type;                      // 沟通类型
 $data['connect_name'] = $connect_name;                      // 联络对象
 $data['is_location'] = $is_location;                        // 是否限定地点
