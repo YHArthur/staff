@@ -66,7 +66,12 @@ $table->add_javascript =  <<<EOF
 
     // 货币金额格式化
     function currencyFormatter(value, row, index) {
-        var fmt = '¥'+parseInt(value/100)+'.'+value.substr(-2,2);
+        var fmt;
+        if (value.length > 1) {
+          fmt = '¥'+parseInt(value/100)+'.'+value.substr(-2,2);
+        } else {
+          fmt = '¥0.0'+value;
+        }
         return fmt;
     }
 

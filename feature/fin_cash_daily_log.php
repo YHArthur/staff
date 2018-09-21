@@ -3,7 +3,7 @@ require_once '../inc/common.php';
 
 php_begin();
 
-$table_name = 'fin_bank_daily_log';
+$table_name = 'fin_cash_daily_log';
 $table = new DBTable('DB_WWW', $table_name);
 
 // 货币金额
@@ -13,7 +13,7 @@ $table->format_columns[] = array('field'=>'amount', 'formatter'=>'currencyFormat
 $table->format_columns[] = array('field'=>'is_pay', 'formatter'=>'isPayFormatter');
 
 // 展示字段列表
-$table->show_columns = array("is_pay", "pay_account_name", "rcpt_account_name", "amount", "abstract", "bank_rec_date");
+$table->show_columns = array("is_pay", "pay_date", "pay_name", "rcpt_name", "abstract", "amount", "record_name");
 
 // 是否可添加记录
 $table->add_able = false;
@@ -21,31 +21,39 @@ $table->add_able = false;
 // 是否可修改记录
 $table->upd_able = false;
 
+// 修改经费
+$table->add_columns[] = array('title'=>'修改', 'field'=>'upd_btn', 'align'=>'center', 'valign'=>'middle', 'events'=>'updBtnEvents', 'formatter'=>'updBtnFormatter');
+
 // 排序
-$table->orderby = "bank_rec_date DESC";
+$table->orderby = "pay_date DESC, log_id DESC";
 
 // 额外增加的工具栏代码
 $table->add_toolbar = <<<EOF
       <button id="add_btn" class="btn btn-warning">
-        <i class="glyphicon glyphicon-plus-sign"></i> 银行日记账导入
+        <i class="glyphicon glyphicon-plus-sign"></i> 添加现金日记账
       </button>
 EOF;
 
 // 额外增加的JS代码
 $table->add_javascript =  <<<EOF
     $(function () {
-      // 添加任务按钮点击事件
+      // 添加按钮点击事件
       $('#add_btn').click(function() {
           layer.open({
               type: 2,
-              title: '银行日记账导入',
+              title: '添加现金日记账',
               shadeClose: true,
               shade: 0.8,
-              area: ['600px', '480px'],
-              content: 'dialog/fin_bank_daily_log.php'
+              area: ['780px', '500px'],
+              content: 'dialog/fin_cash_daily_log.php'
           });
       });
     });
+
+    // 修改按钮
+    function updBtnFormatter(value, row, index) {
+        return '<button class="updbtn btn-warning" type="button" aria-label="修改"><i class="glyphicon glyphicon-edit"></i></button>';
+    }
 
     // 货币金额格式化
     function currencyFormatter(value, row, index) {
@@ -71,6 +79,21 @@ $table->add_javascript =  <<<EOF
         }
         return fmt;
     }
+
+    window.updBtnEvents = {
+        'click .updbtn': function (e, value, row) {
+          layer.open({
+              type: 2,
+              title: '修改现金日记账',
+              fix: false,
+              maxmin: true,
+              shadeClose: true,
+              shade: 0.8,
+              area: ['780px', '500px'],
+              content: 'dialog/fin_cash_daily_log.php?id=' + row.log_id
+          });
+        }
+    };
 
 EOF;
 

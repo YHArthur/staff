@@ -173,57 +173,55 @@ if ($connect_type != '0') {
   var layedit = new Object();
 
   $(function () {
-    // 成果类型初始化
-    var rt = $("input[name='result_type']:checked").val();
-    resultChange(rt);
-    // 沟通类型初始化
-    var ct = $("input[name='connect_type']:checked").val();
-    connectChange(ct);
+      // 成果类型初始化
+      resultChange($("input[name='result_type']:checked").val());
+      // 沟通类型初始化
+      connectChange($("input[name='connect_type']:checked").val());
   });
 
   // 使用Layui
   layui.use(['layer', 'form', 'layedit', 'upload', 'element'], function(){
-    layer = layui.layer;
-    form = layui.form();
-    layedit = layui.layedit;
+      layer = layui.layer;
+      form = layui.form();
+      layedit = layui.layedit;
 
-    layedit.set({
-      uploadImage: {
-        url: 'http://www.fnying.com/upload/upload_image.php' //接口url
-        ,type: '' //默认post
-      }
-    });
+      layedit.set({
+        uploadImage: {
+          url: 'http://www.fnying.com/upload/upload_image.php' //接口url
+          ,type: '' //默认post
+        }
+      });
 
-    var pr_element = layui.element();
-    layui.upload({
-      url: 'http://www.fnying.com/upload/upload_doc.php'
-      ,title: '本地文档上传'
-      ,ext: 'txt|pdf|html|css|doc|docx|xls|xlsx|ppt|pptx'
-      ,before: function(input) {
-        // 显示上传进度条
-        $("#div_upload_result").show();
-        pr_element.progress('fileup', '30%');
-      }
-      ,success: function(res) {
-        var file_url = res.data.src;
-        pr_element.progress('fileup', '100%');
-        $("#ct_result_name").val(file_url);
-        $("#lnk_upload_file").attr("href", file_url);
-        $("#lnk_upload_file").show();
-        $("#div_upload_result").hide();
-      }
-    });
-    edit_index = layedit.build('ct_result_memo_edit');
+      var pr_element = layui.element();
+      layui.upload({
+          url: 'http://www.fnying.com/upload/upload_doc.php'
+          ,title: '本地文档上传'
+          ,ext: 'txt|pdf|html|css|doc|docx|xls|xlsx|ppt|pptx|jpg|png|bmp|jpeg'
+          ,before: function(input) {
+            // 显示上传进度条
+            $("#div_upload_result").show();
+            pr_element.progress('fileup', '30%');
+          }
+          ,success: function(res) {
+            var file_url = res.data.src;
+            pr_element.progress('fileup', '100%');
+            $("#ct_result_name").val(file_url);
+            $("#lnk_upload_file").attr("href", file_url);
+            $("#lnk_upload_file").show();
+            $("#div_upload_result").hide();
+          }
+      });
+      edit_index = layedit.build('ct_result_memo_edit');
 
-    // 成果类型变更事件
-    form.on('radio(radio_result_type)', function(data) {
-      resultChange(data.value);
-    });
+      // 成果类型变更事件
+      form.on('radio(radio_result_type)', function(data) {
+          resultChange(data.value);
+      });
 
-    // 沟通类型变更事件
-    form.on('radio(radio_connect_type)', function(data) {
-       connectChange(data.value);
-    });
+      // 沟通类型变更事件
+      form.on('radio(radio_connect_type)', function(data) {
+          connectChange(data.value);
+      });
   });
 
   // 成果类型处理
