@@ -114,8 +114,10 @@ function get_action_html(row){
 }
 
 // 完成状态格式化
-function closeFormatter(is_closed) {
-    if (is_closed == 1)
+function closeFormatter(row) {
+    if (row.is_void == 1)
+        return '无效任务';
+    if (row.is_closed == 1)
         return '已完成';
     return '执行中';
 }
@@ -124,6 +126,8 @@ function closeFormatter(is_closed) {
 function show_task_info(response) {
     // 任务名称
     $('#task_name').html(response.task_name);
+    if (response.is_void == 1)
+      $("#task_name").addClass("void_text");
     // 任务等级
     $('#task_star').html(taskLevelFormatter(response.task_level));
     // 任务内容
@@ -139,7 +143,7 @@ function show_task_info(response) {
     // 创建时间
     $('#ctime').html(response.ctime);
     // 完成状态
-    $('#is_close').html(closeFormatter(response.is_closed));
+    $('#is_close').html(closeFormatter(response));
     if (response.is_closed == 1) {
       // 完成时间
       $('#closed_time').html(response.closed_time);

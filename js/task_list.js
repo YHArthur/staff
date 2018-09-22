@@ -183,6 +183,14 @@ function initTable() {
                 visible: false,
                 sortable: true,
                 valign: 'middle'
+            },
+            {
+                title: '删除',
+                field: 'deel_btn',
+                align: 'center',
+                valign: 'middle',
+                events: delBtnEvents,
+                formatter: delBtnFormatter
             }
         ]
     });
@@ -242,6 +250,52 @@ window.updBtnEvents = {
     }
 };
 
+// 删除任务按钮
+function delBtnFormatter(value, row, index) {
+    var my_id = $("#my_id").val();
+    if (my_id == row.owner_id)
+      return ' <button class="remove btn-danger" type="button" aria-label="删除"><i class="glyphicon glyphicon-remove"></i></button> ';
+    return '-';
+}
+
+// 删除任务触发事件
+window.delBtnEvents = {
+    'click .remove': function (e, value, row) {
+      //询问框
+      layer.confirm('是否删除 ' + getRowDescriptions(row) + ' 的记录？', {
+          icon: 3,
+          title: table_name + '操作确认',
+          btn: ['确认','取消']
+      }, function(){
+          $.ajax({
+              url: '/staff/api/obj_delete.php?obj=task&id=' + row.task_id,
+              type: 'get',
+              success: function (msg) {
+                if (msg.errcode == '0') {
+                  layer.alert(msg.errmsg, {
+                    icon: 1,
+                    title: '提示信息',
+                    btn: ['OK']
+                  });
+                  table.bootstrapTable('refresh');
+                } else {
+                  layer.msg(msg.errmsg, {
+                    icon: 2,
+                    title: '错误信息',
+                    btn: ['好吧']
+                  });
+                }
+              },
+              error:function(XMLHttpRequest, textStatus, errorThrown) {
+                // AJAX异常
+                show_NG_msg(textStatus, errorThrown);
+              }
+          })
+      } , function(){
+      });
+    }
+};
+
 // 行动列表按钮
 function listBtnFormatter(value, row, index) {
     return '<button class="actbtn btn-info" type="button" aria-label="行动"><i class="glyphicon glyphicon-list-alt"></i></button>';
@@ -283,7 +337,10 @@ function taskNameFormatter(value, row, index) {
         var task_star = '';
         if (row.task_level > 2)
           task_star = ' ★';
-        return '<a href="http://www.fnying.com/staff/wx/task.php?id=' + row.task_id + '" target="_blank">' + row.task_name + '</a>' + task_star;
+        var link_style = '';
+        if (row.task_void == 1)
+          link_style = 'void_text';
+        return '<a class="' + link_style + '" href="http://www.fnying.com/staff/wx/task.php?id=' + row.task_id + '" target="_blank">' + row.task_name + '</a>' + task_star;
     }
     return '-';
 }
@@ -379,7 +436,7 @@ function limitTimeFormatter(value, row, index) {
 
 // 取得记录描述
 function getRowDescriptions(row) {
-    return '任务ID=' + row.task_id;
+    return '【' + row.task_name + '】';
 }
 
 // 更多明细字段显示

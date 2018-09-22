@@ -33,6 +33,7 @@ GET参数
   is_cycle          是否有周期（0 无 1 有周期）
   cycle_time_stamp  周期时间
   prvs_task_id      上一任务ID
+  is_void           是否无效
   utime             更新时间
   ctime             创建时间
   is_login          是否登录
@@ -105,6 +106,7 @@ $limit_time = $task['limit_time'];              // 任务期限
 $is_cycle = $task['is_cycle'];                  // 是否有周期
 $cycle_time_stamp = $task['cycle_time_stamp'];  // 周期时间
 $prvs_task_id = $task['prvs_task_id'];          // 上一任务ID
+$is_void = $task['is_void'];                    // 是否无效
 $utime = $task['utime'];                        // 更新时间
 $ctime = $task['ctime'];                        // 创建时间
 
@@ -163,6 +165,7 @@ $rtn_ary['limit_time'] = $limit_time;
 $rtn_ary['is_cycle'] = $is_cycle;
 $rtn_ary['cycle_time_stamp'] = $cycle_time_stamp;
 $rtn_ary['prvs_task_id'] = $prvs_task_id;
+$rtn_ary['is_void'] = $is_void;
 $rtn_ary['utime'] = $utime;
 $rtn_ary['ctime'] = $ctime;
 $rtn_ary['is_login'] = $is_login;

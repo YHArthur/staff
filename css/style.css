@@ -1,20 +1,24 @@
 /*BODY*/
-body {padding-top: 5px; background-color: #F7F7F7; background: transparent url('../img/bg.jpg') repeat;font-family: "微软雅黑";}
+body {padding-top:5px; background-color:#F7F7F7; background:transparent url('../img/bg.jpg') repeat;font-family: "微软雅黑";}
+
+/*无效的链接*/
+a.void_text {color:#808080;}
+a.void_text:hover {color:#808080; text-decoration:line-through;}
 
 /*页面内容*/
-.content {padding-right: 15px; padding-left: 15px; margin-right: auto; margin-left: auto; word-break: break-all;}
-.layui-form-label{width: 110px}
+.content {padding-right:15px; padding-left:15px; margin-right:auto; margin-left:auto; word-break:break-all;}
+.layui-form-label{width:110px}
 
-img.avata {width: 32px; height:32px}
+img.avata {width:32px; height:32px}
 
 /*表头居中*/
-th {color: #ffffff; text-align: center; background-color: #666699;}
-th.r{text-align: right;}
-th.l{text-align: left;}
+th {color:#ffffff; text-align:center; background-color:#666699;}
+th.r{text-align:right;}
+th.l{text-align:left;}
 
 /*单元格居左*/
-td {text-align: left;}
-td.l{text-align: left;}
-td.c{text-align: center;}
-td.r{text-align: right;}
+td {text-align:left;}
+td.l{text-align:left;}
+td.c{text-align:center;}
+td.r{text-align:right;}
 

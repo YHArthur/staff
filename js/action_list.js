@@ -198,7 +198,7 @@ window.delBtnEvents = {
           btn: ['确认','取消']
       }, function(){
           $.ajax({
-              url: '/staff/api/action_delete.php?obj=action&id=' + row.action_id,
+              url: '/staff/api/obj_delete.php?obj=action&id=' + row.action_id,
               type: 'get',
               success: function (msg) {
                 if (msg.errcode == '0') {
@@ -265,7 +265,10 @@ function taskNameFormatter(value, row, index) {
         var task_star = '';
         if (row.task_level > 2)
           task_star = ' ★';
-        return '<a href="http://www.fnying.com/staff/wx/task.php?id=' + row.task_id + '" target="_blank">' + row.task_name + '</a>' + task_star;
+        var link_style = '';
+        if (row.task_void == 1)
+          link_style = 'void_text';
+        return '<a class="' + link_style + '" href="http://www.fnying.com/staff/wx/task.php?id=' + row.task_id + '" target="_blank">' + row.task_name + '</a>' + task_star;
     }
     return '-';
 }
@@ -343,7 +346,7 @@ window.closeBtnEvents = {
 function closedTimeFormatter(value, row, index) {
 
     if (!value)
-      return '';
+      return '未完';
 
     var ct = new Date(value.replace(/-/g, "/"));
     var month = ct.getMonth() + 1;

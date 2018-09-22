@@ -8,15 +8,17 @@ header("cache-control:no-cache,must-revalidate");
 header("Content-Type:application/json;charset=utf-8");
 
 /*
-========================== 任务行动删除 ==========================
+========================== 对象删除 ==========================
 POST参数
   obj             删除对象
-  id              任务ID或行动ID
+  id              对象ID
 
 返回
   删除结果
 
 说明
+  目前支持的删除对象为任务和行动
+
 */
 
 // 禁止游客访问
@@ -31,7 +33,6 @@ $obj = get_arg_str('GET', 'obj');                         // 删除对象
 $id = get_arg_str('GET', 'id');                           // 任务ID或行动ID
 
 $staff_id = $_SESSION['staff_id'];
-$staff_name = $_SESSION['staff_name'];
 
 // 删除对象判断
 switch ($obj)
@@ -52,6 +53,7 @@ case 'task':
   if ($ret == '')
     exit_error('110', '任务信息删除失败');
   break;
+
 case 'action':
   // 取得指定行动ID的行动记录
   $action = get_action($id);
@@ -67,7 +69,8 @@ case 'action':
   // 任务信息创建失败
   if ($ret == '')
     exit_error('110', '行动信息删除失败');
-  break;  
+  break;
+
 default:
   exit_error('120', '错误的删除对象');
   break;
