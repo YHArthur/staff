@@ -8,6 +8,7 @@ $table = new DBTable('DB_WWW', $table_name);
 
 // 金额
 $table->format_columns[] = array('field'=>'pre_tax_salary', 'formatter'=>'currencyFormatter');
+$table->format_columns[] = array('field'=>'base_salary', 'formatter'=>'currencyFormatter');
 $table->format_columns[] = array('field'=>'effic_salary', 'formatter'=>'currencyFormatter');
 $table->format_columns[] = array('field'=>'pension_base', 'formatter'=>'currencyFormatter');
 $table->format_columns[] = array('field'=>'fund_base', 'formatter'=>'currencyFormatter');
@@ -23,7 +24,7 @@ $table->format_columns[] = array('field'=>'to_date', 'formatter'=>'dateTimeForma
 $table->format_columns[] = array('field'=>'is_void', 'formatter'=>'isVoidFormatter');
 
 // 展示字段列表
-$table->show_columns = array("staff_name", "is_void", "pre_tax_salary", "effic_salary", "pension_base", "fund_base", "office_subsidy", "from_date");
+$table->show_columns = array("staff_name", "is_void", "pre_tax_salary", "base_salary", "effic_salary", "pension_base", "fund_base", "office_subsidy", "from_date", "to_date");
 // 排序
 $table->orderby = "is_void, staff_cd DESC";
 
@@ -34,7 +35,7 @@ $table->add_able = false;
 $table->upd_able = false;
 
 // 修改经费
-$table->add_columns[] = array('title'=>'修改经费', 'field'=>'upd_btn', 'align'=>'center', 'valign'=>'middle', 'events'=>'updBtnEvents', 'formatter'=>'updBtnFormatter');
+$table->add_columns[] = array('title'=>'修改', 'field'=>'upd_btn', 'align'=>'center', 'valign'=>'middle', 'events'=>'updBtnEvents', 'formatter'=>'updBtnFormatter');
 
 // 额外增加的工具栏代码
 $table->add_toolbar = <<<EOF
@@ -77,7 +78,8 @@ $table->add_javascript =  <<<EOF
 
     // 日期格式化
     function dateTimeFormatter(value, row, index) {
-
+        if (value == '0000-00-00 00:00:00')
+          return '未指定期限';
         var date_time = new Date(value.replace(/-/g, "/"));
         var year = date_time.getFullYear();
         var month = date_time.getMonth() + 1;
@@ -91,10 +93,10 @@ $table->add_javascript =  <<<EOF
         var fmt = '?';
         switch (value) {
           case '0':
-            fmt = '有效';
+            fmt = '<span class="label label-success">有效</span>';
             break;
           case '1':
-            fmt = '无效';
+            fmt = '<span class="label label-danger">无效</span>';
             break;
         }
         return fmt;
@@ -104,7 +106,7 @@ $table->add_javascript =  <<<EOF
         'click .updbtn': function (e, value, row) {
           layer.open({
               type: 2,
-              title: '修改员工工资',
+              title: '修改员工工资基数',
               fix: false,
               maxmin: true,
               shadeClose: true,

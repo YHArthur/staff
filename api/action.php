@@ -2,6 +2,7 @@
 require_once "../inc/common.php";
 require_once '../db/task.php';
 require_once '../db/action.php';
+require_once '../db/id_relation.php';
 
 header("Access-Control-Allow-Origin: *");
 header("cache-control:no-cache,must-revalidate");
@@ -14,8 +15,8 @@ POST参数
   task_id         任务ID
   action_title    行动标题
   action_intro    行动预期结果
-  respo_id        责任人ID(TODO)
-  respo_name      责任人(TODO)
+  respo_id        责任人ID
+  respo_name      责任人
   is_location     是否限定地点
   location_name   地点名称
 
@@ -111,6 +112,16 @@ if ($action_id == '') {
   $data = array();
   upd_task($data, $task_id);
 }
+
+// 任务关系人列表
+$sids = array($my_id, $respo_id);
+// 增加ID关系
+$ret = add_relation_ids('task_action', $task_id, $sids);
+if ($ret == '')
+  exit_error('110', '任务行动人列表添加失败');
+$ret = add_relation_ids('task_follow', $task_id, $sids);
+if ($ret == '')
+  exit_error('110', '任务关注人列表添加失败');
 
 // 输出结果
 exit_ok($msg);

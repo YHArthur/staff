@@ -383,23 +383,23 @@ $pay_input = get_radio_input('pay_level', $pay_list, $pay_level);
     // 个人所得税计算
     var tax_sum = 0;
     // 计算记税总额
-    var count_tax_sum = bef_tax_sum - 3500;
+    var count_tax_sum = bef_tax_sum - 5000;
     if (count_tax_sum <= 0) {
       tax_sum = 0;
-    } else if (count_tax_sum <= 1500) {
+    } else if (count_tax_sum <= 3000) {
       tax_sum = count_tax_sum * 0.03;
-    } else if (count_tax_sum <= 4500) {
-      tax_sum = count_tax_sum * 0.1 - 105;
-    } else if (count_tax_sum <= 9000) {
-      tax_sum = count_tax_sum * 0.2 - 555;
+    } else if (count_tax_sum <= 12000) {
+      tax_sum = count_tax_sum * 0.1 - 210;
+    } else if (count_tax_sum <= 25000) {
+      tax_sum = count_tax_sum * 0.2 - 1410;
     } else if (count_tax_sum <= 35000) {
-      tax_sum = count_tax_sum * 0.25 - 1005;
+      tax_sum = count_tax_sum * 0.25 - 2660;
     } else if (count_tax_sum <= 55000) {
-      tax_sum = count_tax_sum * 0.3 - 2755;
+      tax_sum = count_tax_sum * 0.3 - 4410;
     } else if (count_tax_sum <= 80000) {
-      tax_sum = count_tax_sum * 0.35 - 5505;
+      tax_sum = count_tax_sum * 0.35 - 7160;
     } else if (count_tax_sum > 80000) {
-      tax_sum = count_tax_sum * 0.45 - 13505;
+      tax_sum = count_tax_sum * 0.45 - 15160;
     }
     $("#tax_sum").html('¥ ' + tax_sum.toFixed(2));
 

@@ -77,25 +77,25 @@ $data['bef_tax_sum'] = $bef_tax_sum;
 // 个人所得税计算
 $tax_sum = 0;
 // 计算记税总额
-$count_tax_sum = $bef_tax_sum - 350000;
+$count_tax_sum = $bef_tax_sum - 500000;
 if ($count_tax_sum <= 0) {
   $tax_sum = 0;
-} elseif ($count_tax_sum <= 150000) {
+} elseif ($count_tax_sum <= 300000) {
   $tax_sum = $count_tax_sum * 0.03;
-} elseif ($count_tax_sum <= 450000) {
-  $tax_sum = $count_tax_sum * 0.1 - 10500;
-} elseif ($count_tax_sum <= 900000) {
-  $tax_sum = $count_tax_sum * 0.2 - 55500;
+} elseif ($count_tax_sum <= 1200000) {
+  $tax_sum = $count_tax_sum * 0.1 - 21000;
+} elseif ($count_tax_sum <= 2500000) {
+  $tax_sum = $count_tax_sum * 0.2 - 141000;
 } elseif ($count_tax_sum <= 3500000) {
-  $tax_sum = $count_tax_sum * 0.25 - 100500;
+  $tax_sum = $count_tax_sum * 0.25 - 266000;
 } elseif ($count_tax_sum <= 5500000) {
-  $tax_sum = $count_tax_sum * 0.3 - 275500;
+  $tax_sum = $count_tax_sum * 0.3 - 441000;
 } elseif ($count_tax_sum <= 8000000) {
-  $tax_sum = $count_tax_sum * 0.35 - 550500;
+  $tax_sum = $count_tax_sum * 0.35 - 716000;
 } elseif ($count_tax_sum > 8000000) {
-  $tax_sum = $count_tax_sum * 0.45 - 1350500;
+  $tax_sum = $count_tax_sum * 0.45 - 1516000;
 }
-    
+
 $data['tax_sum'] = $tax_sum;                              // 个人所得税
 
 $aft_tax_sum = $bef_tax_sum - $tax_sum;
