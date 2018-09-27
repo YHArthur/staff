@@ -1,5 +1,6 @@
 <?php
 require_once '../inc/common.php';
+require_once '../db/id_relation.php';
 require_once '../db/task.php';
 require_once '../db/action.php';
 
@@ -120,6 +121,13 @@ $my_id = '0';
 if (isset($_SESSION['staff_id']))
   $my_id = $_SESSION['staff_id'];
 
+// 取得所有任务行动人列表
+$action_ids = get_relation_ids('task_action', $task_id);
+// 行动人包含当前用户ID
+$is_action = '0';
+if (in_array($my_id, $action_ids))
+  $is_action = '1';
+
 // 是否登录判定
 $is_login = '0';
 if ($my_id != '0')
@@ -172,6 +180,7 @@ $rtn_ary['is_login'] = $is_login;
 $rtn_ary['is_owner'] = $is_owner;
 $rtn_ary['is_respo'] = $is_respo;
 $rtn_ary['is_check'] = $is_check;
+$rtn_ary['is_action'] = $is_action;
 $rtn_ary['action_total'] = $action_total;
 $rtn_ary['action_rows'] = $action_rows;
 

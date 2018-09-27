@@ -40,12 +40,12 @@ $table->add_javascript =  <<<EOF
       $('#refresh_btn').click(function() {
           $.ajax({
             url:"api/refresh_staff_expense_log.php",
-            success:function(msg) {
-              if (msg.errcode == '0') {
+            success:function(response) {
+              if (response.errcode == '0') {
                 table.bootstrapTable('refresh');
-                layer.msg(msg.errmsg);
+                layer.msg(response.errmsg);
               } else {
-                layer.msg(msg.errmsg);
+                layer.msg(response.errmsg);
               }
             },
             error:function(XMLHttpRequest, textStatus, errorThrown) {

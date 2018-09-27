@@ -106,7 +106,8 @@ function show_staff_action(response, is_closed) {
   
   var rows = response.rows;
   if (rows.length > 0) {
-    var html_str = getNowDate();
+    var html_str = '<a id="btn_new" href="action_new.php" class="weui-btn weui-btn_plain-primary">新的行动</a>';
+    $("#time_stamp").html(getNowDate());
     $(".page__desc").html(html_str);
     rows.forEach(function(row, index, array) {
       html = get_action_html(row);

@@ -143,7 +143,7 @@ function get_action_pane($task_id, $respo_id, $active_class) {
     var ta = $("#task_action").val();
     var ma = $("#my_action").val();
     btnChange(ta, ma);
-    
+
     // 按钮初始化
     function btnChange(ta, ma) {
       $("#add_action_btn").hide();
@@ -160,7 +160,7 @@ function get_action_pane($task_id, $respo_id, $active_class) {
         $("#join_task_btn").show();
       }
     }
-    
+
     // 添加行动点击事件
     $("#add_action_btn").click(function() {
       var task_id = $("#task_id").val();
@@ -262,7 +262,7 @@ function get_action_pane($task_id, $respo_id, $active_class) {
     });
 
   });
-  
+
   </script>
 
 </body>

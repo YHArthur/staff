@@ -16,7 +16,22 @@ require_once '../db/staff_weixin.php';
 
   <div class="page__hd">
     <h2 class="page__title" id="task_name"></h2>
-    <p class="page__desc"><span id="task_star"></span><small id="ctime" class="weui-article"></small></p>
+    <p class="page__desc">
+      <span id="task_star"></span>
+      <small id="ctime" class="weui-article"></small>
+    </p>
+    <p class="page__desc">
+      <span id="action_btn">
+        <button id="add_action_btn" href="" class="weui-btn weui-btn_mini weui-btn_primary">添加行动</button>
+        <button id="join_task_btn" href="" class="weui-btn weui-btn_mini weui-btn_default">加入任务</button>
+        <button id="left_task_btn" href="" class="weui-btn weui-btn_mini weui-btn_warn">离开任务</button>
+      </span>
+    </p>
+  </div>
+
+  <input type="hidden" name="task_id" id="task_id" value="">
+
+  <div class="weui-media-box weui-media-box_text">
     <p class="page__desc" id="task_intro">任务介绍</p>
   </div>
 

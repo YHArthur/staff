@@ -14,6 +14,82 @@ window.shareData = {
 $(function () {
     // 获取任务信息
     get_task_info();
+    // 按钮初始化
+    btnChange('0', '0', '0');
+});
+
+// 按钮初始化
+// la 是否登录
+// ta 是否是行动关系人
+// ma 是否是行动执行人
+function btnChange(la, ta, ma) {
+  $("#add_action_btn").hide();
+  $("#join_task_btn").hide();
+  $("#left_task_btn").hide();
+  if (ta == "1") {
+    // 显示添加行动按钮
+    $("#add_action_btn").show();
+    // 显示离开按钮
+    if (ma != "1")
+      $("#left_task_btn").show();
+  } else if (la == '1') {
+    // 显示加入任务按钮
+    $("#join_task_btn").show();
+  }
+}
+
+// 添加行动点击事件
+$("#add_action_btn").click(function() {
+  var task_id = GetQueryString('id');
+  window.location.href = 'action_new.php?task_id=' + task_id;
+});
+
+// 加入任务点击事件
+$("#join_task_btn").click(function() {
+  var task_id = GetQueryString('id');
+  var row = {};
+  row['type'] = 'task_action';
+  row['mid'] = task_id;
+  $.ajax({
+      url: '/staff/api/add_relation_id.php',
+      type: 'post',
+      data: row,
+      success:function(response) {
+        // AJAX正常返回
+        if (response.errcode == '0')
+          // 按钮变更
+          btnChange('1', '1', '0');
+         AlertDialog(response.errmsg);
+      },
+      error:function(XMLHttpRequest, textStatus, errorThrown) {
+        // AJAX异常
+        AlertDialog(errorThrown);
+      }
+  });
+});
+
+// 离开任务点击事件
+$("#left_task_btn").click(function() {
+  var task_id = GetQueryString('id');
+  var row = {};
+  row['type'] = 'task_action';
+  row['mid'] = task_id;
+  $.ajax({
+      url: '/staff/api/del_relation_id.php',
+      type: 'post',
+      data: row,
+      success:function(response) {
+        // AJAX正常返回
+        if (response.errcode == '0')
+          // 按钮变更
+          btnChange('1', '0', '0');
+        AlertDialog(response.errmsg);
+      },
+      error:function(XMLHttpRequest, textStatus, errorThrown) {
+        // AJAX异常
+        AlertDialog(errorThrown);
+      }
+  });
 });
 
 // 任务等级
@@ -150,6 +226,9 @@ function show_task_info(response) {
     } else {
       $('#div_close_time').hide();
     }
+
+    // 按钮初始化
+    btnChange(response.is_login, response.is_action, response.is_respo);
     
     // 行动列表
     var rows = response.action_rows;

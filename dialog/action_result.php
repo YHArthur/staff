@@ -329,10 +329,10 @@ if ($connect_type != '0') {
         url: '/staff/api/action_result.php',
         type: 'post',
         data: row,
-        success:function(msg) {
+        success:function(response) {
           // AJAX正常返回
-          if (msg.errcode == '0') {
-            parent.layer.alert(msg.errmsg, {
+          if (response.errcode == '0') {
+            parent.layer.alert(response.errmsg, {
               icon: 1,
               title: '提示信息',
               btn: ['OK']
@@ -341,7 +341,7 @@ if ($connect_type != '0') {
             parent.table.bootstrapTable('refresh');
             parent.layer.close(index);
           } else {
-            parent.layer.msg(msg.errmsg, {
+            parent.layer.msg(response.errmsg, {
               icon: 2,
               title: '错误信息',
               btn: ['好吧']

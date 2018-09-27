@@ -11,14 +11,14 @@ need_staff_login();
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
-  <title>员工行动列表-风赢科技</title>
+  <title>行动一览-风赢科技</title>
   <link rel="stylesheet" href="css/weui.css">
   <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
 
   <div class="page__hd">
-    <h1 class="page__title">行动列表</h1>
+    <h2 class="page__title">我的行动<span id="time_stamp"><span></h2>
     <p class="page__desc"></p>
   </div>
   
