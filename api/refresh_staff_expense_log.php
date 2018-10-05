@@ -3,7 +3,6 @@ require_once "../inc/common.php";
 require_once '../db/staff_expense.php';
 require_once '../db/staff_expense_log.php';
 
-header("Access-Control-Allow-Origin: *");
 header("cache-control:no-cache,must-revalidate");
 header("Content-Type:application/json;charset=utf-8");
 

@@ -2,7 +2,6 @@
 require_once "../inc/common.php";
 require_once '../db/fin_cash_daily_log.php';
 
-header("Access-Control-Allow-Origin: *");
 header("cache-control:no-cache,must-revalidate");
 header("Content-Type:application/json;charset=utf-8");
 

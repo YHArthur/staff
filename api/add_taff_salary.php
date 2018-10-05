@@ -3,7 +3,6 @@ require_once "../inc/common.php";
 require_once '../db/fin_staff_salary.php';
 require_once '../db/fin_staff_salary_log.php';
 
-header("Access-Control-Allow-Origin: *");
 header("cache-control:no-cache,must-revalidate");
 header("Content-Type:application/json;charset=utf-8");
 

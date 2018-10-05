@@ -128,7 +128,7 @@ $salary_ym_option = get_select_option($salary_ym_list, $salary_ym);
   // 获得指定年月员工工资列表
   function getMonthStaff(salary_ym) {
       $.ajax({
-          url: '/staff/api/get_staff_month_salary.php',
+          url: '/staff/api/get_month_staff_salary.php',
           type: 'get',
           data: {"ym":salary_ym},
           success:function(response) {

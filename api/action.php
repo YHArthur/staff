@@ -4,7 +4,6 @@ require_once '../db/task.php';
 require_once '../db/action.php';
 require_once '../db/id_relation.php';
 
-header("Access-Control-Allow-Origin: *");
 header("cache-control:no-cache,must-revalidate");
 header("Content-Type:application/json;charset=utf-8");
 
