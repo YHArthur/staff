@@ -28,7 +28,7 @@ $table->format_columns[] = array('field'=>'aft_tax_sum', 'formatter'=>'currencyF
 $table->format_columns[] = array('field'=>'salary_date', 'formatter'=>'dateTimeFormatter');
 
 // 展示字段列表
-$table->show_columns = array("staff_name", "salary_date", "pre_tax_salary", "base_salary", "office_subsidy", "effic_salary", "aft_tax_sum" , "tax_sum");
+$table->show_columns = array("staff_name", "salary_ym", "salary_date", "pre_tax_salary", "base_salary", "office_subsidy", "effic_salary", "aft_tax_sum" , "tax_sum");
 // 排序
 $table->orderby = "salary_ym, staff_cd DESC";
 
@@ -44,7 +44,7 @@ $table->add_columns[] = array('title'=>'修改', 'field'=>'upd_btn', 'align'=>'c
 // 额外增加的工具栏代码
 $table->add_toolbar = <<<EOF
       <button id="add_btn" class="btn btn-warning">
-        <i class="glyphicon glyphicon-plus-sign"></i> 添加员工工资
+        <i class="glyphicon glyphicon-plus-sign"></i> 设定员工工资
       </button>
 EOF;
 

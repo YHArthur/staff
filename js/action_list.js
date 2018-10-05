@@ -85,7 +85,7 @@ function initTable() {
                 title: '结束时间',
                 field: 'closed_time',
                 align: 'center',
-                visible: false,
+                visible: true,
                 sortable: true,
                 formatter: closedTimeFormatter,
                 valign: 'middle'
@@ -345,36 +345,22 @@ window.closeBtnEvents = {
 // 结束时间格式化
 function closedTimeFormatter(value, row, index) {
 
-    if (!value)
+    if (row.is_closed == 0)
       return '未完';
 
-    var ct = new Date(value.replace(/-/g, "/"));
-    var month = ct.getMonth() + 1;
-    var day = ct.getDate();
-    var fmt = month+'月'+day+'日';
-    if (row.closed_time <= 1)
-      return fmt;
-    
-    return value;
-
+    var closed_time = new Date(value.replace(/-/g, "/"));
     // 相差日期计算
     var current_time = new Date();
-    var diff_day = parseInt((is_closed.getTime() - current_time.getTime()) / (1000 * 3600 * 24));
+    var diff_day = parseInt((current_time.getTime() - closed_time.getTime()) / (1000 * 3600 * 24));
     if (diff_day == 0) {
-      fmt += '【<span class="bg-warning">当天</span>】';
+      fmt = '<span class="text-success">今天</span>';
       return fmt;
-    } else if (diff_day < 0) {
-      fmt += '【<span class="bg-danger">延迟 ';
-      diff_day *= -1;
-    } else {
-      fmt += '【<span>还剩 ';
-    }
-    if (diff_day <= 7) {
-      fmt += diff_day + ' 天</span>】';
+    } else if (diff_day <= 7) {
+      fmt = '<span class="text-info">' + diff_day + '天前</span>';
     } else if (diff_day <= 30) {
-      fmt += parseInt(diff_day / 7) + ' 周</span>】';
+      fmt = '<span class="text-warning">' + parseInt(diff_day / 7) + '周前</span>';
     } else {
-      fmt += parseInt(diff_day / 30) + ' 个月</span>】';
+      fmt = '<span class="text-muted">' + parseInt(diff_day / 30) + '个月前</span>';
     }
     return fmt;
 }

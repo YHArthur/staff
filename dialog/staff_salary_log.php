@@ -22,14 +22,9 @@ foreach ($salary_staffs as $rec) {
   $rtn_str .= "\n    " . '</li>';
 }
 
-if ($rtn_str == '')
-  $rtn_str = '没有行动数据';
-
-$staff_panes = '<div class="tab-pane active" id="all_staff"><ul class="nav">' . $rtn_str . '</ul></div>';
-
 // 工资年月选项列表
 $from_ym = '201803';
-$salary_ym = date('Ym');
+$salary_ym = date('Ym', strtotime('-1 month'));
 $salary_date = date('Y-m-06');
 $salary_ym_list = array();
 
@@ -51,7 +46,7 @@ $salary_ym_option = get_select_option($salary_ym_list, $salary_ym);
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>添加员工工资</title>
+  <title>设定员工工资</title>
 
   <link rel="stylesheet" href="../css/bootstrap.min.css">
   <link rel="stylesheet" href="../js/layui/css/layui.css">
@@ -76,22 +71,22 @@ $salary_ym_option = get_select_option($salary_ym_list, $salary_ym);
             </div>
 
             <div class="layui-inline">
-              <label for="ct_salary_date" class="layui-form-label" style="width: 110px;">发放时间</label>
+              <label for="ct_salary_date" class="layui-form-label" style="width: 110px;">支付日期</label>
               <div class="layui-input-inline" style="width: 190px;">
-                <input type="Datatime" class="layui-input" id="ct_salary_date" name="salary_date" value="<?php echo $salary_date?>" placeholder="发放时间" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD'})">
+                <input type="Datatime" class="layui-input" id="ct_salary_date" name="salary_date" value="<?php echo $salary_date?>" placeholder="支付日期" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD'})">
               </div>
             </div>
           </div>
        </form>
     </fieldset>
 
-    <div id="staff_list">
+    <div>
       <ul class="nav nav-tabs">
-        <li class="active"><a href="#all_staff" data-toggle="tab">员工列表&nbsp;&nbsp;<span class="badge">10</span></a></li>
+        <li class="active"><a href="#all_staff" data-toggle="tab">员工列表&nbsp;&nbsp;<span class="badge" id="staff_count">10</span></a></li>
       </ul>
 
       <div class="tab-content" style="padding-top: 10px; font-size:15px; color:#F06;">
-        <?php echo $staff_panes;?>
+        <div class="tab-pane active" id="all_staff"><ul class="nav" id="staff_list"></ul></div>
       </div>
     </div>
   </div>
@@ -113,7 +108,64 @@ $salary_ym_option = get_select_option($salary_ym_list, $salary_ym);
     laydate = layui.laydate;
   });
 
+  // 员工工资列表展示
+  function showMonthStaff(response) {
+    $("#staff_list").html('');
+    var rows = response.rows;
+    var html_str = '';
+    // 有数据
+    if (rows.length > 0) {
+      rows.forEach(function(row, index, array) {
+          // 获取具体日期设定的HTML
+          // html_str += get_staff_html(row, index);
+      });
+    } else {
+      html_str = '没有数据';
+    }
+    $("#staff_list").html(html_str);
+  }
+
+  // 获得指定年月员工工资列表
+  function getMonthStaff(salary_ym) {
+      $.ajax({
+          url: '/staff/api/get_staff_month_salary.php',
+          type: 'get',
+          data: {"ym":salary_ym},
+          success:function(response) {
+            // AJAX正常返回
+            if (response.errcode == '0') {
+              // 员工工资列表展示
+              showMonthStaff(response);;
+            } else {
+              parent.layer.msg(response.errmsg, {
+                icon: 2,
+                title: '错误信息',
+                btn: ['好吧']
+              });
+            }
+          },
+          error:function(XMLHttpRequest, textStatus, errorThrown) {
+            // AJAX异常
+            parent.layer.msg(textStatus, {
+                icon: 2,
+                title: errorThrown,
+                btn: ['好吧']
+            });
+          }
+      });
+  }
+
+  // 员工工资列表初始化
+  function initMonthStaff() {
+      var salary_ym = $("#salary_ym").val();
+      // 获得指定年月员工工资列表
+      getMonthStaff(salary_ym);
+  }
+
   $(function () {
+    // 员工工资列表初始化
+    initMonthStaff();
+    
     // 添加工资点击事件
     $(".btn-staff").click(function() {
       var ym = $("#ct_salary_ym").val();
