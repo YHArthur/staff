@@ -163,6 +163,7 @@ if ($tmp_sub != '') {
   <script src="js/bootstrap-table-zh-CN.min.js"></script>
   <script src="js/bootstrap-table-export.js"></script>
   <script src="js/tableExport.js"></script>
+  <script src="js/common.js"></script>
   <script src="js/pc_menu.js"></script>
 
 </body>

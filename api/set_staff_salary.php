@@ -7,14 +7,16 @@ header("cache-control:no-cache,must-revalidate");
 header("Content-Type:application/json;charset=utf-8");
 
 /*
-========================== 添加员工工资 ==========================
+========================== 设定员工工资 ==========================
 POST参数
   ym              工资年月
   dt              支付工资日期
   id              员工ID
+  pts             税前工资
+  es              绩效奖金
 
 返回
-  添加结果
+  设定结果
 
 说明
 */
@@ -30,14 +32,19 @@ chk_empty_args('POST', $args);
 $salary_ym = get_arg_str('POST', 'ym');                   // 工资年月
 $salary_date = get_arg_str('POST', 'dt');                 // 支付工资日期
 $staff_id = get_arg_str('POST', 'id');                    // 员工ID
+$pre_tax_salary = get_arg_str('POST', 'pts');             // 税前工资
+$effic_salary = get_arg_str('POST', 'es');                // 绩效奖金
+
+$pre_tax_salary = intval($pre_tax_salary * 100);
+$effic_salary = intval($effic_salary * 100);
 
 // 取得指定员工ID的员工工资基数
 $salary =  get_fin_staff_salary($staff_id);
 $staff_cd = $salary['staff_cd'];
 $staff_name = $salary['staff_name'];
-$pre_tax_salary = $salary['pre_tax_salary'];
+// $pre_tax_salary = $salary['pre_tax_salary'];
+// $effic_salary = $salary['effic_salary'];
 $base_salary = $salary['base_salary'];
-$effic_salary = $salary['effic_salary'];
 $pension_base = $salary['pension_base'];
 $fund_base = $salary['fund_base'];
 $office_subsidy = $salary['office_subsidy'];
@@ -60,10 +67,10 @@ $data['office_subsidy'] = $office_subsidy;                // 办公经费
 $pension_fee = $pension_base * 0.08;                      // 个人养老保险比例
 $data['pension_fee'] = $pension_fee;                      // 养老保险
 
-$medical_fee = $pension_base *  0.02;                     // 个人医疗保险比例
+$medical_fee = $pension_base * 0.02;                      // 个人医疗保险比例
 $data['medical_fee'] = $medical_fee;                      // 医疗保险
 
-$jobless_fee = $pension_base *   0.005;                   // 个人失业保险比例
+$jobless_fee = $pension_base * 0.005;                     // 个人失业保险比例
 $data['jobless_fee'] = $jobless_fee;                      // 失业保险
 
 $fund_fee = $fund_base * 0.07;                            // 个人公积金比例
@@ -75,24 +82,47 @@ $data['bef_tax_sum'] = $bef_tax_sum;
 
 // 个人所得税计算
 $tax_sum = 0;
-// 计算记税总额
-$count_tax_sum = $bef_tax_sum - 500000;
-if ($count_tax_sum <= 0) {
-  $tax_sum = 0;
-} elseif ($count_tax_sum <= 300000) {
-  $tax_sum = $count_tax_sum * 0.03;
-} elseif ($count_tax_sum <= 1200000) {
-  $tax_sum = $count_tax_sum * 0.1 - 21000;
-} elseif ($count_tax_sum <= 2500000) {
-  $tax_sum = $count_tax_sum * 0.2 - 141000;
-} elseif ($count_tax_sum <= 3500000) {
-  $tax_sum = $count_tax_sum * 0.25 - 266000;
-} elseif ($count_tax_sum <= 5500000) {
-  $tax_sum = $count_tax_sum * 0.3 - 441000;
-} elseif ($count_tax_sum <= 8000000) {
-  $tax_sum = $count_tax_sum * 0.35 - 716000;
-} elseif ($count_tax_sum > 8000000) {
-  $tax_sum = $count_tax_sum * 0.45 - 1516000;
+
+if ($salary_date >= '2018-10-01') {
+  // 计算记税总额
+  $count_tax_sum = $bef_tax_sum - 500000;
+  if ($count_tax_sum <= 0) {
+    $tax_sum = 0;
+  } elseif ($count_tax_sum <= 300000) {
+    $tax_sum = $count_tax_sum * 0.03;
+  } elseif ($count_tax_sum <= 1200000) {
+    $tax_sum = $count_tax_sum * 0.1 - 21000;
+  } elseif ($count_tax_sum <= 2500000) {
+    $tax_sum = $count_tax_sum * 0.2 - 141000;
+  } elseif ($count_tax_sum <= 3500000) {
+    $tax_sum = $count_tax_sum * 0.25 - 266000;
+  } elseif ($count_tax_sum <= 5500000) {
+    $tax_sum = $count_tax_sum * 0.3 - 441000;
+  } elseif ($count_tax_sum <= 8000000) {
+    $tax_sum = $count_tax_sum * 0.35 - 716000;
+  } elseif ($count_tax_sum > 8000000) {
+    $tax_sum = $count_tax_sum * 0.45 - 1516000;
+  }
+} else {
+  // 计算记税总额
+  $count_tax_sum = $bef_tax_sum - 350000;
+  if ($count_tax_sum <= 0) {
+    $tax_sum = 0;
+  } elseif ($count_tax_sum <= 150000) {
+    $tax_sum = $count_tax_sum * 0.03;
+  } elseif ($count_tax_sum <= 450000) {
+    $tax_sum = $count_tax_sum * 0.1 - 10500;
+  } elseif ($count_tax_sum <= 900000) {
+    $tax_sum = $count_tax_sum * 0.2 - 55500;
+  } elseif ($count_tax_sum <= 3500000) {
+    $tax_sum = $count_tax_sum * 0.25 - 100500;
+  } elseif ($count_tax_sum <= 5500000) {
+    $tax_sum = $count_tax_sum * 0.3 - 275500;
+  } elseif ($count_tax_sum <= 8000000) {
+    $tax_sum = $count_tax_sum * 0.35 - 550500;
+  } elseif ($count_tax_sum > 8000000) {
+    $tax_sum = $count_tax_sum * 0.45 - 1350500;
+  }
 }
 
 $data['tax_sum'] = $tax_sum;                              // 个人所得税

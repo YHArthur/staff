@@ -65,6 +65,23 @@ function get_staff_list()
 }
 
 //======================================
+// 函数: 取得所有员工列表（包含无效员工）
+// 参数: 无
+// 返回: 员工列表
+//======================================
+function get_staff_list_all()
+{
+  $db = new DB_SATFF();
+
+  $sql = "SELECT * FROM staff_main";
+  $sql .= " ORDER BY staff_cd";
+
+  $db->query($sql);
+  $rows = $db->fetchAll();
+  return $rows;
+}
+
+//======================================
 // 函数: 创建员工信息
 // 参数: $data          信息数组
 // 返回: true           创建成功

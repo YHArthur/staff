@@ -33,7 +33,7 @@ chk_empty_args('GET', $args);
 // 获取提交参数
 $ym = get_arg_str('GET', 'ym');
 if (strlen(intval($ym)) != 6)
-  exit_error('120', '指定年月日期格式不正确');
+  exit_error('120', '【' . $ym . '】年月格式不正确');
 
 $year = substr($ym, 0, 4);
 $month = substr($ym, 4, 2);
@@ -41,7 +41,7 @@ $month = substr($ym, 4, 2);
 $rows = get_hr_date_type_total($year, $month);
 
 if (!$rows)
-  exit_error('120', '指定年月的数据不存在');
+  exit_error('120', '【' . $ym . '】的初始数据未设定');
 
 // 该月总天数
 $sum_days = 0;

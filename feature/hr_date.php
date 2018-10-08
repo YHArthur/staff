@@ -21,7 +21,7 @@ $rtn_str  = <<<EOF
        <h1 style="text-align: center;"><small class="text-muted" id="bef_month"></small></h1>
       </div>
       <div class="col-md-4">
-        <h1 style="text-align: center;"><span id="cur_month_str" class="text-primary">{$cur_month_str}</span> 节假日设定</h1>
+        <h1 style="text-align: center;"><span id="cur_month_str" class="text-primary">{$cur_month_str}</span> 假日设定</h1>
       </div>
       <div class="col-md-2">
         <h1 style="text-align: center;"><small class="text-muted" id="aft_month"></small></h1>

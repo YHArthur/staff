@@ -40,7 +40,7 @@ if (!isset($_GET["id"])) {
 
 // 员工选项
 $my_id = $_SESSION['staff_id'];
-$staff_rows = get_staff_list();
+$staff_rows = get_staff_list_all();
 $staff_list = get_staff_list_select($my_id, $staff_rows);
 $staff_list['0'] = '请选择员工';
 $staff_option = get_select_option($staff_list, $staff_id);

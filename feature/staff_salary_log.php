@@ -30,7 +30,7 @@ $table->format_columns[] = array('field'=>'salary_date', 'formatter'=>'dateTimeF
 // 展示字段列表
 $table->show_columns = array("staff_name", "salary_ym", "salary_date", "pre_tax_salary", "base_salary", "office_subsidy", "effic_salary", "aft_tax_sum" , "tax_sum");
 // 排序
-$table->orderby = "salary_ym, staff_cd DESC";
+$table->orderby = "salary_ym DESC, staff_cd";
 
 // 默认不可添加
 $table->add_able = false;
@@ -88,20 +88,6 @@ $table->add_javascript =  <<<EOF
         var month = date_time.getMonth() + 1;
         var day = date_time.getDate();
         var fmt = year+'年'+month+'月'+day+'日';
-        return fmt;
-    }
-
-    // 是否无效
-    function isVoidFormatter(value, row, index) {
-        var fmt = '?';
-        switch (value) {
-          case '0':
-            fmt = '有效';
-            break;
-          case '1':
-            fmt = '无效';
-            break;
-        }
         return fmt;
     }
 

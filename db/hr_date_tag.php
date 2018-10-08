@@ -15,6 +15,28 @@ function get_hr_date_tag($ymd)
 }
 
 //======================================
+// 函数: 取得指定日期类型人事标注的日期列表
+// 参数: $from_ymd      开始年月日
+// 参数: $to_ymd        结束年月日
+// 参数: $date_type     日期类型 0 工作日 1 休日 2 国定假日 (默认0)
+// 返回: 日期列表
+//======================================
+function get_hr_date_tag_by_type($from_ymd, $to_ymd, $date_type=0)
+{
+  $db = new DB_SATFF();
+
+  $sql = "SELECT date_ymd, date_type, date_tag FROM hr_date_tag";
+  $sql .= " WHERE date_ymd >= '{$from_ymd}'";
+  $sql .= " AND date_ymd <= '{$to_ymd}'";
+  $sql .= " AND date_type = {$date_type}";
+  $sql .= " ORDER BY date_ymd";
+
+  $db->query($sql);
+  $rows = $db->fetchAll();
+  return $rows;
+}
+
+//======================================
 // 函数: 取得人事节假日标志列表
 // 参数: $from_ymd      开始年月日
 // 参数: $to_ymd        结束年月日

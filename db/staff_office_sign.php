@@ -43,6 +43,27 @@ function get_staff_office_sign_list($limit, $offset, $staff_id = '')
 }
 
 //======================================
+// 函数: 取得指定时间段的办公室签到员工ID列表
+// 参数: $from_time     开始时间戳
+// 参数: $to_time       结束时间戳
+// 返回: 员工ID列表
+//======================================
+function get_staff_office_sign_id_list($from_time, $to_time)
+{
+  $db = new DB_SATFF();
+
+  $sql = " SELECT staff_id FROM staff_office_sign";
+  $sql .= " WHERE is_void = 0";
+  $sql .= " AND ctime >= '{$from_time}'";
+  $sql .= " AND ctime <= '{$to_time}'";
+  $sql .= " GROUP BY staff_id";
+  
+  $db->query($sql);
+  $rows = $db->fetchAll();
+  return $rows;
+}
+
+//======================================
 // 函数: 取得员工指定时间开始的办公室签到记录列表
 // 参数: $staff_id      员工ID
 // 参数: $from_time     开始时间戳

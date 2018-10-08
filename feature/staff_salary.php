@@ -15,16 +15,16 @@ $table->format_columns[] = array('field'=>'fund_base', 'formatter'=>'currencyFor
 $table->format_columns[] = array('field'=>'office_subsidy', 'formatter'=>'currencyFormatter');
 
 // 开始时间
-$table->format_columns[] = array('field'=>'from_date', 'formatter'=>'dateTimeFormatter');
+$table->format_columns[] = array('field'=>'from_month', 'formatter'=>'dateTimeFormatter');
 
 // 结束时间
-$table->format_columns[] = array('field'=>'to_date', 'formatter'=>'dateTimeFormatter');
+$table->format_columns[] = array('field'=>'to_month', 'formatter'=>'dateTimeFormatter');
 
 // 是否无效
 $table->format_columns[] = array('field'=>'is_void', 'formatter'=>'isVoidFormatter');
 
 // 展示字段列表
-$table->show_columns = array("staff_name", "is_void", "pre_tax_salary", "base_salary", "effic_salary", "pension_base", "fund_base", "office_subsidy", "from_date", "to_date");
+$table->show_columns = array("staff_name", "is_void", "from_month", "pre_tax_salary", "base_salary", "effic_salary", "pension_base", "fund_base", "office_subsidy", "to_month");
 // 排序
 $table->orderby = "is_void, staff_cd DESC";
 
@@ -78,13 +78,11 @@ $table->add_javascript =  <<<EOF
 
     // 日期格式化
     function dateTimeFormatter(value, row, index) {
-        if (value == '0000-00-00 00:00:00')
+        if (value == '2099-12')
           return '未指定期限';
-        var date_time = new Date(value.replace(/-/g, "/"));
-        var year = date_time.getFullYear();
-        var month = date_time.getMonth() + 1;
-        var day = date_time.getDate();
-        var fmt = year+'年'+month+'月'+day+'日';
+        var year = value.substr(0,4);
+        var month = parseInt(value.substr(5,2));
+        var fmt = year+'年'+month+'月';
         return fmt;
     }
 

@@ -53,10 +53,10 @@ $table->add_javascript =  <<<EOF
         var fmt = '?';
         switch (value) {
           case '0':
-            fmt = '有效';
+            fmt = '<span class="label label-success">有效</span>';
             break;
           case '1':
-            fmt = '无效';
+            fmt = '<span class="label label-danger">无效</span>';
             break;
         }
         return fmt;

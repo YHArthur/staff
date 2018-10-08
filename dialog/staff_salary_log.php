@@ -1,26 +1,10 @@
 <?php
 require_once '../inc/common.php';
-require_once '../db/fin_staff_salary.php';
 
 php_begin();
 
 // 禁止游客访问
 exit_guest();
-
-$my_id = $_SESSION['staff_id'];                           // 当前用户ID
-
-// 取得所有有效员工列表
-$salary_staffs = get_all_fin_staff_salary();
-$rtn_str = '';
-
-// 取得员工列表面板
-foreach ($salary_staffs as $rec) {
-  $rtn_str .= "\n    " . '<li style="padding: 10px 15px;">';
-  $rtn_str .= "\n      " . '<button id="' . $rec['staff_id'] . '" class="btn btn-staff btn-primary"><i class="glyphicon glyphicon-ok"></i></button>';
-  $rtn_str .= "\n        " . $rec['staff_name'];
-  $rtn_str .= "\n      " . '<small class="text-muted">税前工资:' . $rec['pre_tax_salary'] / 100 . ' 基本工资:' . $rec['base_salary'] / 100 . ' 绩效奖金：' . $rec['effic_salary'] / 100 . '</small>';
-  $rtn_str .= "\n    " . '</li>';
-}
 
 // 工资年月选项列表
 $from_ym = '201803';
@@ -51,6 +35,9 @@ $salary_ym_option = get_select_option($salary_ym_list, $salary_ym);
   <link rel="stylesheet" href="../css/bootstrap.min.css">
   <link rel="stylesheet" href="../js/layui/css/layui.css">
   <link rel="stylesheet" href="../css/style.css">
+  <style type="text/css">
+  .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {vertical-align: middle;}
+  </style>
 </head>
 
 <body>
@@ -62,9 +49,9 @@ $salary_ym_option = get_select_option($salary_ym_list, $salary_ym);
       <form id="ct_form" class="layui-form">
           <div class="layui-form-item">
             <div class="layui-inline">
-              <label for="ct_salary_ym" class="layui-form-label">计算月份</label>
+              <label for="ct_salary_ym" class="layui-form-label">工资月份</label>
               <div class="layui-input-inline" style="width: 190px;">
-                <select name="salary_ym" id="ct_salary_ym">
+                <select name="salary_ym" id="ct_salary_ym" lay-filter="select_salary_ym">
                   <?php echo $salary_ym_option?>
                 </select>
               </div>
@@ -82,7 +69,7 @@ $salary_ym_option = get_select_option($salary_ym_list, $salary_ym);
 
     <div>
       <ul class="nav nav-tabs">
-        <li class="active"><a href="#all_staff" data-toggle="tab">员工列表&nbsp;&nbsp;<span class="badge" id="staff_count">10</span></a></li>
+        <li class="active"><a href="#all_staff" data-toggle="tab">员工列表&nbsp;&nbsp;<span class="badge" id="staff_count">0</span></a></li>
       </ul>
 
       <div class="tab-content" style="padding-top: 10px; font-size:15px; color:#F06;">
@@ -106,19 +93,64 @@ $salary_ym_option = get_select_option($salary_ym_list, $salary_ym);
     layer = layui.layer;
     form = layui.form();
     laydate = layui.laydate;
+    
+    // 工资月份变更事件
+    form.on('select(select_salary_ym)', function(data) {
+      getMonthStaff(data.value);
+    });
   });
+
+  // 获取具体员工工资设定的HTML
+  function get_staff_html(row){
+    var html = '<tr>';
+    var lack_str = '';
+    var staff_id = row.staff_id;
+    var pre_tax_salary = row.pre_tax_salary / 100;
+    var effic_salary = row.effic_salary / 100;
+    var btn_str = '<button class="btn btn-success btn-staff" id="' + staff_id + '"><i class="glyphicon glyphicon-plus"></i></button>';
+    // 已经设定过工资
+    if (row.salary_log) {
+      pre_tax_salary = row.salary_log.pre_tax_salary / 100;
+      effic_salary = row.salary_log.effic_salary / 100;
+      btn_str = '<button class="btn btn-danger btn-staff" id="' + staff_id + '"><i class="glyphicon glyphicon-refresh"></i></button>';
+    }
+    if (row.lack_days > 0) {
+      // lack_str = row.lack_days + '天:';
+      var lack_days = row.lack_days_list.split(',');
+      lack_days.forEach(function(day, index, array) {
+        lack_str += parseInt(day.substr(8, 2)) + '日,';
+      });
+      lack_str = lack_str.substr(0, lack_str.length - 1);
+    }
+    html += '<td>' + row.staff_cd + '</td>';
+    html += '<td>' + row.staff_name + '</td>';
+    html += '<td class="r"><input type="number" class="layui-input" id="p_' + staff_id + '" name="" autocomplete="off" value="' + pre_tax_salary + '" placeholder="税前工资"></td>';
+    html += '<td class="r">¥' + row.base_salary / 100 + '</td>';
+    html += '<td class="r"><input type="number" class="layui-input" id="e_' + staff_id + '" name="" autocomplete="off" value="' + effic_salary + '" placeholder="绩效奖金"></td>';
+    html += '<td>' + lack_str + '</td>';
+    html += '<td>' + btn_str + '</td>';
+    html += '</tr>';
+    return html;
+  }
 
   // 员工工资列表展示
   function showMonthStaff(response) {
+    $("#ct_salary_date").val(response.salary_date);
+    $("#staff_count").html(response.total);
     $("#staff_list").html('');
     var rows = response.rows;
     var html_str = '';
     // 有数据
     if (rows.length > 0) {
+      html_str = '<table class="table table-hover table-no-bordered table-striped">';
+      html_str += '<tr>';
+      html_str += '<th width="10%">工号</th><th width="10%">姓名</th><th width="15%">税前工资</th><th width="15%">基本工资</th><th width="15%">绩效奖金</th><th>欠勤日</th><th width="10%">操作</th>';
+      html_str += '</tr>';
       rows.forEach(function(row, index, array) {
-          // 获取具体日期设定的HTML
-          // html_str += get_staff_html(row, index);
+          // 获取具体员工工资设定的HTML
+          html_str += get_staff_html(row);
       });
+      html_str += '</table>';
     } else {
       html_str = '没有数据';
     }
@@ -135,7 +167,9 @@ $salary_ym_option = get_select_option($salary_ym_list, $salary_ym);
             // AJAX正常返回
             if (response.errcode == '0') {
               // 员工工资列表展示
-              showMonthStaff(response);;
+              showMonthStaff(response);
+              // 添加工资点击事件
+              $(".btn-staff").click(setStaffSalary);
             } else {
               parent.layer.msg(response.errmsg, {
                 icon: 2,
@@ -157,27 +191,27 @@ $salary_ym_option = get_select_option($salary_ym_list, $salary_ym);
 
   // 员工工资列表初始化
   function initMonthStaff() {
-      var salary_ym = $("#salary_ym").val();
+      var salary_ym = $("#ct_salary_ym").val();
       // 获得指定年月员工工资列表
       getMonthStaff(salary_ym);
   }
 
-  $(function () {
-    // 员工工资列表初始化
-    initMonthStaff();
-    
-    // 添加工资点击事件
-    $(".btn-staff").click(function() {
+  // 设定员工工资
+  function setStaffSalary() {
       var ym = $("#ct_salary_ym").val();
       var dt = $("#ct_salary_date").val();
       var id = $(this).attr('id');
-      var li = $(this).parent();
+      var pts = $("#p_" + id).val();
+      var es = $("#e_" + id).val();
+      var tr = $(this).parent().parent();
       var row = {};
       row['ym'] = ym;
       row['dt'] = dt;
       row['id'] = id;
+      row['pts'] = pts;
+      row['es'] = es;
       $.ajax({
-          url: '/staff/api/add_taff_salary.php',
+          url: '/staff/api/set_staff_salary.php',
           type: 'post',
           data: row,
           success:function(response) {
@@ -189,7 +223,7 @@ $salary_ym_option = get_select_option($salary_ym_list, $salary_ym);
                 btn: ['OK']
               });
               // 员工隐藏
-              li.hide();
+              tr.hide();
             } else {
               parent.layer.msg(response.errmsg, {
                 icon: 2,
@@ -207,7 +241,11 @@ $salary_ym_option = get_select_option($salary_ym_list, $salary_ym);
             });
           }
       });
-    });
+  }
+
+  $(function () {
+    // 员工工资列表初始化
+    initMonthStaff();
   });
   </script>
 

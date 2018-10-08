@@ -15,18 +15,27 @@ function get_fin_staff_salary($staff_id)
 }
 
 //======================================
-// 函数: 取得所有有效员工工资基数
-// 参数: 无
+// 函数: 取得指定ID列表的当月员工工资基数
+// 参数: $staff_ids     员工ID数组
+// 参数: $year_month    指定年月
 // 返回: 员工工资基数数据集
 //======================================
-function get_all_fin_staff_salary()
+function get_fin_staff_salary_list($staff_ids, $year_month)
 {
   $db = new DB_SATFF();
-
+  // 员工ID数组处理
+  $ids = array();
+  foreach ($staff_ids AS $id) {
+    $ids[] = "'{$id}'";
+  }
+  $staff_list = join(",", $ids);
+  
   $sql = "SELECT * FROM fin_staff_salary";
-  $sql .= " WHERE is_void = 0";
+  $sql .= " WHERE staff_id in ({$staff_list})";
+  $sql .= " AND from_month <= '{$year_month}'";
+  $sql .= " AND to_month >= '{$year_month}'";
   $sql .= " ORDER BY staff_cd";
-
+  
   $db->query($sql);
   $rows = $db->fetchAll();
   return $rows;

@@ -2,6 +2,7 @@
 require_once '../inc/common.php';
 require_once '../db/hr_date_tag.php';
 require_once '../db/fin_staff_salary.php';
+require_once '../db/fin_staff_salary_log.php';
 require_once '../db/staff_office_sign.php';
 
 header("cache-control:no-cache,must-revalidate");
@@ -12,12 +13,19 @@ header("Content-Type:application/json;charset=utf-8");
   ym                指定年月（YYYYMM）
 
 返回
-  work_days         本月工作日
+  salary_date       支付日期
+  total             总记录件数             
   rows              记录数组
-    day               日
-    date_type         日期类型 0 工作日 1 休日 2 国定假日
-    date_tag          日期标注
-    
+    staff_id          员工ID
+    staff_cd          员工工号
+    staff_name        员工姓名
+    base_salary       基本工资
+    effic_salary      绩效工资
+    pension_base      社保基数
+    fund_base         公积金基数
+    lack_days         欠勤天数
+    lack_days_list    欠勤工作日列表
+
 说明
 */
 
@@ -34,59 +42,60 @@ if (strlen(intval($ym)) != 6)
 
 $year = substr($ym, 0, 4);
 $month = substr($ym, 4, 2);
-// 取得人事节假日记录总数
-$rows = get_hr_date_type_total($year, $month);
 
+// 本月第一天
+$month_first_day = date($year . '-' . $month . '-01');
+// 本月最后一天
+$month_last_day = date('Y-m-d', strtotime('+1 month -1 day', strtotime($month_first_day)));
+// 支付日
+$salary_date = date('Y-m-d', strtotime('+1 month +5 day', strtotime($month_first_day)));
+
+// 取得当月正常出勤年月日列表
+$rows = get_hr_date_tag_by_type($month_first_day, $month_last_day);
 if (!$rows)
-  exit_error('120', '指定年月的数据不存在');
-
-// 该月总天数
-$sum_days = 0;
-// 该月工作日天数
-$work_days = 0;
-// 取得该月休息日天数
-$rest_days = 0;
-
+  exit_error('120', '指定年月工作日未设定');
+$work_days = array();
 foreach($rows as $row) {
-  // 工作日
-  if ($row['date_type'] == 0) {
-    $work_days += $row['log_total'];
-  } else {
-    $rest_days += $row['log_total'];
-  }
-  $sum_days += $row['log_total'];
+  $work_days[] = $row['date_ymd'];
 }
 
-// 取得上个月
-$month_first_day = date($year . '-' . $month . '-01');
-$last_month = date('Ym', strtotime('-1 day', strtotime($month_first_day)));
-// 取得下个月
-$month_last_day = date('Y-m-d', strtotime('+1 month -1 day', strtotime($month_first_day)));
-$next_month = date('Ym', strtotime('+1 month', strtotime($month_first_day)));
+// 取得当月签到的员工ID列表
+$rows = get_staff_office_sign_id_list($month_first_day . ' 00:00:00', $month_last_day . ' 23:59:59');
+if (!$rows)
+  exit_error('120', '该月没有员工出勤');
+$work_staffs = array();
+foreach($rows as $row) {
+  $work_staffs[] = $row['staff_id'];
+}
 
-// 取得该月第一天对应周的周一
-$month_first_monday = date('Y-m-d', strtotime('Sunday -6 day', strtotime($month_first_day)));
-
-// 取得该月最后一天对应周的周日
-$month_last_sunday = date('Y-m-d', strtotime('Sunday', strtotime($month_last_day)));
-
-// 取得该月人事节假日标志列表
-$rtn_rows = get_hr_date_tag_list($month_first_monday, $month_last_sunday);
+// 取得出勤员工的工资基数
+$rows = get_fin_staff_salary_list($work_staffs, $year . '-' . $month);
+$rtn_rows = array();
+foreach($rows as $row) {
+  $staff_id = $row['staff_id'];
+  // 取得员工当月的办公室签到记录列表
+  $sign_list = get_staff_office_sign_duration_list($staff_id, strtotime($month_first_day . ' 00:00:00'), strtotime($month_last_day . ' 23:59:59'));
+  $staff_work_days = array();
+  foreach($sign_list as $sign) {
+    $sign_day = substr($sign['ctime'], 0, 10);
+    $staff_work_days[] = $sign_day;
+  }
+  $lack_days = array_diff($work_days, array_unique($staff_work_days));
+  // 计算该员工的欠勤天数
+  $row['lack_days'] = count($lack_days);
+  $row['lack_days_list'] = join(",", $lack_days);
+  // 取得员工当月工资发放记录
+  $row['salary_log'] = get_fin_staff_salary_log($year . $month, $staff_id);
+  $rtn_rows[] = $row;
+}
 
 //返回数据做成
 $rtn_ary = array();
 $rtn_ary['errcode'] = '0';
 $rtn_ary['errmsg'] = '';
-$rtn_ary['sum_days'] = $sum_days;
-$rtn_ary['work_days'] = $work_days;
-$rtn_ary['rest_days'] = $rest_days;
-$rtn_ary['first_day'] = $month_first_day;
-$rtn_ary['last_day'] = $month_last_day;
-$rtn_ary['first_monday'] = $month_first_monday;
-$rtn_ary['last_sunday'] = $month_last_sunday;
 $rtn_ary['cur_month'] = $ym;
-$rtn_ary['last_month'] = $last_month;
-$rtn_ary['next_month'] = $next_month;
+$rtn_ary['salary_date'] = $salary_date;
+$rtn_ary['total'] = count($rtn_rows);
 $rtn_ary['rows'] = $rtn_rows;
 $rtn_str = json_encode($rtn_ary);
 

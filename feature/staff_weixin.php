@@ -11,7 +11,7 @@ $table->show_columns = array("staff_name", "staff_phone", "staff_avata", "wx_nam
 
 // 头像样式
 $table->format_columns[] = array('field'=>'staff_avata', 'formatter'=>'imageFormatter');
-// 是否无效样式
+// 是否无效
 $table->format_columns[] = array('field'=>'is_void', 'formatter'=>'isVoidFormatter');
 
 // 账号审核事件
