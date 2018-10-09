@@ -108,7 +108,7 @@ function show_action_list(response) {
   }
 
   // 第一天大于系统启动时间
-  if (response.week_begin > '18年9月3日') {
+  if (response.from_date > '18-09-03') {
       // 显示上一周按钮
       var lastbtn = '\
         <div class="weui-flex__item button_sp_area">\

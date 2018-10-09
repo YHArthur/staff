@@ -59,7 +59,7 @@ $table->add_javascript =  <<<EOF
               shadeClose: true,
               shade: 0.8,
               area: ['800px', '800px'],
-              content: 'dialog/staff_salary_log.php'
+              content: 'dialog/staff_salary_list.php'
           });
       });
     });
@@ -101,7 +101,7 @@ $table->add_javascript =  <<<EOF
               shadeClose: true,
               shade: 0.8,
               area: ['800px', '450px'],
-              content: 'dialog/staff_salary_log.php?ym=' + row.salary_ym + 'id=' + row.staff_id
+              content: 'dialog/staff_salary_log.php?ym=' + row.salary_ym + '&id=' + row.staff_id
           });
         }
     };

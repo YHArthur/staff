@@ -1,25 +1,34 @@
 <?php
 require_once '../inc/common.php';
-
-php_begin();
+require_once '../db/fin_staff_salary_log.php';
 
 // 禁止游客访问
 exit_guest();
 
-// 工资年月选项列表
-$from_ym = '201803';
-$salary_ym = date('Ym', strtotime('-1 month'));
-$salary_date = date('Y-m-06');
-$salary_ym_list = array();
+$staff_id = $_GET["id"];                                                  // 员工ID
+$salary_ym = $_GET["ym"];                                                 // 工资年月
+// 取得指定工资年月和员工ID的员工工资发放记录
+$row = get_fin_staff_salary_log($salary_ym, $staff_id);
+if (!$row)
+  exit('staff_id and salary_ym is not exist');
 
-for ($i=0; $i<=12; $i++) {
-  $tmp_year = substr($from_ym, 0, 4);
-  $tmp_mon = substr($from_ym, 4, 2);
-  $salary_ym_list[$from_ym] = $tmp_year . '年' . $tmp_mon . '月';
-  $from_ym = date("Ym", mktime(0,0,0,$tmp_mon+1,1,$tmp_year));
-}
+$salary_date = $row['salary_date'];                                       // 支付日期
+$staff_cd = $row['staff_cd'];                                             // 员工工号
+$staff_name = $row['staff_name'];                                         // 员工姓名
+$pre_tax_salary = $row['pre_tax_salary'] / 100.0;                         // 税前工资
+$base_salary = $row['base_salary'] / 100.0;                               // 基本工资
+$effic_salary = $row['effic_salary'] / 100.0;                             // 绩效工资
+$pension_base = $row['pension_base'] / 100.0;                             // 社保基数
+$fund_base = $row['fund_base'] / 100.0;                                   // 公积金基数
+$office_subsidy = $row['office_subsidy'] / 100.0;                         // 办公经费
 
-$salary_ym_option = get_select_option($salary_ym_list, $salary_ym);
+$pension_fee = $row['pension_fee'] / 100.0;                               // 养老保险
+$medical_fee = $row['medical_fee'] / 100.0;                               // 医疗保险
+$jobless_fee = $row['jobless_fee'] / 100.0;                               // 失业保险
+$fund_fee = $row['fund_fee'] / 100.0;                                     // 住房公积金
+$bef_tax_sum = $row['bef_tax_sum'] / 100.0;                               // 税前总额
+$tax_sum = $row['tax_sum'] / 100.0;                                       // 个人所得税
+$aft_tax_sum = $row['aft_tax_sum'] / 100.0;                               // 税后工资
 ?>
 
 <html lang="zh-CN">
@@ -30,51 +39,110 @@ $salary_ym_option = get_select_option($salary_ym_list, $salary_ym);
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>设定员工工资</title>
+  <title>员工工资发放记录设定</title>
 
   <link rel="stylesheet" href="../css/bootstrap.min.css">
   <link rel="stylesheet" href="../js/layui/css/layui.css">
   <link rel="stylesheet" href="../css/style.css">
-  <style type="text/css">
-  .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {vertical-align: middle;}
-  </style>
 </head>
 
 <body>
 
   <div class="container">
-
-    <fieldset class="layui-elem-field">
-      <br>
+    <div class="modal-body">
       <form id="ct_form" class="layui-form">
+
           <div class="layui-form-item">
             <div class="layui-inline">
-              <label for="ct_salary_ym" class="layui-form-label">工资月份</label>
-              <div class="layui-input-inline" style="width: 190px;">
-                <select name="salary_ym" id="ct_salary_ym" lay-filter="select_salary_ym">
-                  <?php echo $salary_ym_option?>
-                </select>
-              </div>
+              <label class="layui-form-label">员工姓名</label>
+              <div class="layui-input-inline" style="width: 190px;"><?php echo $staff_name?></div>
+            </div>
+
+            <div class="layui-inline">
+              <label class="layui-form-label">员工工号</label>
+              <div class="layui-input-inline" style="width: 190px"><?php echo $staff_cd?></div>
+            </div>
+          </div>
+
+          <div class="layui-form-item">
+            <div class="layui-inline">
+              <label class="layui-form-label" style="width: 110px;">工资年月</label>
+              <div class="layui-input-inline"><?php echo $salary_ym?></div>
             </div>
 
             <div class="layui-inline">
               <label for="ct_salary_date" class="layui-form-label" style="width: 110px;">支付日期</label>
-              <div class="layui-input-inline" style="width: 190px;">
+              <div class="layui-input-inline">
                 <input type="Datatime" class="layui-input" id="ct_salary_date" name="salary_date" value="<?php echo $salary_date?>" placeholder="支付日期" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD'})">
               </div>
             </div>
           </div>
-       </form>
-    </fieldset>
 
-    <div>
-      <ul class="nav nav-tabs">
-        <li class="active"><a href="#all_staff" data-toggle="tab">员工列表&nbsp;&nbsp;<span class="badge" id="staff_count">0</span></a></li>
-      </ul>
+          <div class="layui-form-item">
+            <div class="layui-inline">
+              <label for="ct_pre_tax_salary" class="layui-form-label">税前工资</label>
+              <div class="input-group" style="width: 190px;">
+                <div class="input-group-addon">¥</div>
+                <input type="number" class="layui-input" id="ct_pre_tax_salary" name="pre_tax_salary" required lay-verify="required" autocomplete="off" value="<?php echo $pre_tax_salary?>" placeholder="0.00">
+              </div>
+            </div>
 
-      <div class="tab-content" style="padding-top: 10px; font-size:15px; color:#F06;">
-        <div class="tab-pane active" id="all_staff"><ul class="nav" id="staff_list"></ul></div>
-      </div>
+            <div class="layui-inline">
+              <label for="ct_office_subsidy" class="layui-form-label">办公经费</label>
+              <div class="input-group" style="width: 190px;">
+                <div class="input-group-addon">¥</div>
+                <input type="number" class="layui-input" id="ct_office_subsidy" name="office_subsidy" required lay-verify="required" autocomplete="off" value="<?php echo $office_subsidy?>" placeholder="0.00">
+              </div>
+            </div>
+          </div>
+
+          <div class="layui-form-item">
+            <div class="layui-inline">
+              <label for="ct_base_salary" class="layui-form-label">基本工资</label>
+              <div class="input-group" style="width: 190px;">
+                <div class="input-group-addon">¥</div>
+                <input type="number" class="layui-input" id="ct_base_salary" name="base_salary" required lay-verify="required" autocomplete="off" value="<?php echo $base_salary?>" placeholder="0.00">
+              </div>
+            </div>
+
+            <div class="layui-inline">
+              <label for="ct_effic_salary" class="layui-form-label">绩效工资</label>
+              <div class="input-group" style="width: 190px;">
+                <div class="input-group-addon">¥</div>
+                <input type="number" class="layui-input" id="ct_effic_salary" name="effic_salary" required lay-verify="required" autocomplete="off" value="<?php echo $effic_salary?>" placeholder="0.00">
+              </div>
+            </div>
+          </div>
+
+          <div class="layui-form-item">
+            <div class="layui-inline">
+              <label for="ct_pension_base" class="layui-form-label">社保基数</label>
+              <div class="input-group" style="width: 190px;">
+                <div class="input-group-addon">¥</div>
+                <input type="number" class="layui-input" id="ct_pension_base" name="pension_base" required lay-verify="required" autocomplete="off" value="<?php echo $pension_base?>" placeholder="0.00">
+              </div>
+            </div>
+
+            <div class="layui-inline">
+              <label for="ct_fund_base" class="layui-form-label">公积金基数</label>
+              <div class="input-group" style="width: 190px;">
+                <div class="input-group-addon">¥</div>
+                <input type="number" class="layui-input" id="ct_fund_base" name="fund_base" required lay-verify="required" autocomplete="off" value="<?php echo $fund_base?>" placeholder="0.00">
+              </div>
+            </div>
+          </div>
+
+          <div class="layui-form-item">
+            <div class="col-xs-8"></div>
+            <div class="col-xs-2">
+              <button type="button" id="btn_close" class="btn btn-default btn-block">关闭</button>
+            </div>
+            <div class="col-xs-2">
+              <button type="button" id="btn_ok" class="btn btn-primary btn-block submit">确认</button>
+            </div>
+          </div>
+
+        </form>
     </div>
   </div>
 
@@ -82,7 +150,8 @@ $salary_ym_option = get_select_option($salary_ym_list, $salary_ym);
   <script src="http://libs.baidu.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
   <script src="../js/layui/layui.js"></script>
 
-  <script type="text/javascript">
+  <script>
+
   var edit_index = 0;
   var layer = new Object();
   var form = new Object();
@@ -93,161 +162,108 @@ $salary_ym_option = get_select_option($salary_ym_list, $salary_ym);
     layer = layui.layer;
     form = layui.form();
     laydate = layui.laydate;
-    
-    // 工资月份变更事件
-    form.on('select(select_salary_ym)', function(data) {
-      getMonthStaff(data.value);
-    });
   });
 
-  // 获取具体员工工资设定的HTML
-  function get_staff_html(row){
-    var html = '<tr>';
-    var lack_str = '';
-    var staff_id = row.staff_id;
-    var pre_tax_salary = row.pre_tax_salary / 100;
-    var effic_salary = row.effic_salary / 100;
-    var btn_str = '<button class="btn btn-success btn-staff" id="' + staff_id + '"><i class="glyphicon glyphicon-plus"></i></button>';
-    // 已经设定过工资
-    if (row.salary_log) {
-      pre_tax_salary = row.salary_log.pre_tax_salary / 100;
-      effic_salary = row.salary_log.effic_salary / 100;
-      btn_str = '<button class="btn btn-danger btn-staff" id="' + staff_id + '"><i class="glyphicon glyphicon-refresh"></i></button>';
-    }
-    if (row.lack_days > 0) {
-      // lack_str = row.lack_days + '天:';
-      var lack_days = row.lack_days_list.split(',');
-      lack_days.forEach(function(day, index, array) {
-        lack_str += parseInt(day.substr(8, 2)) + '日,';
-      });
-      lack_str = lack_str.substr(0, lack_str.length - 1);
-    }
-    html += '<td>' + row.staff_cd + '</td>';
-    html += '<td>' + row.staff_name + '</td>';
-    html += '<td class="r"><input type="number" class="layui-input" id="p_' + staff_id + '" name="" autocomplete="off" value="' + pre_tax_salary + '" placeholder="税前工资"></td>';
-    html += '<td class="r">¥' + row.base_salary / 100 + '</td>';
-    html += '<td class="r"><input type="number" class="layui-input" id="e_' + staff_id + '" name="" autocomplete="off" value="' + effic_salary + '" placeholder="绩效奖金"></td>';
-    html += '<td>' + lack_str + '</td>';
-    html += '<td>' + btn_str + '</td>';
-    html += '</tr>';
-    return html;
-  }
+  // 关闭按钮点击事件
+  $("#btn_close").click(function() {
+    var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+    parent.layer.close(index);
+  });
 
-  // 员工工资列表展示
-  function showMonthStaff(response) {
-    $("#ct_salary_date").val(response.salary_date);
-    $("#staff_count").html(response.total);
-    $("#staff_list").html('');
-    var rows = response.rows;
-    var html_str = '';
-    // 有数据
-    if (rows.length > 0) {
-      html_str = '<table class="table table-hover table-no-bordered table-striped">';
-      html_str += '<tr>';
-      html_str += '<th width="10%">工号</th><th width="10%">姓名</th><th width="15%">税前工资</th><th width="15%">基本工资</th><th width="15%">绩效奖金</th><th>欠勤日</th><th width="10%">操作</th>';
-      html_str += '</tr>';
-      rows.forEach(function(row, index, array) {
-          // 获取具体员工工资设定的HTML
-          html_str += get_staff_html(row);
-      });
-      html_str += '</table>';
-    } else {
-      html_str = '没有数据';
+  // 确认按钮点击事件
+  $("#btn_ok").click(function() {
+    var from_date = $("#ct_from_date").val().trim();
+    if (from_date.length == 0) {
+      parent.layer.msg('请输入开始时间');
+      return;
     }
-    $("#staff_list").html(html_str);
-  }
 
-  // 获得指定年月员工工资列表
-  function getMonthStaff(salary_ym) {
-      $.ajax({
-          url: '/staff/api/get_month_staff_salary.php',
-          type: 'get',
-          data: {"ym":salary_ym},
-          success:function(response) {
-            // AJAX正常返回
-            if (response.errcode == '0') {
-              // 员工工资列表展示
-              showMonthStaff(response);
-              // 添加工资点击事件
-              $(".btn-staff").click(setStaffSalary);
-            } else {
-              parent.layer.msg(response.errmsg, {
-                icon: 2,
-                title: '错误信息',
-                btn: ['好吧']
-              });
-            }
-          },
-          error:function(XMLHttpRequest, textStatus, errorThrown) {
-            // AJAX异常
-            parent.layer.msg(textStatus, {
-                icon: 2,
-                title: errorThrown,
-                btn: ['好吧']
+    var to_date = $("#ct_to_date").val().trim();
+    if (to_date.length == 0) {
+      parent.layer.msg('请输入结束时间');
+      return;
+    }
+
+    var row = {};
+    var form = $("#ct_form");
+
+    form.find('input[name]').each(function () {
+        row[$(this).attr('name')] = $(this).val();
+    });
+
+    form.find('select[name]').each(function () {
+        row[$(this).attr('name')] = $(this).val();
+    });
+
+    form.find('textarea[name]').each(function () {
+        row[$(this).attr('name')] = $(this).val();
+    });
+
+    // 员工ID
+    if (row['staff_id'] == 0) {
+      parent.layer.msg('请选择员工');
+      return;
+    }
+
+    // 税前月薪
+    if (row['pre_tax_salary'] <= 0) {
+      parent.layer.msg('请设定税前月薪');
+      return;
+    }
+
+    // 基本工资
+    if (row['base_salary'] <= 0) {
+      parent.layer.msg('请设定基本工资');
+      return;
+    }
+
+    // 基本工资
+    if (row['base_salary'] < 4275) {
+      parent.layer.msg('基本工资不能少于4275');
+      return;
+    }
+
+    // 员工姓名
+    row['staff_name'] = $("#ct_staff_id option:selected").text();
+    // 是否无效
+    row['is_void'] = $("input[name='is_void']:checked").val();
+
+    $.ajax({
+        url: '/staff/api/set_staff_salary.php',
+        type: 'get',
+        data: row,
+        success:function(response) {
+          // AJAX正常返回
+          if (response.errcode == '0') {
+            parent.layer.alert(response.errmsg, {
+              icon: 1,
+              title: '提示信息',
+              btn: ['OK']
+            });
+            var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+            parent.table.bootstrapTable('refresh');
+            parent.layer.close(index);
+          } else {
+            parent.layer.msg(response.errmsg, {
+              icon: 2,
+              title: '错误信息',
+              btn: ['好吧']
             });
           }
-      });
-  }
+        },
+        error:function(XMLHttpRequest, textStatus, errorThrown) {
+          // AJAX异常
+          parent.layer.msg(textStatus, {
+              icon: 2,
+              title: errorThrown,
+              btn: ['好吧']
+          });
+        }
+    });
 
-  // 员工工资列表初始化
-  function initMonthStaff() {
-      var salary_ym = $("#ct_salary_ym").val();
-      // 获得指定年月员工工资列表
-      getMonthStaff(salary_ym);
-  }
-
-  // 设定员工工资
-  function setStaffSalary() {
-      var ym = $("#ct_salary_ym").val();
-      var dt = $("#ct_salary_date").val();
-      var id = $(this).attr('id');
-      var pts = $("#p_" + id).val();
-      var es = $("#e_" + id).val();
-      var tr = $(this).parent().parent();
-      var row = {};
-      row['ym'] = ym;
-      row['dt'] = dt;
-      row['id'] = id;
-      row['pts'] = pts;
-      row['es'] = es;
-      $.ajax({
-          url: '/staff/api/set_staff_salary.php',
-          type: 'post',
-          data: row,
-          success:function(response) {
-            // AJAX正常返回
-            if (response.errcode == '0') {
-              parent.layer.alert(response.errmsg, {
-                icon: 1,
-                title: '提示信息',
-                btn: ['OK']
-              });
-              // 员工隐藏
-              tr.hide();
-            } else {
-              parent.layer.msg(response.errmsg, {
-                icon: 2,
-                title: '错误信息',
-                btn: ['好吧']
-              });
-            }
-          },
-          error:function(XMLHttpRequest, textStatus, errorThrown) {
-            // AJAX异常
-            parent.layer.msg(textStatus, {
-                icon: 2,
-                title: errorThrown,
-                btn: ['好吧']
-            });
-          }
-      });
-  }
-
-  $(function () {
-    // 员工工资列表初始化
-    initMonthStaff();
   });
   </script>
+
 
 </body>
 </html>

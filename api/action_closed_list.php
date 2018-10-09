@@ -88,6 +88,7 @@ $rtn_ary['rows'] = $rows;
 
 // 未设置日期，默认周
 if (empty($day)) {
+  $rtn_ary['from_date'] = date('y-m-d', $timestamp_from);
   $rtn_ary['week_begin'] = date('y年n月j日', $timestamp_from);
   $rtn_ary['week_end'] = date('n月j日', $timestamp_to);
 } else {
