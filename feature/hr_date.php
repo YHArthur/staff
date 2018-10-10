@@ -44,18 +44,18 @@ $rtn_str  = <<<EOF
         <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu" style="min-width: 60px;">
-          <li data-type="01"><a href="javascript:void(0)">一月</a></li>
-          <li data-type="02"><a href="javascript:void(0)">二月</a></li>
-          <li data-type="03"><a href="javascript:void(0)">三月</a></li>
-          <li data-type="04"><a href="javascript:void(0)">四月</a></li>
-          <li data-type="05"><a href="javascript:void(0)">五月</a></li>
-          <li data-type="06"><a href="javascript:void(0)">六月</a></li>
-          <li data-type="07"><a href="javascript:void(0)">七月</a></li>
-          <li data-type="08"><a href="javascript:void(0)">八月</a></li>
-          <li data-type="09"><a href="javascript:void(0)">九月</a></li>
-          <li data-type="10"><a href="javascript:void(0)">十月</a></li>
-          <li data-type="11"><a href="javascript:void(0)">十一月</a></li>
-          <li data-type="12"><a href="javascript:void(0)">十二月</a></li>
+          <li><a href="javascript:jumpMonth(1);">一月</a></li>
+          <li><a href="javascript:jumpMonth(2);">二月</a></li>
+          <li><a href="javascript:jumpMonth(3);">三月</a></li>
+          <li><a href="javascript:jumpMonth(4);">四月</a></li>
+          <li><a href="javascript:jumpMonth(5);">五月</a></li>
+          <li><a href="javascript:jumpMonth(6);">六月</a></li>
+          <li><a href="javascript:jumpMonth(7);">七月</a></li>
+          <li><a href="javascript:jumpMonth(8);">八月</a></li>
+          <li><a href="javascript:jumpMonth(9);">九月</a></li>
+          <li><a href="javascript:jumpMonth(10);">十月</a></li>
+          <li><a href="javascript:jumpMonth(11);">十一月</a></li>
+          <li><a href="javascript:jumpMonth(12);">十二月</a></li>
         </ul>
         </div>
       </div>
@@ -66,13 +66,13 @@ $rtn_str  = <<<EOF
       <table class="table table-hover table-no-bordered table-striped">
         <thead>
           <tr>
-            <th>周一</th>
-            <th>周二</th>
-            <th>周三</th>
-            <th>周四</th>
-            <th>周五</th>
-            <th style="background-color: #CC6666;">周六</th>
-            <th style="background-color: #CC6666;">周日</th>
+            <th>一</th>
+            <th>二</th>
+            <th>三</th>
+            <th>四</th>
+            <th>五</th>
+            <th style="background-color: #CC6666;">六</th>
+            <th style="background-color: #CC6666;">日</th>
           </tr>
         </thead>
         <tbody id="tag_list">

@@ -91,6 +91,17 @@ function getMonthDateTag(cur_month) {
 }
 
 // 变更当前年月
+function jumpMonth(m) {
+    var year = $("#cur_month").val().substr(0, 4);
+    var month = m;
+    if (m < 10)
+        month = '0' + month;
+    
+    // 变更当前年月
+    changeMonth(year + month);
+}
+
+// 变更当前年月
 function changeMonth(ym) {
     $("#cur_month").val(ym);
     // 节假日设定页面初始化
