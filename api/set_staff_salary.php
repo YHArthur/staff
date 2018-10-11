@@ -38,8 +38,8 @@ $effic_salary = get_arg_str('POST', 'es');                // 绩效奖金
 $pre_tax_salary = intval($pre_tax_salary * 100);
 $effic_salary = intval($effic_salary * 100);
 
-// 取得指定员工ID的员工工资基数
-$salary =  get_fin_staff_salary($staff_id);
+// 取得指定员工ID和指定年月的员工工资基数
+$salary =  get_fin_staff_salary($staff_id, $salary_ym);
 $staff_cd = $salary['staff_cd'];
 $staff_name = $salary['staff_name'];
 // $pre_tax_salary = $salary['pre_tax_salary'];

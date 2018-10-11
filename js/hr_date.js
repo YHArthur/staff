@@ -13,6 +13,18 @@ function setDateTag(ymd, week) {
   });
 };
 
+// 取得当前时间
+function getNowYmd() {
+    var date = new Date();
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    if (month < 10)
+        month = "0" + month;
+    if (day < 10)
+        day = "0" + day;
+    return date.getFullYear() + "-" + month + "-" + day;
+}
+
 // 获取具体日期设定的HTML
 function get_date_html(row, index){
   var html = '';
@@ -20,8 +32,8 @@ function get_date_html(row, index){
   var month = row.date_ymd.substr(5, 2);
   var day = parseInt(row.date_ymd.substr(8, 2));
   var cur_month = $("#cur_month").val().substr(4, 2);
-  var btn_class = 'btn-success';
   var date_type = '<span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>';
+  var btn_class = 'btn-success';
   if (row.date_type == '1') {
     date_type = '<span class="glyphicon glyphicon-glass" aria-hidden="true"></span>';
     btn_class = 'btn-warning';
@@ -30,11 +42,16 @@ function get_date_html(row, index){
     date_type = '<span class="glyphicon glyphicon-plane" aria-hidden="true"></span>';
     btn_class = 'btn-danger';
   }
+  // 当天
+  if (row.date_ymd == getNowYmd())
+    date_type = '<span class="glyphicon glyphicon-star" aria-hidden="true"></span>';
+  
   var date_tag = parseInt(month) + '月';
   if (row.date_tag != '')
     date_tag = row.date_tag;
-  // 非本月数据
+  
   var btn_active = ' onclick="setDateTag(\'' + row.date_ymd + '\',' + week + ')"';
+  // 非本月数据
   if (month != cur_month) {
     btn_class = 'btn-default';
     btn_active = 'disabled="disabled"';

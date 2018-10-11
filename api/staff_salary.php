@@ -16,8 +16,8 @@ GET参数
   pension_base        社保基数
   fund_base           公积金基数
   office_subsidy      办公经费
-  from_date           开始时间
-  to_date             结束时间
+  from_month           开始年月
+  to_month             结束年月
   is_void             是否无效
 
 返回
@@ -30,7 +30,7 @@ GET参数
 exit_guest();
 
 // 参数检查
-$args = array('staff_id', 'staff_name', 'from_date', 'to_date');
+$args = array('staff_id', 'staff_name', 'from_month', 'to_month');
 chk_empty_args('GET', $args);
 
 // 提交参数整理
@@ -42,8 +42,8 @@ $effic_salary = get_arg_str('GET', 'effic_salary');               // 绩效工�
 $pension_base = get_arg_str('GET', 'pension_base');               // 社保基数
 $fund_base = get_arg_str('GET', 'fund_base');                     // 公积金基数
 $office_subsidy = get_arg_str('GET', 'office_subsidy');           // 办公经费
-$from_date = get_arg_str('GET', 'from_date');                     // 开始时间
-$to_date = get_arg_str('GET', 'to_date');                         // 结束时间
+$from_month = get_arg_str('GET', 'from_month');                   // 开始年月
+$to_month = get_arg_str('GET', 'to_month');                       // 结束年月
 $is_void = get_arg_str('GET', 'is_void');                         // 是否无效
 
 // 提交信息整理
@@ -77,14 +77,14 @@ $data['effic_salary'] = $effic_salary;                            // 绩效工�
 $data['pension_base'] = $pension_base;                            // 社保基数
 $data['fund_base'] = $fund_base;                                  // 公积金基数
 $data['office_subsidy'] = $office_subsidy;                        // 办公经费
-$data['from_date'] = $from_date;                                  // 开始时间
-$data['to_date'] = $to_date;                                      // 结束时间
+$data['from_month'] = $from_month;                                // 开始年月
+$data['to_month'] = $to_month;                                    // 结束年月
 $data['is_void'] = $is_void;                                      // 是否无效
 $data['cid'] = $my_id;                                            // 办理员工ID
 $data['cname'] = $my_name;                                        // 办理员工姓名
 
-// 取得指定员工ID的员工工资基数
-$row = get_fin_staff_salary($staff_id);
+// 取得指定员工ID和指定年月的员工工资基数
+$row = get_fin_staff_salary($staff_id, $from_month);
 // 取得记录为空，表示创建员工工资基数
 if (empty($row)) {
 

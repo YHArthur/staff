@@ -108,7 +108,7 @@ function get_select_option($list, $select)
 {
   $option = '';
   foreach ($list as $key=>$val) {
-    if ($key == $select) {
+    if (strval($key) == strval($select)) {
       $option .= '<option value="' . $key . '" selected="selected">' . $val . '</option>';
     } else {
       $option .= '<option value="' . $key . '">' . $val . '</option>';
@@ -129,7 +129,7 @@ function get_radio_input($name, $list, $checked)
 {
   $input = '';
   foreach ($list as $key=>$val) {
-    if ($key == $checked) {
+    if (strval($key) == strval($checked)) {
       $input .= '<input type="radio" lay-filter="radio_' . $name . '" name="' . $name . '" value="' . $key . '" title="' . $val . '" checked>';
     } else {
       $input .= '<input type="radio" lay-filter="radio_' . $name . '" name="' . $name . '" value="' . $key . '" title="' . $val . '">';

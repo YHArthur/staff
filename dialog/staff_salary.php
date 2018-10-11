@@ -16,15 +16,17 @@ if (!isset($_GET["id"])) {
   $pension_base = $base_salary;                                             // 社保基数
   $fund_base = $base_salary;                                                // 公积金基数
   $office_subsidy = $pre_tax_salary * 1.05 - $base_salary - $effic_salary;  // 办公经费
-  $from_date = date('Y-m-d');                                               // 入职时间
-  $to_date = '0000-00-00 00:00:00';                                         // 离职时间
+  $from_month = date('Y-m');                                                // 开始年月
+  $to_month = '2099-12';                                                    // 结束年月
   $is_void = 0;                                                             // 是否无效
 
 } else {
 
   $staff_id = $_GET["id"];                                                  // 员工ID
-  // 取得指定员工ID的员工工资基数
-  $row = get_fin_staff_salary($staff_id);
+  $from_month = $_GET["ym"];                                                // 开始年月
+  
+  // 取得指定员工ID和指定年月的员工工资基数
+  $row = get_fin_staff_salary($staff_id, $from_month);
   if (!$row)
     exit('staff_id id is not exist');
   $pre_tax_salary = $row['pre_tax_salary'] / 100.0;                         // 税前月薪
@@ -33,8 +35,8 @@ if (!isset($_GET["id"])) {
   $pension_base = $row['pension_base'] / 100.0;                             // 社保基数
   $fund_base = $row['fund_base'] / 100.0;                                   // 公积金基数
   $office_subsidy = $row['office_subsidy'] / 100.0;                         // 办公经费
-  $from_date = $row['from_date'];                                           // 入职时间
-  $to_date = $row['to_date'];                                               // 离职时间
+  $from_month = $row['from_month'];                                         // 开始年月
+  $to_month = $row['to_month'];                                             // 结束年月
   $is_void = $row['is_void'];                                               // 是否无效
 }
 
@@ -91,16 +93,16 @@ $void_input = get_radio_input('is_void', $void_list, $is_void);
 
           <div class="layui-form-item">
             <div class="layui-inline">
-              <label for="ct_from_date" class="layui-form-label" style="width: 110px;">开始日期</label>
+              <label for="ct_from_month" class="layui-form-label" style="width: 110px;">开始年月</label>
               <div class="layui-input-inline">
-                <input type="Datatime" class="layui-input" id="ct_from_date" name="from_date" value="<?php echo $from_date?>" placeholder="开始日期" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD'})">
+                <input type="Datatime" class="layui-input" id="ct_from_month" name="from_month" value="<?php echo $from_month?>" placeholder="开始日期" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM'})">
               </div>
             </div>
 
             <div class="layui-inline">
-              <label for="ct_to_date" class="layui-form-label" style="width: 110px;">结束日期</label>
+              <label for="ct_to_month" class="layui-form-label" style="width: 110px;">结束年月</label>
               <div class="layui-input-inline">
-                <input type="Datatime" class="layui-input" id="ct_to_date" name="to_date" value="<?php echo $to_date?>" placeholder="结束时间" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD'})">
+                <input type="Datatime" class="layui-input" id="ct_to_month" name="to_month" value="<?php echo $to_month?>" placeholder="结束时间" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM'})">
               </div>
             </div>
           </div>
@@ -199,14 +201,14 @@ $void_input = get_radio_input('is_void', $void_list, $is_void);
 
   // 确认按钮点击事件
   $("#btn_ok").click(function() {
-    var from_date = $("#ct_from_date").val().trim();
-    if (from_date.length == 0) {
+    var from_month = $("#ct_from_month").val().trim();
+    if (from_month.length == 0) {
       parent.layer.msg('请输入开始时间');
       return;
     }
 
-    var to_date = $("#ct_to_date").val().trim();
-    if (to_date.length == 0) {
+    var to_month = $("#ct_to_month").val().trim();
+    if (to_month.length == 0) {
       parent.layer.msg('请输入结束时间');
       return;
     }

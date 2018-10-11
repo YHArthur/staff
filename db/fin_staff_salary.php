@@ -1,14 +1,19 @@
 <?php
 //======================================
-// 函数: 取得指定员工ID的员工工资基数
+// 函数: 取得指定员工ID和指定年月的员工工资基数
 // 参数: $staff_id      员工ID
 // 返回: 员工工资基数
 //======================================
-function get_fin_staff_salary($staff_id)
+function get_fin_staff_salary($staff_id, $year_month)
 {
   $db = new DB_SATFF();
 
-  $sql = "SELECT * FROM fin_staff_salary WHERE staff_id = '{$staff_id}'";
+  $sql = "SELECT * FROM fin_staff_salary";
+  $sql .= " WHERE staff_id = '{$staff_id}'";
+  $sql .= " AND from_month <= '{$year_month}'";
+  $sql .= " AND to_month >= '{$year_month}'";
+  $sql .= " ORDER BY utime DESC LIMIT 1";
+  
   $db->query($sql);
   $row = $db->fetchRow();
   return $row;

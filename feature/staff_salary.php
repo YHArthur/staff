@@ -110,7 +110,7 @@ $table->add_javascript =  <<<EOF
               shadeClose: true,
               shade: 0.8,
               area: ['800px', '450px'],
-              content: 'dialog/staff_salary.php?id=' + row.staff_id
+              content: 'dialog/staff_salary.php?ym=' + row.from_month + '&id=' + row.staff_id
           });
         }
     };

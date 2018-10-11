@@ -78,7 +78,7 @@ $connect_list = array('0'=>'无', '1'=>'即时', '2'=>'网络', '3'=>'等待');
 $connect_input = get_radio_input('connect_type', $connect_list, $connect_type);
 
 // 是否限定地点列表
-$location_list = array('0'=>'不限定地点','1'=>'公司','2'=>'家','3'=>'其它指定场所');
+$location_list = array('0'=>'不限定地点', '1'=>'公司', '2'=>'家', '3'=>'其它指定场所');
 $location_option = get_select_option($location_list, $is_location);
 ?>
 
