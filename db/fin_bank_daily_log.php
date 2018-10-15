@@ -1,7 +1,7 @@
 <?php
 //======================================
 // 功能: 取得指定电子回单号码的银行日记账记录
-// 参数: $elec_reply_no       电子回单号码
+// 参数: $elec_reply_no 电子回单号码
 // 返回: 银行日记账记录数组
 // 说明:
 //======================================
@@ -13,6 +13,47 @@ function get_fin_bank_daily_log($elec_reply_no)
   $db->query($sql);
   $row = $db->fetchRow();
   return $row;
+}
+
+//======================================
+// 函数: 取得银行日记账集计金额
+// 参数: $is_pay        收支区分
+// 参数: $ym            收支年月（YYYY-MM）
+// 返回: 取得现金日记账集计金额
+//======================================
+function get_bank_daily_amount_sum($is_pay, $ym = '')
+{
+  $db = new DB_SATFF();
+
+  $sql = "SELECT SUM(amount) AS amount_sum";
+  $sql .= " FROM fin_bank_daily_log";
+  $sql .= " WHERE is_pay = {$is_pay}";
+  if ($ym != '')
+    $sql .= " AND left(log_datetime, 7) = '{$ym}'";
+  
+  $amount_sum = $db->getField($sql, 'amount_sum');
+  if ($amount_sum)
+    return $amount_sum;
+  return 0;
+}
+
+//======================================
+// 函数: 取得月列表和支付总额
+// 参数: 无
+// 返回: 记录数组
+//======================================
+function get_bank_daily_pay_amount_group()
+{
+  $db = new DB_SATFF();
+
+  $sql = "SELECT left(log_datetime, 7) AS log_ym, SUM(amount) AS pay_amount";
+  $sql .= " FROM fin_bank_daily_log";
+  $sql .= " WHERE is_pay = 1";
+  $sql .= " GROUP BY log_ym";
+
+  $db->query($sql);
+  $rows = $db->fetchAll();
+  return $rows;
 }
 
 //======================================

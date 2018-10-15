@@ -203,11 +203,16 @@ if ($connect_type != '0') {
             pr_element.progress('fileup', '30%');
           }
           ,success: function(res) {
-            var file_url = res.data.src;
-            pr_element.progress('fileup', '100%');
-            $("#ct_result_name").val(file_url);
-            $("#lnk_upload_file").attr("href", file_url);
-            $("#lnk_upload_file").show();
+            if (res.code == '0') {
+              var file_url = res.data.src;
+              pr_element.progress('fileup', '100%');
+              $("#ct_result_name").val(file_url);
+              $("#lnk_upload_file").attr("href", file_url);
+              $("#lnk_upload_file").show();
+            } else {
+              pr_element.progress('fileup', '0%');
+              parent.layer.msg(res.msg);
+            }
             $("#div_upload_result").hide();
           }
       });

@@ -41,7 +41,16 @@ function view_staff_info(my_id) {
                 staff_subsidy = '¥' + parseInt(row.staff_subsidy) + '.00';
                 
                 // 经费余额
-                exp_balance = '¥' + parseInt(row.exp_balance/100) + '.' + row.exp_balance.substr(-2,2);
+                exp_balance = '';
+                // 可报销办公经费
+                if ((row.free_exp) >= 0)
+                  exp_balance = '¥' + parseInt(row.free_exp / 100) + '.' + row.free_exp.substr(-2, 2);
+                // 锁定办公经费
+                if ((row.lock_exp) > 0) {
+                  if (exp_balance != '')
+                      exp_balance += '/';
+                  exp_balance += '<span class="lock_text">¥' + parseInt(row.lock_exp / 100) + '.' + row.lock_exp.substr(-2, 2) + '<span>';
+                }
                 
                 // 当前任务
                 staff_task = '无';

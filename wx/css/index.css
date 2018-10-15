@@ -5,6 +5,7 @@ body{background-color:#f8f8f8}
 .avata {width:50px;height:50px}
 .button_sp_area {padding:10px 20px;}
 .void_text {color: #808080;text-decoration:line-through}
+.lock_text {color: #808080;}
 #time_stamp {color: #999999;font-size:13px;margin-left:10px;}
 #task_star {font-size:1em}
 #ctime {color:#808080;}

@@ -33,6 +33,28 @@ function get_pending_staff_expense()
 }
 
 //======================================
+// 函数: 取得指定员工待处理的办公经费总额
+// 参数: $staff_id      员工ID
+// 返回: 待处理的办公经费总额
+//======================================
+function get_pending_staff_expense_amount_sum($staff_id)
+{
+  $db = new DB_SATFF();
+
+  $sql = "SELECT SUM(exp_amount * (max_count - now_count)) AS amount_sum";
+  $sql .= " FROM staff_expense";
+  $sql .= " WHERE staff_id = '{$staff_id}'";
+  $sql .= " AND exp_amount < 0";
+  $sql .= " AND is_void = 0";
+  $sql .= " AND now_count < max_count";
+
+  $amount_sum = $db->getField($sql, 'amount_sum');
+  if ($amount_sum)
+    return $amount_sum;
+  return 0;
+}
+
+//======================================
 // 函数: 办公经费创建
 // 参数: $data          信息数组
 // 返回: exp_id         创建成功的经费ID

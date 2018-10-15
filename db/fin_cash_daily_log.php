@@ -14,25 +14,44 @@ function get_fin_cash_daily_log($log_id)
 }
 
 //======================================
-// 函数: 取得现金日记账余额
-// 参数: 无
-// 返回: 取得现金日记账余额
+// 函数: 取得现金日记账集计金额
+// 参数: $staff_id     员工ID
+// 参数: $is_pay       收支区分
+// 返回: 取得现金日记账集计金额
 //======================================
-function get_fin_cash_amount_balance()
+function get_cash_daily_amount_sum($is_pay, $staff_id = '')
 {
   $db = new DB_SATFF();
 
-  $sql = "SELECT SUM(amount) AS sum_amount";
+  $sql = "SELECT SUM(amount) AS amount_sum";
   $sql .= " FROM fin_cash_daily_log";
-  $sql .= " WHERE is_pay = 0";
-  $income_amount = $db->getField($sql, 'sum_amount');
+  $sql .= " WHERE is_pay = {$is_pay}";
+  if ($staff_id != '')
+    $sql .= " AND debit_id = '{$staff_id}'";
+  
+  $amount_sum = $db->getField($sql, 'amount_sum');
+  if ($amount_sum)
+    return $amount_sum;
+  return 0;
+}
 
-  $sql = "SELECT SUM(amount) AS sum_amount";
+//======================================
+// 函数: 取得员工列表和支付总额
+// 参数: 无
+// 返回: 记录数组
+//======================================
+function get_cash_daily_pay_amount_group()
+{
+  $db = new DB_SATFF();
+
+  $sql = "SELECT debit_id AS staff_id, pay_name, SUM(amount) AS pay_amount";
   $sql .= " FROM fin_cash_daily_log";
   $sql .= " WHERE is_pay = 1";
-  $pay_amount = $db->getField($sql, 'sum_amount');
-  
-  return $income_amount - $pay_amount;
+  $sql .= " GROUP BY debit_id, pay_name";
+
+  $db->query($sql);
+  $rows = $db->fetchAll();
+  return $rows;
 }
 
 //======================================

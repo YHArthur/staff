@@ -27,7 +27,10 @@ $table->orderby = "bank_rec_date DESC";
 // 额外增加的工具栏代码
 $table->add_toolbar = <<<EOF
       <button id="add_btn" class="btn btn-warning">
-        <i class="glyphicon glyphicon-plus-sign"></i> 银行日记账导入
+        <i class="glyphicon glyphicon-plus-sign"></i> 银行账导入
+      </button>
+      <button id="sum_btn" class="btn btn-primary">
+        <i class="glyphicon glyphicon-stats"></i> 余额集计表
       </button>
 EOF;
 
@@ -45,6 +48,18 @@ $table->add_javascript =  <<<EOF
               content: 'dialog/fin_bank_daily_log.php'
           });
       });
+
+      // 集计按钮点击事件
+      $('#sum_btn').click(function() {
+          layer.open({
+              type: 2,
+              title: '银行余额集计表',
+              shadeClose: true,
+              shade: 0.8,
+              area: ['780px', '500px'],
+              content: 'dialog/fin_bank_daily_sum.php'
+          });
+      });      
     });
 
     // 货币金额格式化

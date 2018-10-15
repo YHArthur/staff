@@ -76,6 +76,7 @@ require_once '../db/staff_weixin.php';
   <script src="js/common.js"></script>
   <script src="js/wx.js"></script>
   <script src="js/task_info.js"></script>
+  <script src="../js/cnt.js"></script>
 
 </body>
 </html>

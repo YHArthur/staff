@@ -2,6 +2,7 @@
 require_once '../inc/common.php';
 require_once '../db/staff_main.php';
 require_once '../db/staff_office_sign.php';
+require_once '../db/staff_expense.php';
 require_once '../db/staff_expense_log.php';
 require_once '../db/task.php';
 require_once 'subsidy.php';
@@ -135,11 +136,31 @@ foreach($rows as $row) {
   $staff_row['staff_subsidy'] =  $staff_subsidy;                              // 本周补助
   
   // 办公经费余额初期值
+  $exp_balance = 0;
   $staff_row['exp_balance'] = '00';
   // 取得指定员工最后一次经费变动记录
   $last_log = get_staff_last_expense_log($row['staff_id']);
-  if ($last_log)
-    $staff_row['exp_balance'] = str_pad($last_log['exp_balance'], 2, '0', STR_PAD_LEFT);
+  if ($last_log) {
+    $exp_balance = $last_log['exp_balance'];
+    $staff_row['exp_balance'] = str_pad($exp_balance, 2, '0', STR_PAD_LEFT);
+  }
+  
+  // 取得指定员工待扣除办公经费总额
+  $pendin_sum = get_pending_staff_expense_amount_sum($row['staff_id']);
+  $staff_row['pendin_sum'] = $pendin_sum;
+  
+  // 可报销办公经费
+  $free_exp = $exp_balance + $pendin_sum;
+  $staff_row['free_exp'] = str_pad($free_exp, 2, '0', STR_PAD_LEFT);
+
+  // 锁定办公经费
+  if ($free_exp < 0) {
+    $lock_exp = $exp_balance;
+  } else {
+    $lock_exp = $exp_balance - $free_exp;
+  }
+  $staff_row['lock_exp'] = str_pad($lock_exp, 2, '0', STR_PAD_LEFT);
+  
   // 取得员工当前任务总数
   $staff_row['staff_task'] = get_staff_task_total($row['staff_id']);
   $staff_rows[] = $staff_row;
