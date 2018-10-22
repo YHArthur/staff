@@ -87,18 +87,17 @@ $data['cname'] = $my_name;                                        // 办理员�
 $row = get_fin_staff_salary($staff_id, $from_month);
 // 取得记录为空，表示创建员工工资基数
 if (empty($row)) {
-
   // 员工工资基数创建
   $ret = ins_fin_staff_salary($data);
-  $msg = '【' . $staff_name . '】的工资基数已成功添加';
+  $msg = '【' . $staff_name . '】' . $from_month . '开始的工资基数已成功添加';
   // 创建失败
   if ($ret == '')
     exit_error('110', '员工工资基数信息创建失败');
-
 } else {
+
   // 员工工资基数更新
-  $ret = upd_fin_staff_salary($data, $staff_id);
-  $msg = '【' . $staff_name . '】的工资基数已成功更新';
+  $ret = upd_fin_staff_salary($data, $staff_id, $from_month);
+  $msg = '【' . $staff_name . '】' . $from_month . '开始的工资基数已成功更新';
   // 更新失败
   if (!$ret)
     exit_error('110', '员工工资基数更新失败');

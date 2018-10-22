@@ -72,15 +72,17 @@ function ins_fin_staff_salary($data)
 // 函数: 员工工资基数更新
 // 参数: $data          更新数组
 // 参数: $staff_id      员工ID
+// 参数: $from_month    开始月
 // 返回: true           更新成功
 // 返回: false          更新失败
 //======================================
-function upd_fin_staff_salary($data, $staff_id)
+function upd_fin_staff_salary($data, $staff_id, $from_month)
 {
   $db = new DB_SATFF();
 
   $data['utime'] = time();
   $where = "staff_id = '{$staff_id}'";
+  $where .= " AND from_month = '{$from_month}'";
   $sql = $db->sqlUpdate("fin_staff_salary", $data, $where);
   $q_id = $db->query($sql);
 
