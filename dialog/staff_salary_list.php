@@ -7,16 +7,16 @@ php_begin();
 exit_guest();
 
 // 工资年月选项列表
-$from_ym = '201803';
-$salary_ym = date('Ym', strtotime('-1 month'));
+$from_ym = '2018-04';
+$salary_ym = date('Y-m', strtotime('-1 month'));
 $salary_date = date('Y-m-06');
 $salary_ym_list = array();
 
 for ($i=0; $i<=12; $i++) {
   $tmp_year = substr($from_ym, 0, 4);
-  $tmp_mon = substr($from_ym, 4, 2);
+  $tmp_mon = substr($from_ym, 5, 2);
   $salary_ym_list[$from_ym] = $tmp_year . '年' . $tmp_mon . '月';
-  $from_ym = date("Ym", mktime(0,0,0,$tmp_mon+1,1,$tmp_year));
+  $from_ym = date("Y-m", mktime(0,0,0,$tmp_mon+1,1,$tmp_year));
 }
 
 $salary_ym_option = get_select_option($salary_ym_list, $salary_ym);

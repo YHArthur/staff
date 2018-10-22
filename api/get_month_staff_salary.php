@@ -10,7 +10,7 @@ header("Content-Type:application/json;charset=utf-8");
 /*
 ========================== 获得指定年月员工工资列表 ==========================
 参数
-  ym                指定年月（YYYYMM）
+  ym                指定年月（YYYY-MM）
 
 返回
   salary_date       支付日期
@@ -37,14 +37,11 @@ chk_empty_args('GET', $args);
 
 // 获取提交参数
 $ym = get_arg_str('GET', 'ym');
-if (strlen(intval($ym)) != 6)
+if (strlen($ym) != 7)
   exit_error('120', '指定年月日期格式不正确');
 
-$year = substr($ym, 0, 4);
-$month = substr($ym, 4, 2);
-
 // 本月第一天
-$month_first_day = date($year . '-' . $month . '-01');
+$month_first_day = date($ym  . '-01');
 // 本月最后一天
 $month_last_day = date('Y-m-d', strtotime('+1 month -1 day', strtotime($month_first_day)));
 // 支付日
@@ -69,7 +66,7 @@ foreach($rows as $row) {
 }
 
 // 取得出勤员工的工资基数
-$rows = get_fin_staff_salary_list($work_staffs, $year . '-' . $month);
+$rows = get_fin_staff_salary_list($work_staffs, $ym);
 $rtn_rows = array();
 foreach($rows as $row) {
   $staff_id = $row['staff_id'];
@@ -85,7 +82,7 @@ foreach($rows as $row) {
   $row['lack_days'] = count($lack_days);
   $row['lack_days_list'] = join(",", $lack_days);
   // 取得员工当月工资发放记录
-  $row['salary_log'] = get_fin_staff_salary_log($year . $month, $staff_id);
+  $row['salary_log'] = get_fin_staff_salary_log($ym, $staff_id);
   $rtn_rows[] = $row;
 }
 

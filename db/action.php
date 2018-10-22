@@ -140,8 +140,8 @@ function get_open_closed_action_total($staff_id, $from_time, $to_time)
 // 参数: $staff_id      员工ID
 // 参数: $from_time     开始时间戳
 // 参数: $to_time       结束时间戳
-// 参数: $limit         记录条数（TODO）
-// 参数: $offset        记录偏移量（TODO）
+// 参数: $limit         记录条数
+// 参数: $offset        记录偏移量
 // 返回: 记录列表
 //======================================
 function get_open_closed_action_list($staff_id, $from_time, $to_time, $limit, $offset)

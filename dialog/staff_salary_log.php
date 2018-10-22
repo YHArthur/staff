@@ -12,7 +12,7 @@ $row = get_fin_staff_salary_log($salary_ym, $staff_id);
 if (!$row)
   exit('staff_id and salary_ym is not exist');
 
-$salary_date = $row['salary_date'];                                       // 支付日期
+$salary_date = substr($row['salary_date'], 0, 10);                        // 支付日期
 $staff_cd = $row['staff_cd'];                                             // 员工工号
 $staff_name = $row['staff_name'];                                         // 员工姓名
 $pre_tax_salary = $row['pre_tax_salary'] / 100.0;                         // 税前工资
@@ -51,7 +51,9 @@ $aft_tax_sum = $row['aft_tax_sum'] / 100.0;                               // 税
   <div class="container">
     <div class="modal-body">
       <form id="ct_form" class="layui-form">
-
+          <input type="hidden" name="staff_id" id="staff_id" value="<?php echo $staff_id?>">
+          <input type="hidden" name="salary_ym" id="salary_ym" value="<?php echo $salary_ym?>">
+          
           <div class="layui-form-item">
             <div class="layui-inline">
               <label class="layui-form-label">员工姓名</label>
@@ -133,6 +135,60 @@ $aft_tax_sum = $row['aft_tax_sum'] / 100.0;                               // 税
           </div>
 
           <div class="layui-form-item">
+            <div class="layui-inline">
+              <label for="ct_pension_fee" class="layui-form-label">养老保险</label>
+              <div class="input-group" style="width: 190px;">
+                <div class="input-group-addon">¥</div>
+                <input type="number" class="layui-input" id="ct_pension_fee" name="pension_fee" required lay-verify="required" autocomplete="off" value="<?php echo $pension_fee?>" placeholder="0.00">
+              </div>
+            </div>
+
+            <div class="layui-inline">
+              <label for="ct_medical_fee" class="layui-form-label">医疗保险</label>
+              <div class="input-group" style="width: 190px;">
+                <div class="input-group-addon">¥</div>
+                <input type="number" class="layui-input" id="ct_medical_fee" name="medical_fee" required lay-verify="required" autocomplete="off" value="<?php echo $medical_fee?>" placeholder="0.00">
+              </div>
+            </div>
+          </div>
+
+          <div class="layui-form-item">
+            <div class="layui-inline">
+              <label for="ct_jobless_fee" class="layui-form-label">失业保险</label>
+              <div class="input-group" style="width: 190px;">
+                <div class="input-group-addon">¥</div>
+                <input type="number" class="layui-input" id="ct_jobless_fee" name="jobless_fee" required lay-verify="required" autocomplete="off" value="<?php echo $jobless_fee?>" placeholder="0.00">
+              </div>
+            </div>
+
+            <div class="layui-inline">
+              <label for="ct_fund_fee" class="layui-form-label">住房公积金</label>
+              <div class="input-group" style="width: 190px;">
+                <div class="input-group-addon">¥</div>
+                <input type="number" class="layui-input" id="ct_fund_fee" name="fund_fee" required lay-verify="required" autocomplete="off" value="<?php echo $fund_fee?>" placeholder="0.00">
+              </div>
+            </div>
+          </div>
+
+          <div class="layui-form-item">
+            <div class="layui-inline">
+              <label for="ct_bef_tax_sum" class="layui-form-label">税前总额</label>
+              <div class="input-group" style="width: 190px;">
+                <div class="input-group-addon">¥</div>
+                <input type="number" class="layui-input" id="ct_bef_tax_sum" name="bef_tax_sum" required lay-verify="required" autocomplete="off" value="<?php echo $bef_tax_sum?>" placeholder="0.00">
+              </div>
+            </div>
+
+            <div class="layui-inline">
+              <label for="ct_tax_sum" class="layui-form-label">个人所得税</label>
+              <div class="input-group" style="width: 190px;">
+                <div class="input-group-addon">¥</div>
+                <input type="number" class="layui-input" id="ct_tax_sum" name="tax_sum" required lay-verify="required" autocomplete="off" value="<?php echo $tax_sum?>" placeholder="0.00">
+              </div>
+            </div>
+          </div>
+          
+          <div class="layui-form-item">
             <div class="col-xs-8"></div>
             <div class="col-xs-2">
               <button type="button" id="btn_close" class="btn btn-default btn-block">关闭</button>
@@ -172,18 +228,6 @@ $aft_tax_sum = $row['aft_tax_sum'] / 100.0;                               // 税
 
   // 确认按钮点击事件
   $("#btn_ok").click(function() {
-    var from_date = $("#ct_from_date").val().trim();
-    if (from_date.length == 0) {
-      parent.layer.msg('请输入开始时间');
-      return;
-    }
-
-    var to_date = $("#ct_to_date").val().trim();
-    if (to_date.length == 0) {
-      parent.layer.msg('请输入结束时间');
-      return;
-    }
-
     var row = {};
     var form = $("#ct_form");
 
@@ -229,7 +273,7 @@ $aft_tax_sum = $row['aft_tax_sum'] / 100.0;                               // 税
     row['is_void'] = $("input[name='is_void']:checked").val();
 
     $.ajax({
-        url: '/staff/api/set_staff_salary.php',
+        url: '/staff/api/staff_salary_log.php',
         type: 'get',
         data: row,
         success:function(response) {

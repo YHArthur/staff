@@ -54,9 +54,13 @@ $action_intro = $action['action_intro'];      // 预期结果
 $action_desc = mb_substr(strip_tags($action_intro), 0, 30, 'UTF-8');
 $result_type = $action['result_type'];        // 成果类型（I/O）
 $result_name = $action['result_name'];        // 成果名称
+if (empty($result_name))
+  $result_name = '';
 $connect_type = $action['connect_type'];      // 沟通类型
 $connect_name = $action['connect_name'];      // 联络对象
 $result_memo = $action['result_memo'];        // 行动结果
+if (empty($result_memo))
+  $result_memo = '';
 $owner_id = $action['owner_id'];              // 创建人ID
 $owner_name = $action['owner_name'];          // 创建人
 $respo_id = $action['respo_id'];              // 责任人ID

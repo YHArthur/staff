@@ -7,6 +7,10 @@ need_staff_login();
 
 $my_id = $_SESSION['staff_id'];
 $my_name = $_SESSION['staff_name'];
+
+$more_link = 'javascript:;';
+if ($my_id == '640C3986-5EC2-EABA-59C1-B9C6EC4FF610')
+  $more_link = 'wx/staff_action_log_list.php';
 ?>
 
 <!DOCTYPE html>
@@ -58,7 +62,7 @@ $my_name = $_SESSION['staff_name'];
           </div>
           <p class="weui-grid__label">任务一览</p>
       </a>
-      <a href="javascript:;" class="weui-grid">
+      <a href="<?php echo $more_link?>" id="more_btn" class="weui-grid">
           <div class="weui-grid__icon">
               <i class="glyphicon glyphicon-plus"></i>
           </div>

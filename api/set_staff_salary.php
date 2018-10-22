@@ -76,8 +76,12 @@ $data['jobless_fee'] = $jobless_fee;                      // 失业保险
 $fund_fee = $fund_base * 0.07;                            // 个人公积金比例
 $data['fund_fee'] = $fund_fee;                            // 住房公积金
 
-// 税前总额
-$bef_tax_sum = $base_salary - $pension_fee - $medical_fee - $jobless_fee - $fund_fee;
+// 税前总额（出现考情扣减情况）
+if ($pre_tax_salary >= $base_salary) {
+  $bef_tax_sum = $base_salary - $pension_fee - $medical_fee - $jobless_fee - $fund_fee;
+} else {
+  $bef_tax_sum = $pre_tax_salary - $pension_fee - $medical_fee - $jobless_fee - $fund_fee;
+}
 $data['bef_tax_sum'] = $bef_tax_sum;
 
 // 个人所得税计算

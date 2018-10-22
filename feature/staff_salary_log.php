@@ -15,7 +15,6 @@ $table->format_columns[] = array('field'=>'aft_tax_sum', 'formatter'=>'currencyF
 
 $table->format_columns[] = array('field'=>'pension_base', 'formatter'=>'currencyFormatter');
 $table->format_columns[] = array('field'=>'fund_base', 'formatter'=>'currencyFormatter');
-$table->format_columns[] = array('field'=>'office_subsidy', 'formatter'=>'currencyFormatter');
 $table->format_columns[] = array('field'=>'pension_fee', 'formatter'=>'currencyFormatter');
 $table->format_columns[] = array('field'=>'medical_fee', 'formatter'=>'currencyFormatter');
 $table->format_columns[] = array('field'=>'jobless_fee', 'formatter'=>'currencyFormatter');
@@ -28,7 +27,7 @@ $table->format_columns[] = array('field'=>'aft_tax_sum', 'formatter'=>'currencyF
 $table->format_columns[] = array('field'=>'salary_date', 'formatter'=>'dateTimeFormatter');
 
 // 展示字段列表
-$table->show_columns = array("staff_name", "salary_ym", "salary_date", "pre_tax_salary", "base_salary", "office_subsidy", "effic_salary", "aft_tax_sum" , "tax_sum");
+$table->show_columns = array("staff_name", "salary_ym", "salary_date", "pre_tax_salary", "base_salary", "effic_salary", "aft_tax_sum" , "tax_sum");
 // 排序
 $table->orderby = "salary_ym DESC, staff_cd";
 
