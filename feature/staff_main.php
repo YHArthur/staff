@@ -18,15 +18,26 @@ $table->format_columns[] = array('field'=>'is_void', 'formatter'=>'isVoidFormatt
 // 展示字段列表
 $table->show_columns = array("staff_cd", "staff_name", "staff_sex", "birth_year", "join_date", "is_void", "ctime");
 
-// 是否可添加记录
+// 不可添加
 $table->add_able = false;
 
+// 不可修改
+$table->upd_able = false;
+
 // 排序
-$table->orderby = "is_void, join_date DESC, staff_cd DESC";
+$table->orderby = "is_void, staff_cd DESC";
+
+// 修改按钮
+$table->add_columns[] = array('title'=>'修改', 'field'=>'upd_btn', 'align'=>'center', 'valign'=>'middle', 'events'=>'updBtnEvents', 'formatter'=>'updBtnFormatter');
 
 // 额外增加的JS代码
 $table->add_javascript =  <<<EOF
 
+    // 修改按钮
+    function updBtnFormatter(value, row, index) {
+        return '<button class="updbtn btn-warning" type="button" aria-label="修改"><i class="glyphicon glyphicon-edit"></i></button>';
+    }
+    
     // 出生年份
     function birthYearFormatter(value, row, index) {
         var d = new Date()
@@ -61,6 +72,21 @@ $table->add_javascript =  <<<EOF
         }
         return fmt;
     }
+
+    window.updBtnEvents = {
+        'click .updbtn': function (e, value, row) {
+          layer.open({
+              type: 2,
+              title: '员工情报修改',
+              fix: false,
+              maxmin: true,
+              shadeClose: true,
+              shade: 0.8,
+              area: ['800px', '800px'],
+              content: 'dialog/staff_main.php?id=' + row.staff_id
+          });
+        }
+    };
 
 EOF;
 
