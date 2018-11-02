@@ -216,7 +216,9 @@ $void_input = get_radio_input('is_void', $void_list, $is_void);
         ,type: '' //默认post
       }
     });
-    edit_index = layedit.build('ct_staff_memo_edit');
+    edit_index = layedit.build('ct_staff_memo_edit', {
+      height: 150 //设置编辑器高度
+    });
   });
 
   // 关闭按钮点击事件

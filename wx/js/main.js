@@ -20,7 +20,6 @@ function view_staff_info(my_id) {
                 }else{
                     staff_pos = staff_count;
                     edit_url = "info_edit.php";
-                   
                 }
                 
                 // 判断员工性别
@@ -61,9 +60,7 @@ function view_staff_info(my_id) {
                 <div class="swiper-slide">\
                     <div class="weui-cell">\
                         <div class="upload">\
-                            <form  id="uploadForm" enctype="multipart/form-data" method="post" action="../../api/upload_image.php">\
-                                <img src="'+ row.staff_avata +'" id="image"  class="avata" name="image"/>\
-                            </form>\
+                            <img src="'+ row.staff_avata +'" id="image"  class="avata" name="image"/>\
                             <div class="page__hd" >\
                                 <h2 class="page__title" >'+ row.staff_name + '(' + row.nick_name + ') <a target=_blank href="' + edit_url + '"><img src="' + staff_sex + '" class = "sex"></a></h2>\
                                 <h3 class="page__desc">'+ row.staff_position + ' ' +'<img src="' + staff_status + '" class = "status">' + ' ' + row.staff_cd + '</h3>\

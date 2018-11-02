@@ -82,7 +82,7 @@ $table->add_javascript =  <<<EOF
               maxmin: true,
               shadeClose: true,
               shade: 0.8,
-              area: ['800px', '800px'],
+              area: ['800px', '750px'],
               content: 'dialog/staff_main.php?id=' + row.staff_id
           });
         }

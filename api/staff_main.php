@@ -57,6 +57,10 @@ $data['join_date'] = $join_date;                            // 加入时间
 $data['work_period'] = $work_period;                        // 出勤时间段
 $data['is_void'] = $is_void;                                // 是否无效
 
+// 创始人信息禁止他人修改
+if ($staff_id == '640C3986-5EC2-EABA-59C1-B9C6EC4FF610' && $_SESSION['staff_id'] != $staff_id)
+  exit_error('110', '亲爱的，我还没有赋予你修改我情报的权力！');
+
 // 更新员工信息
 $ret = upd_staff($data, $staff_id);
 

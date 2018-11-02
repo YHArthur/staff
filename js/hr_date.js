@@ -44,7 +44,7 @@ function get_date_html(row, index){
   }
   // 当天
   if (row.date_ymd == getNowYmd())
-    date_type = '<span class="glyphicon glyphicon-star" aria-hidden="true"></span>';
+    date_type = '<span class="glyphicon glyphicon-star" style="color:#D9534F" aria-hidden="true"></span>';
   
   var date_tag = parseInt(month) + '月';
   if (row.date_tag != '')

@@ -285,7 +285,7 @@ $void_input = get_radio_input('is_void', $void_list, $is_void);
     row['staff_memo'] = layedit.getContent(edit_index);
 
     $.ajax({
-        url: '/staff/api/staff_info.php',
+        url: '/staff/api/staff_main.php',
         type: 'post',
         data: row,
         success:function(response) {
