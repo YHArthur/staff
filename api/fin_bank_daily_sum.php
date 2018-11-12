@@ -24,7 +24,7 @@ GET参数
 */
 
 // 禁止游客访问
-exit_guest();
+api_exit_guest();
 
 // 取得总收到金额
 $rec_amount_sum = get_bank_daily_amount_sum(0, '');

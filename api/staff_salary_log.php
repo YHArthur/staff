@@ -32,7 +32,7 @@ POST参数
 */
 
 // 禁止游客访问
-exit_guest();
+api_exit_guest();
 
 // 参数检查
 $args = array('staff_id', 'salary_ym', 'salary_date', "pre_tax_salary");
@@ -40,6 +40,7 @@ chk_empty_args('POST', $args);
 
 // 提交参数整理
 $staff_id = get_arg_str('POST', 'staff_id');              // 员工ID
+$staff_name = get_arg_str('POST', 'staff_name');          // 员工姓名
 $salary_ym = get_arg_str('POST', 'salary_ym');            // 工资年月
 $salary_date = get_arg_str('POST', 'salary_date');        // 支付工资日期
 $pre_tax_salary = get_arg_str('POST', 'pre_tax_salary');  // 税前工资
@@ -75,7 +76,7 @@ $my_name = $_SESSION['staff_name'];                       // 当前用户昵称
 $ret = chk_fin_staff_salary_log_exist($salary_ym, $staff_id);
 if (!$ret)
   exit_error('120', '工资发放记录不存在');
-  
+
 $data = array();
 $data['salary_ym'] = $salary_ym;                          // 工资年月
 $data['staff_id'] = $staff_id;                            // 员工ID

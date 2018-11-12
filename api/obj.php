@@ -29,7 +29,7 @@ POST参数
 */
 
 // 禁止游客访问
-exit_guest();
+api_exit_guest();
 
 // 参数检查
 $args = array('obj_name', 'limit_time');

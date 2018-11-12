@@ -52,24 +52,29 @@ $aft_tax_sum = $row['aft_tax_sum'] / 100.0;                               // 税
     <div class="modal-body">
       <form id="ct_form" class="layui-form">
           <input type="hidden" name="staff_id" id="staff_id" value="<?php echo $staff_id?>">
-          <input type="hidden" name="salary_ym" id="salary_ym" value="<?php echo $salary_ym?>">
-          
+
           <div class="layui-form-item">
-            <div class="layui-inline">
+            <div for="ct_staff_name" class="layui-inline">
               <label class="layui-form-label">员工姓名</label>
-              <div class="layui-input-inline" style="width: 190px;"><?php echo $staff_name?></div>
+              <div class="layui-input-inline" style="width: 190px;">
+                <input type="text" class="layui-input" id="ct_staff_name" name="staff_name" value="<?php echo $staff_name?>" placeholder="员工姓名" disabled>
+              </div>
             </div>
 
             <div class="layui-inline">
-              <label class="layui-form-label">员工工号</label>
-              <div class="layui-input-inline" style="width: 190px"><?php echo $staff_cd?></div>
+              <label for="ct_staff_cd" class="layui-form-label">员工工号</label>
+              <div class="layui-input-inline" style="width: 190px">
+                <input type="text" class="layui-input" id="ct_staff_cd" name="staff_cd" value="<?php echo $staff_cd?>" placeholder="员工工号" disabled>
+              </div>
             </div>
           </div>
 
           <div class="layui-form-item">
             <div class="layui-inline">
-              <label class="layui-form-label" style="width: 110px;">工资年月</label>
-              <div class="layui-input-inline"><?php echo $salary_ym?></div>
+              <label for="ct_salary_ym" class="layui-form-label" style="width: 110px;">工资年月</label>
+              <div class="layui-input-inline">
+                <input type="Datatime" class="layui-input" id="ct_salary_ym" name="salary_ym" value="<?php echo $salary_ym?>" placeholder="工资年月" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM'})" disabled>
+              </div>
             </div>
 
             <div class="layui-inline">
@@ -187,7 +192,7 @@ $aft_tax_sum = $row['aft_tax_sum'] / 100.0;                               // 税
               </div>
             </div>
           </div>
-          
+
           <div class="layui-form-item">
             <div class="col-xs-8"></div>
             <div class="col-xs-2">
@@ -267,14 +272,9 @@ $aft_tax_sum = $row['aft_tax_sum'] / 100.0;                               // 税
       return;
     }
 
-    // 员工姓名
-    row['staff_name'] = $("#ct_staff_id option:selected").text();
-    // 是否无效
-    row['is_void'] = $("input[name='is_void']:checked").val();
-
     $.ajax({
         url: '/staff/api/staff_salary_log.php',
-        type: 'get',
+        type: 'POST',
         data: row,
         success:function(response) {
           // AJAX正常返回

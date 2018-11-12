@@ -6,6 +6,7 @@ function wx_config(apilist) {
       "onMenuShareTimeline",
       "onMenuShareQQ",
       "onMenuShareWeibo",
+      "openLocation",
       "getLocation",
       "chooseWXPay",
       "scanQRCode",

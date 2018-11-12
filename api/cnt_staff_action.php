@@ -8,9 +8,12 @@ header("cache-control:no-cache,must-revalidate");
 /*
 ========================== 网页访问统计 ==========================
 GET参数
-  referrer       来源URL
-  url            访问URL
-  uuid           访问用户id
+  referrer        来源URL
+  url             访问URL
+  title           访问URL标题
+  uuid            访问用户id
+  latitude        纬度
+  longitude       经度
 
 返回
   不返回任何参数,仅在数据库记录
@@ -24,15 +27,18 @@ $args = array('url');
 chk_empty_args('GET', $args);
 
 // 提交参数整理
-$referrer = get_arg_str('GET','referrer', 512);       // 来源URL
-$url = get_arg_str('GET','url', 512);                 // 访问URL
+$referrer = get_arg_str('GET','referrer', 255);       // 来源URL
+$url = get_arg_str('GET','url', 255);                 // 访问URL
+$action_title = get_arg_str('GET','title', 255);      // 访问URL标题
 $uuid = get_arg_str('GET' , 'uuid');                  // 访问ID
+$latitude = get_arg_str('GET' , 'latitude');          // 纬度
+$longitude = get_arg_str('GET' , 'longitude');        // 经度
 
 if (!session_id())
   session_start();
 
 if (!isset($_SESSION['staff_id'])) {
-  $staff_id = $uuid;
+  $staff_id = '';
   $staff_name = '游客';
 } else {
   $staff_id = $_SESSION['staff_id'];
@@ -64,9 +70,13 @@ if (substr($action_url, 1, 1) == ':' || substr($action_url, 0, 5) == 'local' || 
 $data = array();
 $data['from_url'] = $from_url;
 $data['from_prm'] = $from_prm;
+$data['latitude'] = $latitude;
+$data['longitude'] = $longitude;
 $data['staff_id'] = $staff_id;
+$data['uuid'] = $uuid;
 $data['staff_name'] = $staff_name;
 $data['action_url'] = $action_url;
+$data['action_title'] = $action_title;
 $data['action_prm'] = $action_prm;
 $data['action_ip'] = $action_ip;
 

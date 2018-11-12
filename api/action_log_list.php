@@ -37,7 +37,7 @@ GET参数
 */
 
 // 禁止游客访问
-exit_guest();
+api_exit_guest();
 
 // 参数检查
 // $args = array('staff_id');
@@ -52,8 +52,7 @@ $action_ip =  get_arg_str('GET', 'ip');
 list($limit, $offset) = get_paging_arg('GET');
 
 // 参数整理
-if (!empty($action_ip))
-  $action_ip = ip2long($action_ip);
+$action_ip = intval($action_ip);
 
 // 取得员工访问统计总数
 $total = get_cnt_staff_action_total($staff_id, $action_url, $action_ip);

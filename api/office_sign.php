@@ -41,6 +41,10 @@ $staff_id = $_SESSION['staff_id'];
 $staff_name = $_SESSION['staff_name'];
 $sign_location = round($latitude, 4) . ',' . round($longitude, 4);
 
+// HR特别指定规则
+// if ($staff_id == '4ADA81C2-9428-78BB-536D-84B8703C9A7A' && (round($latitude, 3) != '31.251' || round($longitude, 3) != '121.506'))
+  // exit_error('110', '亲爱的，能不能到了公司再打卡？');
+
 // 字段设定
 $data = array();
 $data['staff_id'] = $staff_id;

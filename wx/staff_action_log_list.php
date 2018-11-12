@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
-  <title>员工访问记录列表-风赢科技</title>
+  <title>员工访问记录-风赢科技</title>
   <link rel="stylesheet" href="css/weui.css">
   <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
 
   <div class="page__hd">
-    <h1 class="page__title">访问记录列表</h1>
+    <h1 class="page__title">访问记录</h1>
     <p class="page__desc"><span id="time_now"></span></p>
   </div>
 

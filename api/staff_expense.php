@@ -26,7 +26,7 @@ GET参数
 */
 
 // 禁止游客访问
-exit_guest();
+api_exit_guest();
 
 // 参数检查
 $args = array('staff_id', 'staff_name', 'exp_amount', 'from_date', 'to_date', 'max_count', 'exp_memo');

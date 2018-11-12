@@ -14,7 +14,7 @@ window.shareData = {
     // 分享标题
     title: "员工微信签出",
     // 分享描述
-    desc: "上海风赢网络科技有限公司员工签出页面【内部专用】",
+    desc: "请扫二维码签出，非特别情况请勿使用本链接直接签出",
     // 分享链接
     link: window.location.href,
     // 分享图标
