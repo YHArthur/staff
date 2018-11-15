@@ -16,19 +16,28 @@ var post_data;
 // 获取日志明细的HTML
 function get_log_html(row) {
   // 第一行 姓名+IP地址
-  var row_title;
-  if (post_data.id) {
-     row_title = row.staff_name;
+  var row_title, guset_name;
+  if (row.staff_name != '游客') {
+    if (post_data.id) {
+       row_title = row.staff_name;
+    } else {
+       row_title = '<a href="javascript:;" onclick="javascript:showStaff(\'' + row.staff_id + '\');">' + row.staff_name + '</a>';
+    }
   } else {
-     row_title = '<a href="javascript:;" onclick="javascript:showStaff(\'' + row.staff_id + '\');">' + row.staff_name + '</a>';
+    guset_name = 'G' + row.uuid.substring(0,3);
+    if (post_data.uuid) {
+       row_title = guset_name;
+    } else {
+       row_title = '<a href="javascript:;" onclick="javascript:showUUID(\'' + row.uuid + '\');">' + guset_name + '</a>';
+    }
   }
+  
   if (post_data.ip) {
     row_title += '【' + row.ip + '】';
   } else {
      row_title += '【<a href="javascript:;" onclick="javascript:showIP(\'' + row.action_ip + '\');">' + row.ip + '</a>】';
   }
-    
-  
+
   // 第二行 时间+地理位置
   var row_desc = row.time;
   if ((parseFloat(row.latitude) * parseFloat(row.longitude)) != 0)
@@ -40,7 +49,7 @@ function get_log_html(row) {
    if (post_data.url) {
      row_url = row.action_url;
    } else {
-     row_url = '<a href="javascript:;" onclick="javascript:showURL(\'' + row.action_url + '\');">' + row.action_url + '</a>';
+     row_url = '<a href="javascript:;" onclick="javascript:showURL(\'' + row.action_url + '\');">' + row.action_title + '</a>';
    }
    
   var  html ='\
@@ -68,28 +77,35 @@ function get_log_html(row) {
 // 全部记录明细展示
 function showAll() {
     post_data = {limit: 100};
-    $(".page__title").html('访问记录列表');
+    $(".page__title").html('访问记录');
     get_action_log_list(post_data);
 }
 
 // 单个员工访问记录明细展示
 function showStaff(id) {
     post_data['id'] = id;
-    $(".page__title").html('<a href="javascript:;"; onclick="javascript:showAll();">访问记录列表</a>');
+    $(".page__title").html('<a href="javascript:;"; onclick="javascript:showAll();">访问记录</a>');
+    get_action_log_list(post_data);
+}
+
+// 单个UUID访问记录明细展示
+function showUUID(id) {
+    post_data['uuid'] = id;
+    $(".page__title").html('<a href="javascript:;"; onclick="javascript:showAll();">访问记录</a>');
     get_action_log_list(post_data);
 }
 
 // 单个URL访问记录明细展示
 function showURL(url) {
     post_data['url'] = url;
-    $(".page__title").html('<a href="javascript:;"; onclick="javascript:showAll();">访问记录列表</a>');
+    $(".page__title").html('<a href="javascript:;"; onclick="javascript:showAll();">访问记录</a>');
     get_action_log_list(post_data);
 }
 
 // 单个IP访问记录明细展示
 function showIP(ip) {
     post_data['ip'] = ip;
-    $(".page__title").html('<a href="javascript:;"; onclick="javascript:showAll();">访问记录列表</a>');
+    $(".page__title").html('<a href="javascript:;"; onclick="javascript:showAll();">访问记录</a>');
     get_action_log_list(post_data);
 }
 
@@ -106,7 +122,8 @@ function showMap(latitude, longitude, staff_name, time){
         });
     } else {
         var url = 'https://apis.map.qq.com/uri/v1/marker?marker=coord:' + latitude + ',' + longitude + ';title:' + staff_name + ';addr:' + time + '&referer=myapp';
-        AlertDialog(longitude + ',' + latitude + '<br>' + '<a href="' + url + '" target="_blank">地理位置</a>');
+        // AlertDialog(longitude + ',' + latitude + '<br>' + '<a href="' + url + '" target="_blank">地理位置</a>');
+        window.open(url, 'map');
     }
 }
 

@@ -9,6 +9,7 @@ header("Content-Type:application/json;charset=utf-8");
 ========================== 员工访问统计一览 ==========================
 GET参数
   staff_id      访问ID（可选）
+  uuid          独立ID（可选）
   action_url    访问URL（可选）
   action_ip     访问IP（可选，长整数）
   limit         （记录条数，可选）默认10 最大100
@@ -21,9 +22,13 @@ GET参数
     logid         访问日志ID
     from_url      来源URL
     from_prm      来源URL参数
+    latitude      纬度
+    longitude     经度
     staff_id      访问ID
+    uuid          独立ID
     staff_name    员工姓名
     action_url    访问URL
+    action_title  访问URL标题
     action_prm    访问URL参数
     action_time   访问时间戳
     action_ip     访问IP
@@ -32,8 +37,7 @@ GET参数
     ip            可视化的访问IP
 
 说明
-  员工访问统计一览
-  最新完成员工，行动完成时间排序
+  员工访问记录一览
 */
 
 // 禁止游客访问
@@ -45,6 +49,7 @@ api_exit_guest();
 
 // 参数取得
 $staff_id = get_arg_str('GET', 'id');
+$uuid = get_arg_str('GET', 'uuid');
 $action_url = get_arg_str('GET', 'url');
 $action_ip =  get_arg_str('GET', 'ip');
 
@@ -55,9 +60,9 @@ list($limit, $offset) = get_paging_arg('GET');
 $action_ip = intval($action_ip);
 
 // 取得员工访问统计总数
-$total = get_cnt_staff_action_total($staff_id, $action_url, $action_ip);
+$total = get_cnt_staff_action_total($staff_id, $uuid, $action_url, $action_ip);
 // 取得员工访问统计列表
-$rows = get_cnt_staff_action_list($staff_id, $action_url, $action_ip, $limit, $offset);
+$rows = get_cnt_staff_action_list($staff_id, $uuid, $action_url, $action_ip, $limit, $offset);
 
 $rtn_rows = array();
 foreach($rows as $row) {

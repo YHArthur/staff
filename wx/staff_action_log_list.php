@@ -1,3 +1,11 @@
+<?php
+require_once '../inc/common.php';
+require_once '../db/staff_weixin.php';
+require_once '../db/staff_permit.php';
+
+need_staff_login();
+?>
+
 <!DOCTYPE html>
 <html>
 <head>

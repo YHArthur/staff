@@ -6,7 +6,7 @@
 // 参数: $action_ip     访问IP（可以省略）
 // 返回: 记录总数
 //======================================
-function get_cnt_staff_action_total($staff_id = '', $action_url = '', $action_ip = 0)
+function get_cnt_staff_action_total($staff_id = '', $uuid = '', $action_url = '', $action_ip = 0)
 {
   $db = new DB_SATFF();
 
@@ -35,7 +35,7 @@ function get_cnt_staff_action_total($staff_id = '', $action_url = '', $action_ip
 // 参数: $offset        记录偏移量
 // 返回: 记录列表
 //======================================
-function get_cnt_staff_action_list($staff_id, $action_url, $action_ip, $limit, $offset)
+function get_cnt_staff_action_list($staff_id = '', $uuid = '', $action_url = '', $action_ip = 0, $limit, $offset)
 {
   $db = new DB_SATFF();
 
@@ -44,6 +44,8 @@ function get_cnt_staff_action_list($staff_id, $action_url, $action_ip, $limit, $
   $sql .= " WHERE action_ip > 0";
   if ($staff_id != '')
     $sql .= " AND staff_id = '{$staff_id}'";
+  if ($uuid != '')
+    $sql .= " AND uuid = '{$uuid}'";
   if ($action_url != '')
     $sql .= " AND action_url = '{$action_url}'";
   if ($action_ip != 0)
