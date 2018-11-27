@@ -1,17 +1,37 @@
 <?php
 //======================================
-// 函数: 取得指定员工ID和指定年月的员工工资基数
+// 函数: 取得指定员工ID和开始年月的员工工资基数
 // 参数: $staff_id      员工ID
+// 参数: $from_month    开始年月
 // 返回: 员工工资基数
 //======================================
-function get_fin_staff_salary($staff_id, $year_month)
+function get_fin_staff_salary($staff_id, $from_month)
 {
   $db = new DB_SATFF();
 
   $sql = "SELECT * FROM fin_staff_salary";
   $sql .= " WHERE staff_id = '{$staff_id}'";
-  $sql .= " AND from_month <= '{$year_month}'";
-  $sql .= " AND to_month >= '{$year_month}'";
+  $sql .= " AND from_month = '{$from_month}'";
+  
+  $db->query($sql);
+  $row = $db->fetchRow();
+  return $row;
+}
+
+//======================================
+// 函数: 取得指定员工ID和有效年月的员工工资基数
+// 参数: $staff_id      员工ID
+// 参数: $valid_month   有效年月
+// 返回: 员工工资基数
+//======================================
+function get_fin_staff_salary_valid($staff_id, $valid_month)
+{
+  $db = new DB_SATFF();
+
+  $sql = "SELECT * FROM fin_staff_salary";
+  $sql .= " WHERE staff_id = '{$staff_id}'";
+  $sql .= " AND from_month <= '{$valid_month}'";
+  $sql .= " AND to_month >= '{$valid_month}'";
   $sql .= " ORDER BY utime DESC LIMIT 1";
   
   $db->query($sql);

@@ -25,7 +25,7 @@ if (!isset($_GET["id"])) {
   $staff_id = $_GET["id"];                                                  // 员工ID
   $from_month = $_GET["ym"];                                                // 开始年月
   
-  // 取得指定员工ID和指定年月的员工工资基数
+  // 取得指定员工ID和开始年月的员工工资基数
   $row = get_fin_staff_salary($staff_id, $from_month);
   if (!$row)
     exit('staff_id id is not exist');
