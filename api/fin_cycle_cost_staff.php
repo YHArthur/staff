@@ -39,9 +39,9 @@ $base_salary = get_arg_str('GET', 'base_salary');         // 基本工资
 $effic_salary = get_arg_str('GET', 'effic_salary');       // 绩效工资
 
 // 提交信息整理
-$office_subsidy = intval($office_subsidy * 100);
+$office_subsidy = round($office_subsidy * 100);
 $base_salary = intval($base_salary);
-$effic_salary = intval($effic_salary * 100);
+$effic_salary = round($effic_salary * 100);
 
 $my_id = $_SESSION['staff_id'];
 $my_name = $_SESSION['staff_name'];

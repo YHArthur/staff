@@ -35,8 +35,8 @@ $staff_id = get_arg_str('POST', 'id');                    // 员工ID
 $pre_tax_salary = get_arg_str('POST', 'pts');             // 税前工资
 $effic_salary = get_arg_str('POST', 'es');                // 绩效奖金
 
-$pre_tax_salary = intval($pre_tax_salary * 100);
-$effic_salary = intval($effic_salary * 100);
+$pre_tax_salary = round($pre_tax_salary * 100);
+$effic_salary = round($effic_salary * 100);
 
 // 取得指定员工ID和有效年月的员工工资基数
 $salary =  get_fin_staff_salary_valid($staff_id, $salary_ym);

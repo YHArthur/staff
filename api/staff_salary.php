@@ -47,13 +47,13 @@ $to_month = get_arg_str('GET', 'to_month');                       // 结束年�
 $is_void = get_arg_str('GET', 'is_void');                         // 是否无效
 
 // 提交信息整理
-$pre_tax_salary = intval($pre_tax_salary * 100);
-$base_salary = intval($base_salary * 100);
-$effic_salary = intval($effic_salary * 100);
-$pension_base = intval($pension_base * 100);
-$fund_base = intval($fund_base * 100);
-$office_subsidy = intval($office_subsidy * 100);
-$is_void = intval($is_void);
+$pre_tax_salary = round($pre_tax_salary * 100);
+$base_salary = round($base_salary * 100);
+$effic_salary = round($effic_salary * 100);
+$pension_base = round($pension_base * 100);
+$fund_base = round($fund_base * 100);
+$office_subsidy = round($office_subsidy * 100);
+$is_void = round($is_void);
 
 $my_id = $_SESSION['staff_id'];
 $my_name = $_SESSION['staff_name'];

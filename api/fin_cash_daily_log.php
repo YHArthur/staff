@@ -48,7 +48,7 @@ $file_url = get_arg_str('GET', 'file_url', 255);          // 附件URL地址
 $log_id = intval($log_id);
 $is_pay = intval($is_pay);
 $pay_channel = intval($pay_channel);
-$amount = intval($amount * 100);
+$amount = round($amount * 100);
 
 $my_id = $_SESSION['staff_id'];
 $my_name = $_SESSION['staff_name'];

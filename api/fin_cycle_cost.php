@@ -49,7 +49,7 @@ $is_fix = get_arg_str('GET', 'is_fix');                   // 是否固定
 $is_void = get_arg_str('GET', 'is_void');                 // 是否无效
 
 // 提交信息整理
-$cost_amount = intval($cost_amount * 100);
+$cost_amount = round($cost_amount * 100);
 $month_gap = intval($month_gap);
 $term_day = intval($term_day);
 $is_fix = intval($is_fix);
