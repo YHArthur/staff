@@ -146,7 +146,7 @@ $location_option = get_select_option($location_list, $is_location);
       <a id="btn_ok" href="javascript:void(0);" class="weui-btn weui-btn_primary">确认</a>
   </div>
 
-  <div class="weui-msg__extra-area"><a href="../h5_menu.php">©2018 风赢科技</a></div>
+  <div class="weui-msg__extra-area"><a href="../h5_menu.php">风赢科技</a></div>
 
   <script src="https://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
   <script src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>

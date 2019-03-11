@@ -52,7 +52,12 @@ function isClosedFormatter(row) {
     var fmt = '?';
     switch (row.is_closed) {
       case '0':
-        fmt = '待办';
+        var staff_id = GetQueryString('staff_id');
+        if (row.respo_id == staff_id) {
+          fmt = '待办';
+        } else {
+          fmt = row.respo_name + ' 待办';
+        }
         break;
       case '1':
         var closed_time = new Date(row.closed_time.replace(/-/g, "/"));

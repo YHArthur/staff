@@ -24,7 +24,7 @@ function get_log_html(row) {
        row_title = '<a href="javascript:;" onclick="javascript:showStaff(\'' + row.staff_id + '\');">' + row.staff_name + '</a>';
     }
   } else {
-    guset_name = 'G' + row.uuid.substring(0,3);
+    guset_name = row.uuid.substring(0,4);
     if (post_data.uuid) {
        row_title = guset_name;
     } else {

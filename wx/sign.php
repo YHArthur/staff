@@ -38,7 +38,7 @@ need_wx_login();
   </div>
 
   <div class="weui-footer weui-footer_fixed-bottom">
-    <p class="weui-footer__text">©2018 风赢科技</p>
+    <p class="weui-footer__text">风赢科技</p>
   </div>
 
   <script src="https://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
