@@ -14,6 +14,15 @@ $(function () {
   });
 })
 
+// 任务名称格式化
+function taskNameFormatter(row) {
+  // 个人任务
+  var task_self = '';
+  if (row.is_self == 1)
+    task_self = '● ';
+  return task_self + row.task_name;
+}
+
 // 任务等级
 function taskLevelFormatter(task_level) {
   var fmt = '';
@@ -81,7 +90,7 @@ function get_task_html(row){
   <div class="weui-panel">\
       <div class="weui-panel__bd">\
           <div class="weui-media-box weui-media-box_text">\
-              <h4 class="weui-media-box__title">' + row.task_name + '</h4>\
+              <h4 class="weui-media-box__title">' + taskNameFormatter(row) + '</h4>\
               <div class="weui-media-box__desc">' + row.task_intro + '</div>\
               <ul class="weui-media-box__info">\
                   <li class="weui-media-box__info__meta">' + taskLevelFormatter(row.task_level) + '</li>\

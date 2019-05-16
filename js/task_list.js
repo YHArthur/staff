@@ -334,13 +334,18 @@ function selfFormatter(value, row, index) {
 // 任务名称格式化
 function taskNameFormatter(value, row, index) {
     if(row.task_name) {
+        // 任务等级
         var task_star = '';
         if (row.task_level > 2)
           task_star = ' ★';
+        // 个人任务
+        var task_self = '';
+        if (row.is_self == 1)
+          task_self = '● ';
         var link_style = '';
         if (row.task_void == 1)
           link_style = 'void_text';
-        return '<a class="' + link_style + '" href="http://www.fnying.com/staff/wx/task.php?id=' + row.task_id + '" target="_blank">' + row.task_name + '</a>' + task_star;
+        return task_self + '<a class="' + link_style + '" href="http://www.fnying.com/staff/wx/task.php?id=' + row.task_id + '" target="_blank">' + row.task_name + '</a>' + task_star;
     }
     return '-';
 }

@@ -8,7 +8,7 @@ window.onload = function(){
 var sign_type;
 sign_type = GetQueryString('lc');
 if (!sign_type)
-    sign_type = '白金湾339';
+    sign_type = '白金湾311';
 
 window.shareData = {
     // 分享标题

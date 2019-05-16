@@ -33,6 +33,15 @@ function getNowDate() {
     return date.getFullYear() + "-" + month + "-" + day + " " + week + ' ' + hours + ":" + minutes + ":" + seconds;
 }
 
+// 行动名称格式化
+function actionNameFormatter(row) {
+  // 个人任务
+  var task_self = '● ';
+  if (row.is_self == '0')
+    task_self = '';
+  return task_self + row.action_title;
+}
+
 // 地点格式化
 function locationNameFormatter(row) {
     if (row.is_location == '1')
@@ -75,7 +84,7 @@ function get_action_html(row){
   <div class="weui-panel">\
       <div class="weui-panel__bd">\
           <div class="weui-media-box weui-media-box_text">\
-              <h4 class="weui-media-box__title">' + row.action_title + '</h4>\
+              <h4 class="weui-media-box__title">' + actionNameFormatter(row) + '</h4>\
               <div class="weui-media-box__desc">' + row.action_intro + '</div>\
               <ul class="weui-media-box__info">\
                   <li class="weui-media-box__info__meta">' + locationNameFormatter(row) + '</li>\

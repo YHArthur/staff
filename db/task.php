@@ -75,7 +75,7 @@ function get_staff_task_list_select($staff_id)
 {
   $db = new DB_SATFF();
 
-  $sql = "SELECT T.task_id, T.task_name";
+  $sql = "SELECT T.task_id, T.task_name, T.task_level, T.is_self";
   $sql .= " FROM task AS T";
   $sql .= " INNER JOIN id_relation AS R";
   $sql .= " ON T.task_id = R.mid";
@@ -89,11 +89,19 @@ function get_staff_task_list_select($staff_id)
   $db->query($sql);
   $rows = $db->fetchAll();
   $task_list = array();
-  $task_list[$staff_id] = '临时行动';
+  $task_list[$staff_id] = '● 临时行动';
   foreach ($rows as $row) {
     $task_id = $row['task_id'];
     $task_name = $row['task_name'];
-    $task_list[$task_id] = $task_name;
+    // 任务等级
+    $task_star = '';
+    if ($row['task_level'] > 2)
+      $task_star = ' ★';
+    // 个人任务
+    $task_self = '';
+    if ($row['is_self'] == 1)
+      $task_self = '● ';
+    $task_list[$task_id] = $task_self . $task_name . $task_star;
   }
 
   return $task_list;

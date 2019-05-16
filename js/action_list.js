@@ -242,7 +242,7 @@ function connectNameFormatter(value, row, index) {
 
 // 是否个人格式化
 function selfFormatter(value, row, index) {
-    var fmt = '?';
+    var fmt = '临时';
     switch (value) {
       case '0':
         fmt = '-';
@@ -256,21 +256,42 @@ function selfFormatter(value, row, index) {
 
 // 行动标题格式化
 function actionTitleFormatter(value, row, index) {
-    return '<a href="http://www.fnying.com/staff/wx/action.php?id=' + row.action_id + '" target="_blank">' + row.action_title + '</a>';
+   // 个人任务
+    var task_self = '● ';
+    switch (row.is_self) {
+      case '0':
+        task_self = '';
+        break;
+      case '1':
+        task_self = '● ';
+        break;
+    }
+    return task_self + '<a href="http://www.fnying.com/staff/wx/action.php?id=' + row.action_id + '" target="_blank">' + row.action_title + '</a>';
 }
 
 // 任务名称格式化
 function taskNameFormatter(value, row, index) {
     if(row.task_name) {
+        // 任务等级
         var task_star = '';
         if (row.task_level > 2)
           task_star = ' ★';
+        // 个人任务
+        var task_self = '● ';
+        switch (row.is_self) {
+          case '0':
+            task_self = '';
+            break;
+          case '1':
+            task_self = '● ';
+            break;
+        }
         var link_style = '';
         if (row.task_void == 1)
           link_style = 'void_text';
-        return '<a class="' + link_style + '" href="http://www.fnying.com/staff/wx/task.php?id=' + row.task_id + '" target="_blank">' + row.task_name + '</a>' + task_star;
+        return task_self + '<a class="' + link_style + '" href="http://www.fnying.com/staff/wx/task.php?id=' + row.task_id + '" target="_blank">' + row.task_name + '</a>' + task_star;
     }
-    return '-';
+    return '临时任务';
 }
 
 // 成果名称格式化
